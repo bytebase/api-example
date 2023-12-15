@@ -570,6 +570,12 @@ video {
 .w-full {
   width: 100%;
 }
+.w-2\/3 {
+  width: 66.666667%;
+}
+.w-1\/2 {
+  width: 50%;
+}
 .flex-col {
   flex-direction: column;
 }
@@ -595,6 +601,9 @@ video {
 .p-24 {
   padding: 6rem;
 }
+.p-10 {
+  padding: 2.5rem;
+}
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -615,15 +624,37 @@ video {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
+.pt-24 {
+  padding-top: 6rem;
+}
 .text-center {
   text-align: center;
+}
+.align-middle {
+  vertical-align: middle;
 }
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
 .font-semibold {
   font-weight: 600;
+}
+.font-bold {
+  font-weight: 700;
+}
+.leading-5 {
+  line-height: 1.25rem;
+}
+.leading-normal {
+  line-height: 1.5;
+}
+.leading-loose {
+  line-height: 2;
 }
 .text-gray-900 {
   --tw-text-opacity: 1;
@@ -680,4 +711,24 @@ video {
 }
 .focus-visible\:outline-indigo-600:focus-visible {
   outline-color: #4f46e5;
+}
+@media (min-width: 640px) {
+
+  .sm\:w-1\/2 {
+    width: 50%;
+  }
+
+  .sm\:w-full {
+    width: 100%;
+  }
+}
+@media (min-width: 768px) {
+
+  .md\:w-1\/2 {
+    width: 50%;
+  }
+
+  .md\:w-2\/3 {
+    width: 66.666667%;
+  }
 }

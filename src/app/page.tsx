@@ -1,55 +1,29 @@
-import AddForm from '@/components/add-form';
+import AddIssueForm from '@/components/add-issue-form';
+import generateToken from '@/app/api/token';
 
 export default async function Home() {
 
-  /* Generate token
-  */ 
+  const token = await generateToken();
 
-  const url = `${process.env.BB_HOST}/v1/auth/login`;
-  const tokenres = await fetch(url,{
-    method: "POST",
-    body: JSON.stringify({ "email":process.env.BB_EMAIL,"password":process.env.BB_PASSWORD,"web":true}),
-    headers: {
-    'Content-Type': 'application/json',
-    'Accept-Encoding': 'deflate, gzip',
-  }});
-
-
-  console.log("process.env.BB_HOST----------------")
-  console.log(process.env.BB_HOST)
-  console.log(process.env.BB_EMAIL)
-  console.log(process.env.BB_PASSWORD)
-  
-  const tokendata = await tokenres.json();
-  console.log("tokendata.token----------------")
-  console.log(tokendata.token)
-
-  console.log("------------------------------")
-
- // let tdata = tokendata.token;
-  
-  /* Fetch projects */ 
-  const projectres = await fetch("https://demo.bytebase.com/v1/projects", {
+  /* Fetch all projects */ 
+  const allProjectRes = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects`, {
     method: "GET",
     headers: {
-      "Authorization": 'Bearer '+ process.env.BB_TOKEN,
-}});
-
-  const projectdata = await projectres.json();
+      "Authorization": 'Bearer '+ token
+  }});
+  const allProjectData = await allProjectRes.json();
 
   /* Fetch all databases */
-  const alldbres = await fetch("https://demo.bytebase.com/v1/instances/-/databases", {
+  const allDatabaseRes = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/instances/-/databases`, {
     method: "GET",
     headers: {
-      "Authorization": 'Bearer '+ process.env.BB_TOKEN,
+      "Authorization": 'Bearer '+ token
   }});
-
-  const alldbdata = await alldbres.json();
-  //console.log(alldbdata.databases);
+  const allDatabaseData = await allDatabaseRes.json();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <AddForm allprojects={projectdata.projects} alldbs={alldbdata.databases} />
+    <main className="flex flex-col w-full p-10 items-center">
+      <AddIssueForm allProjects={allProjectData.projects} allDatabases={allDatabaseData.databases} />
     </main>
 
   )

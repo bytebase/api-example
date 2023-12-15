@@ -1,4 +1,8 @@
 {
   "/page": "app/page.js",
+  "/api/sheets/[project]/route": "app/api/sheets/[project]/route.js",
+  "/api/plans/[project]/route": "app/api/plans/[project]/route.js",
+  "/api/issues/[project]/route": "app/api/issues/[project]/route.js",
+  "/api/rollouts/[project]/route": "app/api/rollouts/[project]/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js"
 }

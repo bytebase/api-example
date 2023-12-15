@@ -1,0 +1,7 @@
+#rename `env-template.local` to `.env.local`
+#update the values of the variables
+
+NEXT_PUBLIC_BB_HOST=http://localhost:5678
+NEXT_PUBLIC_BB_EMAIL=admin@x.com
+NEXT_PUBLIC_BB_PASSWORD=12345
+
