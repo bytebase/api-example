@@ -1,6 +1,8 @@
-# Bytebase API Experiment with Next.js
+# Bytebase API Experiment
 
 This is an experimental project for [Bytebase](https://www.bytebase.com/) API using Next.js.
+
+![Bytebase API Experiment with Next.js](public/add-issue.gif)
 
 ## Getting Started
 
