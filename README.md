@@ -2,14 +2,14 @@
 
 This is an experimental project for [Bytebase](https://www.bytebase.com/) API using Next.js.
 
-# Getting Started
+## Getting Started
 
-## Run a Bytebase console first
+### 1/2 Run a Bytebase console first
 
 1. Check out [Self-host Bytebase via docker](https://www.bytebase.com/docs/get-started/self-host/#docker) for more information.
 2. Register an admin account.
 
-## Run this app
+### 2/2 Run this app
 
 1. Clone this repository.
 2. Rename `env-template.local` to `.env.local`, update the values of your registered admin account.
