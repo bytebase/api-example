@@ -23,3 +23,24 @@ npm run dev
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Dig Deeper
+
+### Fetch data
+_You may find the following API used in `src/app/page.tsx`:_
+
+- List all projects
+  `/v1/projects`
+
+- List all databases
+  `/v1/instances/-/databases`
+
+### Create an issue
+_You may find the following API used in `src/app/components/add-issue-form.tsx` and `src/app/api/xxxx/route.ts`:_
+
+In order to create an issue, you need to follow these steps:
+
+1. Create a sheet
+2. Create a plan
+3. Create an issue
+4. Create a rollout
