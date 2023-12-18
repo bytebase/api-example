@@ -6,12 +6,12 @@ This is an experimental project for [Bytebase](https://www.bytebase.com/) API us
 
 ## Getting Started
 
-### 1/2 Run a Bytebase console first
+### 1 Run a Bytebase console
 
 1. Check out [Self-host Bytebase via docker](https://www.bytebase.com/docs/get-started/self-host/#docker) for more information.
 2. Register an admin account.
 
-### 2/2 Run this app
+### 2 Configure and run this app
 
 1. Clone this repository.
 2. Rename `env-template.local` to `.env.local`, update the values of your registered admin account.
@@ -40,7 +40,7 @@ _You may find the following API used in `src/app/components/add-issue-form.tsx` 
 
 In order to create an issue, you need to follow these steps:
 
-1. Create a sheet
-2. Create a plan
-3. Create an issue
-4. Create a rollout
+1. Create a [sheet](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Sheet)
+2. Create a [plan](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Plan)
+3. Create an [issue](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Issue)
+4. Create a [rollout](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Rollout)
