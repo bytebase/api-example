@@ -1,32 +1,61 @@
-# Bytebase API Experiment
+# Bytebase API Sample
 
-This is an experimental project for [Bytebase](https://www.bytebase.com/) API using Next.js.
+This is an sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API
+to create and rollout a database change.
 
-![Bytebase API Experiment with Next.js](public/add-issue.gif)
+Say your organization already has a DevOps platform and you want to integrate the database change
+into the development workflow. This app is for you.
+
+The app is built with Next.js and TailwindCSS
+
+![Bytebase API Experiment with Next.js](docs/add-issue.gif)
+
+## Prerequisites
+
+- Node >= v18
 
 ## Getting Started
 
-### 1 Run a Bytebase console
+### Step 1 - Start Bytebase
 
 1. Check out [Self-host Bytebase via docker](https://www.bytebase.com/docs/get-started/self-host/#docker) for more information.
-2. Register an admin account.
+1. Create a [service account](https://www.bytebase.com/docs/how-to/spanner/how-to-create-a-service-account-for-bytebase/).
+   Choose the `DBA` role which is sufficient for this sample.
 
-### 2 Configure and run this app
+![Service Account Create](docs/service-account-create.webp)
+
+1. Record the service account key.
+
+![Service Account Create](docs/service-account-key.webp)
+
+### Step 2 - Configure and run this app
 
 1. Clone this repository.
-2. Rename `env-template.local` to `.env.local`, update the values of your registered admin account.
-3. Run the following commands:
+1. Copy `env-template.local` to `.env.local`.
 
-```bash
-npm i
-npm run dev
-```
+   ```bash
+   cp env-template.local .env.local
+   ```
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Update the env file with the created service account.
 
-## Dig Deeper
+   - `NEXT_PUBLIC_BB_HOST`. The host where Bytebase is running. This usually is the [external url](https://www.bytebase.com/docs/get-started/install/external-url).
+   - `NEXT_PUBLIC_BB_SERVICE_ACCOUNT`. The service account created in step 1.
+   - `NEXT_PUBLIC_BB_SERVICE_KEY`. The service key created in step 1.
+
+1. Run the following commands:
+
+   ```bash
+   pnpm i
+   pnpm run dev
+   ```
+
+1. Open host with your browser to see the result.
+
+## Implementation
 
 ### Fetch data
+
 _You may find the following API used in `src/app/page.tsx`:_
 
 - List all projects
@@ -36,9 +65,10 @@ _You may find the following API used in `src/app/page.tsx`:_
   `/v1/instances/-/databases`
 
 ### Create an issue
+
 _You may find the following API used in `src/app/components/add-issue-form.tsx` and `src/app/api/xxxx/route.ts`:_
 
-In order to create an issue, you need to follow these steps:
+In order to create an issue, you need to create resources **in the following order**:
 
 1. Create a [sheet](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Sheet)
 2. Create a [plan](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Plan)
