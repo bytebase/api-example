@@ -1,14 +1,12 @@
 # Bytebase API Sample
 
-This is an sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API
-to create and rollout a database change.
+This is an sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API to create and rollout a database change.
 
-Say your organization already has a DevOps platform and you want to integrate the database change
-into the development workflow. This app is for you.
+Say your organization already has a DevOps platform and you want to integrate the database change into the development workflow. This app is for you.
 
-The app is built with Next.js and TailwindCSS
+The app is built with Next.js and TailwindCSS.
 
-![Bytebase API Experiment with Next.js](docs/add-issue.gif)
+![Bytebase API Experiment with Next.js](docs/add-issue-and-refresh.gif)
 
 ## Prerequisites
 
@@ -74,3 +72,7 @@ In order to create an issue, you need to create resources **in the following ord
 2. Create a [plan](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Plan)
 3. Create an [issue](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Issue)
 4. Create a [rollout](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Rollout)
+
+### Fetch issue status
+
+- Get issue by id `/v1/projects/{project}/issues/{issue}`

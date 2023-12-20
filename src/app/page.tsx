@@ -5,6 +5,8 @@ export default async function Home() {
 
   const token = await generateToken();
 
+  console.log("token--------------", token)
+
   /* Fetch all projects */ 
   const allProjectRes = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects`, {
     method: "GET",

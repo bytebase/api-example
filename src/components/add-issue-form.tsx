@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { v4 } from "uuid";
+import generateToken from '@/app/api/token';
 
 export default function AddIssueForm( props ) {
     const [project, setProject] = useState('');
@@ -9,6 +10,7 @@ export default function AddIssueForm( props ) {
     const [database, setDatabase] = useState('');
     const [SQL, setSQL] = useState('');
     const [createdIssueUID, setCreatedIssueUID] = useState('');
+    const [refreshedIssueStatus, setRefreshedIssueStatus] = useState('OPEN');
 
     const allProjects = props['allProjects']
     const allDatabases = props['allDatabases']
@@ -16,6 +18,17 @@ export default function AddIssueForm( props ) {
     const handleSelectProject = (e:React.ChangeEvent<HTMLSelectElement>) => {
         setProject(e.target.value);
         setFilteredDatabases(allDatabases.filter((item) => item.project === e.target.value));
+    }
+
+    const refreshIssue = async () => {
+
+        const refreshedIssue = await fetch('/api/issues/'+encodeURIComponent(project)+'/'+createdIssueUID, {
+            method: 'GET'
+        });
+     
+        const refreshedIssueData = await refreshedIssue.json();
+        console.log("--------- refreshedIssueData ----------", refreshedIssueData);
+        setRefreshedIssueStatus(refreshedIssueData.status);
     }
 
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
@@ -86,7 +99,7 @@ export default function AddIssueForm( props ) {
             "title": `Issue: Change database ${database}`,
             "description": "dddd",
             "type": "DATABASE_CHANGE",
-            "assignee": "users/support@bytebase.com",
+            "assignee": "",
             "plan": createdPlanData.name
         }
 
@@ -112,10 +125,6 @@ export default function AddIssueForm( props ) {
      
         const createdRolloutData = await createdRollout.json();
         console.log("--------- createdRollout ----------", createdRolloutData);
-
-        setProject('');
-        setFilteredDatabases([]);
-        setSQL('');
     }
 
     return (
@@ -151,9 +160,18 @@ export default function AddIssueForm( props ) {
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >Create New Issue</button>
 
-        {createdIssueUID && <a href={process.env.NEXT_PUBLIC_BB_HOST+"/issue/"+createdIssueUID} target="_blank"
-        className="text-center rounded-md px-3 py-2 text-indigo-500 hover:underline">👉 View Created Issue {createdIssueUID } in Bytebase console</a>}
-
+        {createdIssueUID && 
+        
+        <div className="flex">
+             
+            <a href={process.env.NEXT_PUBLIC_BB_HOST+"/issue/"+createdIssueUID} target="_blank"
+        className="flex-1 text-left rounded-md px-3 py-2 text-indigo-500 hover:underline">👉 View Issue {createdIssueUID } in Bytebase [{refreshedIssueStatus}]</a>
+            <button type="button" onClick={() => refreshIssue(createdIssueUID)}
+            className="flex-none rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+             >Refresh Status</button>
+       
+        </div>
+        }
         </form>
         
     )
