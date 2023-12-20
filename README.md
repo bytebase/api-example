@@ -1,6 +1,6 @@
 # Bytebase API Sample
 
-This is an sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API to create and rollout a database change.
+This is a sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API to create and rollout a database change.
 
 Say your organization already has a DevOps platform and you want to integrate the database change into the development workflow. This app is for you.
 
@@ -42,13 +42,7 @@ The app is built with Next.js and TailwindCSS.
    - `NEXT_PUBLIC_BB_SERVICE_KEY`. The service key created in step 1.
 
 1. Run the following commands:
-
-   ```bash
-   pnpm i
-   pnpm run dev
-   ```
-
-1. Open host with your browser to see the result.
+Open the host with your browser to see the result.
 
 ## Implementation
 
@@ -74,5 +68,7 @@ In order to create an issue, you need to create resources **in the following ord
 4. Create a [rollout](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Rollout)
 
 ### Fetch issue status
+
+_You may need to check if an issue has closed in your own platform._
 
 - Get issue by id `/v1/projects/{project}/issues/{issue}`
