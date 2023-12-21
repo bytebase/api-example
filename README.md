@@ -1,4 +1,4 @@
-# Bytebase API Sample
+# Bytebase API Example
 
 This is a sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API to create and rollout a database change.
 
@@ -10,7 +10,7 @@ The app is built with Next.js and TailwindCSS.
 
 ## Prerequisites
 
-- Node >= v18
+- Node >= 18
 
 ## Getting Started
 
@@ -44,17 +44,16 @@ The app is built with Next.js and TailwindCSS.
 1. Run the following commands:
 
    ```bash
-   pnpm i
-   pnpm run dev
+   pnpm i && pnpm dev
    ```
 
-Open the host with your browser to see the result.
+Open the host with your browser to see the running app.
 
-## Implementation
+## API Usage
 
 ### Fetch data
 
-_You may find the following API used in `src/app/page.tsx`:_
+In `src/app/page.tsx`:
 
 - List all projects
   `/v1/projects`
@@ -64,7 +63,7 @@ _You may find the following API used in `src/app/page.tsx`:_
 
 ### Create an issue
 
-_You may find the following API used in `src/app/components/add-issue-form.tsx` and `src/app/api/xxxx/route.ts`:_
+In `src/app/components/add-issue-form.tsx` and `src/app/api/xxxx/route.ts`:
 
 In order to create an issue, you need to create resources **in the following order**:
 
@@ -75,6 +74,6 @@ In order to create an issue, you need to create resources **in the following ord
 
 ### Fetch issue status
 
-_You may need to check if an issue has closed in your own platform._
+In `src/app/components/add-issue-form.tsx`:
 
 - Get issue by id `/v1/projects/{project}/issues/{issue}`
