@@ -42,6 +42,12 @@ The app is built with Next.js and TailwindCSS.
    - `NEXT_PUBLIC_BB_SERVICE_KEY`. The service key created in step 1.
 
 1. Run the following commands:
+
+   ```bash
+   pnpm i
+   pnpm run dev
+   ```
+
 Open the host with your browser to see the result.
 
 ## Implementation
