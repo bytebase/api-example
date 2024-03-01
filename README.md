@@ -53,6 +53,8 @@ Open the host with your browser to see the running app.
 
 ## API Usage
 
+API Doc: https://github.com/bytebase/bytebase/blob/main/proto/gen/grpc-doc/v1/README.md
+
 ### Fetch data
 
 In `src/app/page.tsx`:
@@ -69,10 +71,10 @@ In `src/app/components/add-issue-form.tsx` and `src/app/api/xxxx/route.ts`:
 
 In order to create an issue, you need to create resources **in the following order**:
 
-1. Create a [sheet](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Sheet)
-2. Create a [plan](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Plan)
-3. Create an [issue](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Issue)
-4. Create a [rollout](https://github.com/bytebase/bytebase/blob/061e6faf452e1c065fb7a209c52484bd88788945/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Rollout)
+1. Create a [sheet](https://github.com/bytebase/bytebase/blob/main/proto/gen/grpc-doc/v1/README.md#bytebase-v1-sheet)
+1. Create a [plan](https://github.com/bytebase/bytebase/blob/main/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Plan)
+1. Create an [issue](https://github.com/bytebase/bytebase/blob/main/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Issue)
+1. Create a [rollout](https://github.com/bytebase/bytebase/blob/main/proto/gen/grpc-doc/v1/README.md#bytebase-v1-Rollout)
 
 ### Fetch issue status
 
