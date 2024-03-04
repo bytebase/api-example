@@ -13,7 +13,7 @@ export async function POST(request: Request,
         'Content-Type': 'application/json',
         "Authorization": 'Bearer '+ token
       },
-      body: JSON.stringify(req.plan)
+      body: JSON.stringify(req)
     });
    
     const data = await res.json();
