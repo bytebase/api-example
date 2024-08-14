@@ -81,3 +81,5 @@ In order to create an issue, you need to create resources **in the following ord
 In `src/app/components/add-issue-form.tsx`:
 
 - Get issue by id `/v1/projects/{project}/issues/{issue}`
+
+### SQL Check

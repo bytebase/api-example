@@ -10,6 +10,7 @@ export default function AddIssueForm( props ) {
     const [database, setDatabase] = useState('');
     const [SQL, setSQL] = useState('');
     const [createdIssueUID, setCreatedIssueUID] = useState('');
+    const [checkResult, setCheckResult] = useState('');
     const [refreshedIssueStatus, setRefreshedIssueStatus] = useState('OPEN');
 
     const allProjects = props['allProjects']
@@ -29,6 +30,32 @@ export default function AddIssueForm( props ) {
         const refreshedIssueData = await refreshedIssue.json();
         console.log("--------- refreshedIssueData ----------", refreshedIssueData);
         setRefreshedIssueStatus(refreshedIssueData.status);
+    }
+
+    const handleCheck = async (e:React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+
+        if(!SQL || !project || !database) return;
+
+        console.log("handleCheck", SQL, database);
+
+            /**
+         * Create a check
+         */
+            let newCheck = {
+                name: database,
+                statement: SQL
+            };
+    
+            const createdCheck = await fetch('/api/checks/', {
+                method: 'POST',
+                body:JSON.stringify(newCheck)
+            });
+
+            const createdCheckData = await createdCheck.json();
+            console.log("--------- createdCheckData ----------",createdCheckData);
+
+            setCheckResult(createdCheckData);     
     }
 
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
@@ -155,6 +182,18 @@ export default function AddIssueForm( props ) {
             cols={20} rows={3} 
             onChange={e => setSQL(e.target.value)}
             value={SQL} placeholder="Input your SQL here, e.g. ALTER TABLE ..." />
+        
+
+
+        <div className="flex flex-col">
+        <button type="button" className="rounded-md bg-yellow-500  px-3 py-2 text-sm font-semibold text-white shadow-sm" onClick={handleCheck}>Run SQL Review only</button>
+        {checkResult && 
+        <ul className="bg-yellow-100">
+            {checkResult.advices.map((subject, index) => (
+                  <li key={index} className="py-4">{index} {JSON.stringify(subject)}</li>
+            ))}
+        </ul>}
+        </div>
 
           <button type="submit"
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
