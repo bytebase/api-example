@@ -83,3 +83,4 @@ In `src/app/components/add-issue-form.tsx`:
 - Get issue by id `/v1/projects/{project}/issues/{issue}`
 
 ### SQL Check
+added 2024/8/15, which is not included in the tutorial
