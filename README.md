@@ -1,7 +1,7 @@
 # Bytebase API Example
 
-1. [Create an issue](#create-an-issue)
-1. [Check the permissions](#check-the-permissions)
+1. [Create an Issue](#create-an-issue)
+1. [Check the Permission](#check-the-permission)
 
 ## Create an Issue
 
@@ -90,10 +90,10 @@ In `src/app/components/add-issue-form.tsx`:
 ### SQL Check
 added 2024/8/15, which is not included in the tutorial
 
-## Check the Permissions
+## Check the Permission
 
 This is a sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API to check which users have a specific database permission.
 
-![Check db permissions](issue-creation/docs/check-db-permission.gif)
+![Check db permissions](permission-check/docs/check-db-permission.gif)
 
 To be continued...
