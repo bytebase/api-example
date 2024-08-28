@@ -1,7 +1,7 @@
 # Bytebase API Example
 
-1. [Create an issue](#1-create-an-issue)
-1. [Check the permissions](#2-check-the-permissions)
+1. [Create an issue](#create-an-issue)
+1. [Check the permissions](#check-the-permissions)
 
 ## Create an Issue
 
