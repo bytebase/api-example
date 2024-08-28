@@ -1,9 +1,9 @@
 # Bytebase API Example
 
-- [1. Create an issue](#1-create-an-issue)
-- [2. Check the permissions](#2-check-the-permissions)
+1. [Create an issue](#1-create-an-issue)
+1. [Check the permissions](#2-check-the-permissions)
 
-## 1. Create an issue
+## Create an Issue
 
 Corresponding [tutorial 🔗](https://www.bytebase.com/docs/tutorials/api/).
 
@@ -90,7 +90,6 @@ In `src/app/components/add-issue-form.tsx`:
 ### SQL Check
 added 2024/8/15, which is not included in the tutorial
 
-
-## 2. Check the permissions
+## Check the Permissions
 
 To be continued...
