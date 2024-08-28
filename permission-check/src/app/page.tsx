@@ -14,7 +14,7 @@ export default async function Home() {
       "Authorization": 'Bearer '+ token
   }});
   const allWorkspaceIamData = await allWorkspaceIam.json();
-  console.log("allWorkspaceIamData--------------", allWorkspaceIamData);
+//  console.log("allWorkspaceIamData--------------", allWorkspaceIamData);
 
   /* Fetch all roles in workspace */
   const allRoles = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/roles`, {

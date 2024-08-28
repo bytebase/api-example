@@ -13,7 +13,7 @@ Say your organization already has a DevOps platform and you want to integrate th
 
 The app is built with Next.js and TailwindCSS.
 
-![Bytebase API Experiment with Next.js](issue-creation/docs/add-issue-and-refresh.gif)
+![add issue](issue-creation/docs/add-issue-and-refresh.gif)
 
 ## Prerequisites
 
@@ -91,5 +91,9 @@ In `src/app/components/add-issue-form.tsx`:
 added 2024/8/15, which is not included in the tutorial
 
 ## Check the Permissions
+
+This is a sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API to check which users have a specific database permission.
+
+![Check db permissions](issue-creation/docs/check-db-permission.gif)
 
 To be continued...
