@@ -1,5 +1,10 @@
 # Bytebase API Example
 
+[1. Create an issue](#1-create-an-issue)
+[2. Check the permissions](#2-check-the-permissions)
+
+## 1. Create an issue
+
 Corresponding [tutorial 🔗](https://www.bytebase.com/docs/tutorials/api/).
 
 This is a sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API to create and rollout a database change.
@@ -84,3 +89,8 @@ In `src/app/components/add-issue-form.tsx`:
 
 ### SQL Check
 added 2024/8/15, which is not included in the tutorial
+
+
+## 2. Check the permissions
+
+To be continued...
