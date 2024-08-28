@@ -1,7 +1,7 @@
 # Bytebase API Example
 
-[1. Create an issue](#1-create-an-issue)
-[2. Check the permissions](#2-check-the-permissions)
+- [1. Create an issue](#1-create-an-issue)
+- [2. Check the permissions](#2-check-the-permissions)
 
 ## 1. Create an issue
 
@@ -13,7 +13,7 @@ Say your organization already has a DevOps platform and you want to integrate th
 
 The app is built with Next.js and TailwindCSS.
 
-![Bytebase API Experiment with Next.js](docs/add-issue-and-refresh.gif)
+![Bytebase API Experiment with Next.js](issue-creation/docs/add-issue-and-refresh.gif)
 
 ## Prerequisites
 
@@ -27,11 +27,11 @@ The app is built with Next.js and TailwindCSS.
 1. Create a [service account](https://www.bytebase.com/docs/how-to/spanner/how-to-create-a-service-account-for-bytebase/).
    Choose the `DBA` role which is sufficient for this sample.
 
-![Service Account Create](docs/service-account-create.webp)
+![Service Account Create](issue-creation/docs/service-account-create.webp)
 
 1. Record the service account key.
 
-![Service Account Create](docs/service-account-key.webp)
+![Service Account Create](issue-creation/docs/service-account-key.webp)
 
 ### Step 2 - Configure and run this app
 
