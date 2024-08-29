@@ -1,58 +1,42 @@
 import FetchDbPermissionForm from "@/components/fetch-db-permission-form";
-import generateToken from "@/app/api/token";
+import FetchUserPermissionForm from "@/components/fetch-user-permission-form";
+import { fetchData, generateToken } from "@/app/api/utils";
 
 export default async function Home() {
 
   const token = await generateToken();
 
-  /* Fetch all users&roles in workspace */
-  const allWorkspaceIam = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/workspaces/*:getIamPolicy`, {
-    method: "GET",
-    headers: {
-      "Authorization": 'Bearer '+ token
-    }});
-  const allWorkspaceIamData = await allWorkspaceIam.json();
+  const allWorkspaceIamData = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/workspaces/*:getIamPolicy`, token);
+  const allGroupsData = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/groups`, token);
+  const allRolesData = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/roles`, token);
+  const allProjectData = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects`, token);
+  const allUsersData = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/users`, token);
 
-  const allGroups = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/groups`, {
-    method: "GET",
-    headers: {
-      "Authorization": 'Bearer '+ token
-  }});
-  const allGroupsData = await allGroups.json();
-
-  /* Fetch all roles in workspace */
-  const allRoles = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/roles`, {
-    method: "GET",
-    headers: {
-      "Authorization": 'Bearer '+ token
-  }});
-  const allRolesData = await allRoles.json();
+  console.log("allUsersData --------------", allUsersData.users)
   
    // Combine all permissions from roles and remove duplicates
-  let allDatabasePermissions = new Set();
-   allRolesData.roles.forEach(role => {
-     role.permissions.forEach(permission => {
-        if (permission.includes("bb.databases")) {  // only care about databases permissions
-       allDatabasePermissions.add(permission);}
-     });
-   });
-   const allDatabasePermissionsData = Array.from(allDatabasePermissions);
- 
-  /* Fetch all projects */
-  const allProjects = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects`, {
-    method: "GET",
-    headers: {
-      "Authorization": 'Bearer '+ token
-  }});
-  const allProjectData = await allProjects.json();
+  const allDatabasePermissions = new Set(
+    allRolesData.roles.flatMap(role =>
+      role.permissions.filter(permission => permission.includes("bb.databases"))
+    )
+  );
+  const allDatabasePermissionsData = Array.from(allDatabasePermissions);
 
   return (
-    <main className="flex flex-col w-full p-10 items-center">
-            <FetchDbPermissionForm 
+    <main className="flex flex-row w-full p-10 items-start">
+            <FetchDbPermissionForm
             allProjects={allProjectData.projects}
             allWorkspaceIam={allWorkspaceIamData}
             allRoles={allRolesData.roles}
             allDatabasePermissions={allDatabasePermissionsData}
+            allGroups={allGroupsData}
+            />
+            <FetchUserPermissionForm 
+            allUsers={allUsersData.users}
+            allDatabasePermissions={allDatabasePermissionsData}
+            allProjects={allProjectData.projects}
+            allWorkspaceIam={allWorkspaceIamData}
+            allRoles={allRolesData.roles}
             allGroups={allGroupsData}
             />
     </main>

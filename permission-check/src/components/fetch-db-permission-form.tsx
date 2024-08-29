@@ -76,9 +76,25 @@ export default function FetchDbPermissionForm( props ) {
             const hasPermission = rolesWithPermission.some((role: any) => role.name === iam.role);
             
             if (hasPermission) {
-                if (!iam.condition.expression || iam.condition.expression.includes(database)) {
-                    console.log("database includes iam.condition.expression or there is no condition");
+                if (!iam.condition?.expression) {
                     return true;
+                }
+                
+                const condition = iam.condition.expression;
+                const databaseCheck = condition.includes(database);
+                const timeCheck = condition.includes('request.time');
+                
+                if (databaseCheck && !timeCheck) {
+                    return true;
+                }
+                
+                if (databaseCheck && timeCheck) {
+                    const expirationMatch = condition.match(/timestamp\("(.+?)"\)/);
+                    if (expirationMatch) {
+                        const expirationTime = new Date(expirationMatch[1]);
+                        const currentTime = new Date();
+                        return currentTime < expirationTime;
+                    }
                 }
             }
             return false;
@@ -88,7 +104,9 @@ export default function FetchDbPermissionForm( props ) {
     }
 
     return (
-        <form onSubmit={handleSubmit}  className="md:w-1/2 sm:w-full flex gap-3 flex-col">                    
+        <form onSubmit={handleSubmit}  className="md:w-1/2 sm:w-full flex gap-3 flex-col p-10 border-yellow-600 border-4">        
+        <h1 className="text-2xl font-bold">Who has access to this database?</h1>            
+       
         <select name="project" id="project" value={project} onChange={(e) => handleSelectProject(e)}
         className="w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
         <option value="">-- Please select a project --</option>
@@ -99,42 +117,6 @@ export default function FetchDbPermissionForm( props ) {
                 return <option key={index} value={item.name}>{item.title}</option>
         })}
         </select>
-        
-        {/*<div className="flex flex-col">
-
-        <div>
-        <strong>Project IAM</strong>
-        {projectIam.map((item, index) => {
-            return <div key={index}>
-                {item.role}
-
-                {item.members.map((member, index) => {
-                    return <div key={index}>
-                        {member}
-                    </div>
-                })}
-
-                </div>
-        })}
-        </div>
-
-        <div>
-        <strong>Workspace IAM</strong>
-        {workspaceIam.map((item, index) => {
-            return <div key={index}>
-                {item.role}
-
-                {item.members.map((member, index) => {
-                    return <div key={index}>
-                        {member}
-                    </div>
-                })}
-
-                </div>
-        })}
-        </div>
-        </div>
-        */}
 
         <select name="database" id="database" value={database} onChange={(e) => handleSelectDatabase(e)}
         className="w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
