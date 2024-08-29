@@ -7,7 +7,9 @@ export default async function generateToken(){
     headers: {
     'Content-Type': 'application/json',
     'Accept-Encoding': 'deflate, gzip',
-  }});
+  },
+      cache: 'no-store'
+});
 
     const token = await res.json();
     return token.token;
