@@ -5,16 +5,20 @@ export default async function Home() {
 
   const token = await generateToken();
 
- // console.log("token--------------", token)
-
    /* Fetch all users&roles in workspace */
    const allWorkspaceIam = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/workspaces/*:getIamPolicy`, {
     method: "GET",
     headers: {
       "Authorization": 'Bearer '+ token
   }});
+  
   const allWorkspaceIamData = await allWorkspaceIam.json();
-//  console.log("allWorkspaceIamData--------------", allWorkspaceIamData);
+    const allGroups = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/groups`, {
+      method: "GET",
+      headers: {
+        "Authorization": 'Bearer '+ token
+    }});
+    const allGroupsData = await allGroups.json();
 
   /* Fetch all roles in workspace */
   const allRoles = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/roles`, {
@@ -28,7 +32,7 @@ export default async function Home() {
   let allDatabasePermissions = new Set();
    allRolesData.roles.forEach(role => {
      role.permissions.forEach(permission => {
-        if (permission.includes("bb.databases")) {
+        if (permission.includes("bb.databases")) {  // only care about databases permissions
        allDatabasePermissions.add(permission);}
      });
    });
@@ -42,16 +46,15 @@ export default async function Home() {
   }});
   const allProjectData = await allProjectRes.json();
 
- // console.log("allProjectData--------------", allProjectData)
-
-
   return (
     <main className="flex flex-col w-full p-10 items-center">
             <FetchDbPermissionForm 
             allProjects={allProjectData.projects}
             allWorkspaceIam={allWorkspaceIamData}
             allRoles={allRolesData.roles}
-            allDatabasePermissions={allDatabasePermissionsData} />
+            allDatabasePermissions={allDatabasePermissionsData}
+            allGroups={allGroupsData}
+            />
     </main>
   );
 }

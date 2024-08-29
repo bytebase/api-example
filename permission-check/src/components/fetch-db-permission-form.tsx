@@ -8,14 +8,13 @@ export default function FetchDbPermissionForm( props ) {
     const allWorkspaceIam = props['allWorkspaceIam']
     const allRoles = props['allRoles']
     const allDatabasePermissions = props['allDatabasePermissions']
+    const allGroups = props['allGroups']
 
     const [project, setProject] = useState('');
     const [filteredDatabases, setFilteredDatabases] = useState([])
     const [database, setDatabase] = useState('')
     const [projectIam, setProjectIam] = useState([])
     const [workspaceIam, setWorkspaceIam] = useState([])
-    const [roles, setRoles] = useState([])
-    const [databasePermissions, setDatabasePermissions] = useState([])
     const [permission, setPermission] = useState('')
     const [rolesWithPermission, setRolesWithPermission] = useState([])
     const [membersWithPermission, setMembersWithPermission] = useState([])
@@ -31,7 +30,6 @@ export default function FetchDbPermissionForm( props ) {
             method: 'GET'
         })
         const fetchedDatabasesData = await fetchedDatabases.json()
-        console.log("fetchedDatabasesData--------------", fetchedDatabasesData)
         setFilteredDatabases(fetchedDatabasesData.databases)
 
         // fetch project iam
@@ -43,8 +41,6 @@ export default function FetchDbPermissionForm( props ) {
         const fetchedProjectIamData = await fetchedProjectIam.json()
         setProjectIam(fetchedProjectIamData.bindings)
         setWorkspaceIam(allWorkspaceIam.bindings)
-        setRoles(allRoles)
-        setDatabasePermissions(allDatabasePermissions)
     }
 
     const handleSelectPermission = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -77,27 +73,15 @@ export default function FetchDbPermissionForm( props ) {
             ...projectIam,
             ...workspaceIam
         ].filter((iam) => {
-           // console.log("filter iam", iam)
             const hasPermission = rolesWithPermission.some((role: any) => role.name === iam.role);
             
             if (hasPermission) {
-                console.log(`Role ${iam.role} has the permission`)
-                if (!iam.condition.expression) {
-                    console.log("iam.condition.expression empty!!! will return true", iam.condition.expression)
-                    return true
-                } else {
-                    console.log("iam.condition.expression", iam.condition.expression)
-                    console.log("database", database)
-                    if (iam.condition.expression.includes(database)) {
-                        console.log("database includes iam.condition.expression")
-                        return true
-                    } else {
-                        return false
-                    }
+                if (!iam.condition.expression || iam.condition.expression.includes(database)) {
+                    console.log("database includes iam.condition.expression or there is no condition");
+                    return true;
                 }
-            } else {
-                return false
-            } 
+            }
+            return false;
 
         }).flatMap(iam => iam.members)
         setMembersWithPermission(membersWithPermission)
@@ -188,8 +172,23 @@ export default function FetchDbPermissionForm( props ) {
             <ul>
                 {membersWithPermission.map((item, index) => (
                     <li key={index}>
-                        {item}
-                    </li>
+                    {item}
+                    {typeof item === 'string' && item.startsWith('group:') && (
+                        allGroups.groups.map((group: any, groupIndex: number) => {
+                            const replacedItem = (item as string).replace('group:', 'groups/');
+                            if (group.name === replacedItem) {
+                                return (
+                                <ul key={groupIndex} className="bg-gray-100 p-2 rounded-md">
+                                    <strong>This group includes these members:</strong>
+                                    {group.members.map((m: any, i: number) => (
+                                        <li key={i}>{m.member}</li>
+                                    ))}
+                                </ul>
+                                );
+                            }
+                        })
+                    )}
+                </li>
                 ))}
             </ul>
             </div>
