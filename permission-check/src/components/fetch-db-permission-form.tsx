@@ -105,7 +105,7 @@ export default function FetchDbPermissionForm( props ) {
 
     return (
         <form onSubmit={handleSubmit}  className="md:w-1/2 sm:w-full flex gap-3 flex-col p-10 border-yellow-600 border-4">        
-        <h1 className="text-2xl font-bold">Who has access to this database?</h1>            
+        <h1 className="text-2xl font-bold">Who has access to a specific database?</h1>            
        
         <select name="project" id="project" value={project} onChange={(e) => handleSelectProject(e)}
         className="w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600">

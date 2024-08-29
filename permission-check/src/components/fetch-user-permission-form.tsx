@@ -100,7 +100,7 @@ export default function FetchUserPermissionForm( props ) {
 
     return (
         <form onSubmit={handleSubmit}  className="md:w-1/2 sm:w-full flex gap-3 flex-col p-10 border-green-600 border-4">        
-        <h1 className="text-2xl font-bold">Which databases does this user have access to?</h1>  
+        <h1 className="text-2xl font-bold">Which databases does a specific user have access to?</h1>  
 
         <select 
                 className="p-2 border rounded"

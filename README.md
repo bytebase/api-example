@@ -92,8 +92,11 @@ added 2024/8/15, which is not included in the tutorial
 
 ## Check the Permission
 
-This is a sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API to check which users have a specific database permission.
+This is a sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API to check:
 
-![Check db permissions](permission-check/docs/check-db-permissions.gif)
+- Who has access to a specific database?
+- Which databases does a specific user have access to?
+
+![Check db and user permissions](permission-check/docs/check-db-user-permissions.gif)
 
 To be continued...
