@@ -1,6 +1,5 @@
 "use client"
 
-import { group } from "console";
 import { SetStateAction, useEffect, useState } from "react";
 
 export default function FetchUserPermissionForm( props ) {
@@ -57,7 +56,7 @@ export default function FetchUserPermissionForm( props ) {
                 });
                 const fetchedProjectIamData = await fetchedProjectIam.json();
     
-                const userHasPermissionProject = checkUserPermission(rolesWithPermission, fetchedProjectIamData.bindings, userGroups.length > 0);
+                const userHasPermissionProject = checkUserPermission(rolesWithPermission, fetchedProjectIamData.bindings, userGroups.length > 0, true);
                 if (userHasPermissionProject) {
                     console.log("User has permission for the project:", project.name);
                     const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
@@ -71,7 +70,7 @@ export default function FetchUserPermissionForm( props ) {
             setDatabasesWithPermission(newDatabasesWithPermission);
     }
 
-    const checkUserPermission = (roles: any[], bindings: any[], hasGroups: boolean = false): boolean => {
+    const checkUserPermission = (roles: any[], bindings: any[], hasGroups: boolean = false, isProject: boolean = false): boolean => {
         
         return roles.some((role) =>
             bindings.some((binding) => {
