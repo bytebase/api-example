@@ -12,7 +12,7 @@ export default async function Home() {
   const allProjectData = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects`, token);
   const allUsersData = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/users`, token);
 
-  console.log("allUsersData --------------", allUsersData.users)
+ // console.log("allUsersData --------------", allUsersData.users)
   
    // Combine all permissions from roles and remove duplicates
   const allDatabasePermissions = new Set(
