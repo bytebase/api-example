@@ -2,14 +2,7 @@
 
 import { SetStateAction, useEffect, useState } from "react";
 
-export default function FetchUserPermissionForm( props ) {
-
-    const allUsers = props['allUsers'];
-    const allDatabasePermissions = props['allDatabasePermissions'];
-    const allProjects = props['allProjects'];
-    const allWorkspaceIam = props['allWorkspaceIam'];
-    const allRoles = props['allRoles'];
-    const allGroups = props['allGroups']; 
+export default function FetchUserPermissionForm({ allUsers, allDatabasePermissions, allProjects, allWorkspaceIam, allRoles, allGroups }) {
 
     const [userGroups, setUserGroups] = useState([])
     const [user, setUser] = useState('')
@@ -20,8 +13,14 @@ export default function FetchUserPermissionForm( props ) {
     const handleSelectUser = (e) => {setUser(e.target.value); setPermission('')};
     const handleSelectPermission = (e) => { setPermission(e.target.value); };
 
+    useEffect(() => {
+        if (user || permission) {
+            updateDatabasesWithPermission();
+        }
+    }, [user, permission]);
+
     const updateDatabasesWithPermission = async () => {
-        console.log("enter updateDatabasesWithPermission ===================")
+     //   console.log("enter updateDatabasesWithPermission ===================")
 
         const newDatabasesWithPermission: Array<{project: string, databases: any[]}> = [];
 
@@ -37,7 +36,7 @@ export default function FetchUserPermissionForm( props ) {
         setUserGroups(newUserGroups);
 
         if (userHasPermissionWorkspace.hasPermission) {
-            console.log("!!!!!!!!!!!!!User has permission for the whole workspace:",userHasPermissionWorkspace);
+          //  console.log("!!!!!!!!!!!!!User has permission for the whole workspace:",userHasPermissionWorkspace);
             for (const project of allProjects) {
                 const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
                     method: 'GET'
@@ -47,7 +46,7 @@ export default function FetchUserPermissionForm( props ) {
             }
 
         } else {
-            console.log("User does not have permission for the whole workspace, let's check the project iam");
+           // console.log("User does not have permission for the whole workspace, let's check the project iam");
             for (const project of allProjects) {
                 const projectShort = project.name.split("/")[1];
                 const fetchedProjectIam = await fetch(`/api/projectiam/${encodeURIComponent(projectShort)}`, {
@@ -57,7 +56,7 @@ export default function FetchUserPermissionForm( props ) {
     
                 const userHasPermissionProject = checkUserPermission(rolesWithPermission, fetchedProjectIamData.bindings, userGroups.length > 0, project.name);
                 if (userHasPermissionProject.hasPermission) { // we should check if the permission is for databases only
-                    console.log("User has permission for the project:", project.name);
+                   // console.log("User has permission for the project:", project.name);
                     const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
                         method: 'GET'
                     });
@@ -120,11 +119,6 @@ export default function FetchUserPermissionForm( props ) {
         return { hasPermission: false, onlyDatabase: databaseMatch[1] };
     };
 
-    useEffect(() => {
-        if (user || permission) {
-            updateDatabasesWithPermission();
-        }
-    }, [user, permission]);
 
     return (
         <form onSubmit={handleSubmit}  className="md:w-1/2 sm:w-full flex gap-3 flex-col p-10 border-green-600 border-4">        

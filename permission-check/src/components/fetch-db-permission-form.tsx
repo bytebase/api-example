@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export default function FetchDbPermissionForm( props ) {
-    
-    const allProjects = props['allProjects']
-    const allWorkspaceIam = props['allWorkspaceIam']
-    const allRoles = props['allRoles']
-    const allDatabasePermissions = props['allDatabasePermissions']
-    const allGroups = props['allGroups']
+export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, allRoles, allDatabasePermissions, allGroups }) {
 
     const [project, setProject] = useState('');
     const [filteredDatabases, setFilteredDatabases] = useState([])
