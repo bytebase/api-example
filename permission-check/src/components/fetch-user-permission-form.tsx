@@ -17,7 +17,7 @@ export default function FetchUserPermissionForm( props ) {
     const [databasesWithPermission, setDatabasesWithPermission] = useState<Array<{project: string, databases: any[]}>>([])
 
     const handleSubmit = (e) => { e.preventDefault();}
-    const handleSelectUser = (e) => {setUser(e.target.value);};
+    const handleSelectUser = (e) => {setUser(e.target.value); setPermission('')};
     const handleSelectPermission = (e) => { setPermission(e.target.value); };
 
     const updateDatabasesWithPermission = async () => {
@@ -25,14 +25,7 @@ export default function FetchUserPermissionForm( props ) {
 
         const newDatabasesWithPermission: Array<{project: string, databases: any[]}> = [];
 
-        console.log("before rolesWithPermission ------------------")
-        console.log("permission", permission)
-        console.log("allRoles", allRoles)
-
         const rolesWithPermission = allRoles.filter((role) => role.permissions.includes(permission));
-
-        console.log("after rolesWithPermission ------------------", rolesWithPermission)
-
         const userHasPermissionWorkspace = checkUserPermission(rolesWithPermission, allWorkspaceIam.bindings);
 
         const newUserGroups: SetStateAction<never[]> = [];
@@ -85,71 +78,48 @@ export default function FetchUserPermissionForm( props ) {
     }
 
     const checkUserPermission = (roles: any[], bindings: any[], hasGroups: boolean = false, theProject: string = ''): { hasPermission: boolean, onlyDatabase: string } => {
-        let hasPermission = false;
-        let onlyDatabase = '';
-
-        if (roles.length === 0 || bindings.length === 0) {
-            return { hasPermission: false, onlyDatabase: '' };
-        }
-        
-        for (const role of roles) {
-            for (const binding of bindings) {
-                const roleMatch = binding.role === role.name;
-                const memberMatch = binding.members.includes(`user:${user}`);
-                let groupMatch = false;
     
-                if (roleMatch && hasGroups) {
-                    for (const groupName of userGroups) {
-                        console.log("user group:", groupName);
-                        if (binding.members.includes(groupName.replace('groups/', 'group:'))) {
-                            groupMatch = true;
-                            break; // Exit the loop once a match is found
-                        }
-                    }
-                }
-                //console.log("before check theproject!==''", theProject !== '')
-                if (roleMatch && (memberMatch || groupMatch) && theProject !== '') {
-
-                    // when the project is not empty, it might be that the permission is only for a specific database in that project
-                    if (binding.condition && binding.condition.expression) {
-
-                        let conditionMatch = true;
-                       // console.log("binding.condition.expression", binding.condition.expression)
-                       // console.log("binding", binding)
-                        const databaseMatch = binding.condition.expression.match(/resource\.database\s+in\s+\["([^"]+)"\]/);
-                        const timestampMatch = binding.condition.expression.match(/request\.time\s*<\s*timestamp\("([^"]+)"\)/);
+        for (const binding of bindings) {
+            if (!roles.some(role => role.name === binding.role)) continue;
     
-                        if (databaseMatch) {
-
-                            conditionMatch = true;
+            const memberMatch = binding.members.includes(`user:${user}`);
+            const groupMatch = hasGroups && userGroups.some(group => 
+                binding.members.includes(group.replace('groups/', 'group:'))
+            );
     
-                            if (timestampMatch) {
-                                const expirationTime = new Date(timestampMatch[1]);
-                                const currentTime = new Date();
-                                conditionMatch = currentTime < expirationTime;
-                            }
-
-                            if (conditionMatch) {
-                                onlyDatabase = databaseMatch[1];
-                            } else {
-                                onlyDatabase = '';
-                            }
-                        }
-                    }
-                    break;
-                } else {
-
-                    if (roleMatch && (memberMatch || groupMatch)) {
-                        hasPermission = true;
-                        break;
+            if (memberMatch || groupMatch) {
+                if (theProject !== '') {
+                    return checkProjectSpecificPermission(binding);
                 }
-                }
+                return { hasPermission: true, onlyDatabase: '' };
             }
         }
     
-      //  console.log("before return", { 'hasPermission': hasPermission && onlyDatabase === '', 'onlyDatabase': onlyDatabase })
-        return { 'hasPermission': hasPermission && onlyDatabase === '', 'onlyDatabase': onlyDatabase };
-    }
+        return { hasPermission: false, onlyDatabase: '' };
+    };
+    
+    const checkProjectSpecificPermission = (binding: any): { hasPermission: boolean, onlyDatabase: string } => {
+        if (!binding.condition || !binding.condition.expression) {
+            return { hasPermission: true, onlyDatabase: '' };
+        }
+    
+        const { expression } = binding.condition;
+        const databaseMatch = expression.match(/resource\.database\s+in\s+\["([^"]+)"\]/);
+        const timestampMatch = expression.match(/request\.time\s*<\s*timestamp\("([^"]+)"\)/);
+    
+        if (!databaseMatch) {
+            return { hasPermission: true, onlyDatabase: '' };
+        }
+    
+        if (timestampMatch) {
+            const expirationTime = new Date(timestampMatch[1]);
+            if (new Date() >= expirationTime) {
+                return { hasPermission: false, onlyDatabase: '' };
+            }
+        }
+    
+        return { hasPermission: false, onlyDatabase: databaseMatch[1] };
+    };
 
     useEffect(() => {
         if (permission || user) {
