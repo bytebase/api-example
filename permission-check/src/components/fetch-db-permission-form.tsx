@@ -24,6 +24,8 @@ export default function FetchDbPermissionForm( props ) {
 
         const projectValue = e.target.value
         setProject(projectValue);
+        setPermission('');
+        setDatabase('');
         // projectValue e.g.: projects/project-sample
         // fetch databases
         const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(projectValue)}`,{
@@ -43,23 +45,25 @@ export default function FetchDbPermissionForm( props ) {
         setWorkspaceIam(allWorkspaceIam.bindings)
     }
 
-    const handleSelectPermission = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setPermission(e.target.value);
-    };
-
-    const handleSelectDatabase = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setDatabase(e.target.value);
-    };
-
-    useEffect(() => {
-        if (permission || database) {
-            updateMembersWithPermission();
-        }
-    }, [permission, database]);
 
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
     }
+
+    const handleSelectDatabase = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setDatabase(e.target.value);
+        setPermission('');
+    };
+
+    const handleSelectPermission = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setPermission(e.target.value);
+    };
+
+    useEffect(() => {
+        if (permission || database || project) {
+            updateMembersWithPermission();
+        }
+    }, [permission, database, project]);
 
     const updateMembersWithPermission = () => {
         // find all roles that have the permission

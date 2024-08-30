@@ -4,7 +4,7 @@ import { SetStateAction, useEffect, useState } from "react";
 
 export default function FetchUserPermissionForm( props ) {
 
-    const users = props['allUsers'];
+    const allUsers = props['allUsers'];
     const allDatabasePermissions = props['allDatabasePermissions'];
     const allProjects = props['allProjects'];
     const allWorkspaceIam = props['allWorkspaceIam'];
@@ -29,7 +29,6 @@ export default function FetchUserPermissionForm( props ) {
         const userHasPermissionWorkspace = checkUserPermission(rolesWithPermission, allWorkspaceIam.bindings);
 
         const newUserGroups: SetStateAction<never[]> = [];
-
         allGroups.groups.map((group: any, groupIndex: number) => {
             if (group.members.some((m) => m.member.includes(user))) {
                 newUserGroups.push(group.name);
@@ -122,10 +121,10 @@ export default function FetchUserPermissionForm( props ) {
     };
 
     useEffect(() => {
-        if (permission || user) {
+        if (user || permission) {
             updateDatabasesWithPermission();
         }
-    }, [permission, user]);
+    }, [user, permission]);
 
     return (
         <form onSubmit={handleSubmit}  className="md:w-1/2 sm:w-full flex gap-3 flex-col p-10 border-green-600 border-4">        
@@ -137,7 +136,7 @@ export default function FetchUserPermissionForm( props ) {
                 onChange={(e) => handleSelectUser(e)}
             >
                 <option value="">-- Select a user --</option>
-                {users.map(user => (
+                {allUsers.map(user => (
                     <option key={user.name} value={user.email}>{user.email}</option>
                 ))}
             </select>
