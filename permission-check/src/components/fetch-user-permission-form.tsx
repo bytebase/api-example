@@ -21,10 +21,17 @@ export default function FetchUserPermissionForm( props ) {
     const handleSelectPermission = (e) => { setPermission(e.target.value); };
 
     const updateDatabasesWithPermission = async () => {
+        console.log("enter updateDatabasesWithPermission ===================")
 
         const newDatabasesWithPermission: Array<{project: string, databases: any[]}> = [];
-        
+
+        console.log("before rolesWithPermission ------------------")
+        console.log("permission", permission)
+        console.log("allRoles", allRoles)
+
         const rolesWithPermission = allRoles.filter((role) => role.permissions.includes(permission));
+
+        console.log("after rolesWithPermission ------------------", rolesWithPermission)
 
         const userHasPermissionWorkspace = checkUserPermission(rolesWithPermission, allWorkspaceIam.bindings);
 
@@ -37,8 +44,8 @@ export default function FetchUserPermissionForm( props ) {
         }) 
         setUserGroups(newUserGroups);
 
-        if (userHasPermissionWorkspace) {
-            console.log("User has permission for the whole workspace:");
+        if (userHasPermissionWorkspace.hasPermission) {
+            console.log("!!!!!!!!!!!!!User has permission for the whole workspace:",userHasPermissionWorkspace);
             for (const project of allProjects) {
                 const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
                     method: 'GET'
@@ -56,39 +63,92 @@ export default function FetchUserPermissionForm( props ) {
                 });
                 const fetchedProjectIamData = await fetchedProjectIam.json();
     
-                const userHasPermissionProject = checkUserPermission(rolesWithPermission, fetchedProjectIamData.bindings, userGroups.length > 0, true);
-                if (userHasPermissionProject) {
+                const userHasPermissionProject = checkUserPermission(rolesWithPermission, fetchedProjectIamData.bindings, userGroups.length > 0, project.name);
+                if (userHasPermissionProject.hasPermission) { // we should check if the permission is for databases only
                     console.log("User has permission for the project:", project.name);
                     const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
                         method: 'GET'
                     });
                     const fetchedDatabasesData = await fetchedDatabases.json();
                     newDatabasesWithPermission.push({project: project.name, databases: fetchedDatabasesData.databases});
+                  
+                } else {
+                    if (userHasPermissionProject.onlyDatabase && userHasPermissionProject.onlyDatabase != '') {
+                     //   console.log("userHasPermissionProject.onlyDatabase=======================", {project: project.name, databases: [userHasPermissionProject.onlyDatabase]})
+                        newDatabasesWithPermission.push({project: project.name, databases: [{name: userHasPermissionProject.onlyDatabase}]});
+                    }
                 }
             }
         }
-            setDatabasesWithPermission(newDatabasesWithPermission);
+
+        setDatabasesWithPermission(newDatabasesWithPermission);
     }
 
-    const checkUserPermission = (roles: any[], bindings: any[], hasGroups: boolean = false, isProject: boolean = false): boolean => {
+    const checkUserPermission = (roles: any[], bindings: any[], hasGroups: boolean = false, theProject: string = ''): { hasPermission: boolean, onlyDatabase: string } => {
+        let hasPermission = false;
+        let onlyDatabase = '';
+
+        if (roles.length === 0 || bindings.length === 0) {
+            return { hasPermission: false, onlyDatabase: '' };
+        }
         
-        return roles.some((role) =>
-            bindings.some((binding) => {
+        for (const role of roles) {
+            for (const binding of bindings) {
                 const roleMatch = binding.role === role.name;
                 const memberMatch = binding.members.includes(`user:${user}`);
                 let groupMatch = false;
+    
                 if (roleMatch && hasGroups) {
-                    userGroups.map((groupName) => {
+                    for (const groupName of userGroups) {
                         console.log("user group:", groupName);
                         if (binding.members.includes(groupName.replace('groups/', 'group:'))) {
-                           groupMatch = true;
+                            groupMatch = true;
+                            break; // Exit the loop once a match is found
                         }
-                    })
-                } // TODO here we haven't checked the groups
-                const conditionMatch = false;// TODO here we don't check the condition expression 
-                return roleMatch && (memberMatch || groupMatch);
-            })
-        );
+                    }
+                }
+                //console.log("before check theproject!==''", theProject !== '')
+                if (roleMatch && (memberMatch || groupMatch) && theProject !== '') {
+
+                    // when the project is not empty, it might be that the permission is only for a specific database in that project
+                    if (binding.condition && binding.condition.expression) {
+
+                        let conditionMatch = true;
+                       // console.log("binding.condition.expression", binding.condition.expression)
+                       // console.log("binding", binding)
+                        const databaseMatch = binding.condition.expression.match(/resource\.database\s+in\s+\["([^"]+)"\]/);
+                        const timestampMatch = binding.condition.expression.match(/request\.time\s*<\s*timestamp\("([^"]+)"\)/);
+    
+                        if (databaseMatch) {
+
+                            conditionMatch = true;
+    
+                            if (timestampMatch) {
+                                const expirationTime = new Date(timestampMatch[1]);
+                                const currentTime = new Date();
+                                conditionMatch = currentTime < expirationTime;
+                            }
+
+                            if (conditionMatch) {
+                                onlyDatabase = databaseMatch[1];
+                            } else {
+                                onlyDatabase = '';
+                            }
+                        }
+                    }
+                    break;
+                } else {
+
+                    if (roleMatch && (memberMatch || groupMatch)) {
+                        hasPermission = true;
+                        break;
+                }
+                }
+            }
+        }
+    
+      //  console.log("before return", { 'hasPermission': hasPermission && onlyDatabase === '', 'onlyDatabase': onlyDatabase })
+        return { 'hasPermission': hasPermission && onlyDatabase === '', 'onlyDatabase': onlyDatabase };
     }
 
     useEffect(() => {
@@ -129,8 +189,8 @@ export default function FetchUserPermissionForm( props ) {
         <select name="permission" id="permission" value={permission} onChange={(e) => handleSelectPermission(e)}
         className="w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
         <option value="">-- Please select a permission --</option>
-        {allDatabasePermissions.map((item, index) => {
-            return  <option key={index} value={item}>{item}</option>
+        {allDatabasePermissions.map((itemadp, indexadp) => {
+            return  <option key={indexadp} value={itemadp}>{itemadp}</option>
         })}
         </select>
 
