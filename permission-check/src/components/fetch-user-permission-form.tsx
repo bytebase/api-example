@@ -110,45 +110,56 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
         }
     
         // Extract resource conditions
-        const resourceConditions = celExpression.split('&&').slice(1).join('&&').trim();
-        console.log("resourceConditions ================= ", resourceConditions)
+        
+       // console.log("celExpression ---------------", celExpression)
+
+        let resourceConditions = '';
+        if (timeMatch){
+            resourceConditions = celExpression.split('&&').slice(1).join('&&').trim();
+        } else {
+            resourceConditions = celExpression.split('&&').join('&&').trim();
+        }
+        //console.log("resourceConditions ---------------", resourceConditions)
 
         // Remove outer parentheses and split by OR
         const orConditions = resourceConditions.replace(/^\(|\)$/g, '').split('||').map(c => c.trim());
+        console.log("orConditions ---------------", orConditions)
     
-        if (orConditions.length) {
-            console.log("orConditions ================= ", orConditions)
-        }
         orConditions.forEach(condition => {
             const resource: { database: string; schemas: string[]; tables: string[] } = { database: '', schemas: [], tables: [] };
             
             // Extract database
-            const dbMatch = condition.match(/resource\.database\s*==\s*"([^"]+)"/);
-            if (dbMatch) resource.database = dbMatch[1];
+            console.log("condition ---------------", condition)
+            const dbMatch = condition.match(/resource\.database\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/);
+            if (dbMatch) {
+                const databases = dbMatch[2]
+                    .replace(/[\[\]]/g, '')
+                    .split(',')
+                    .map(s => s.trim().replace(/^"|"$/g, ''))
+                    .filter(s => s !== '');
+                resource.database = databases[0]; // Take the first database if there are multiple
+                console.log("resource.database ---------------", resource.database)
+            }
     
             // Extract schemas
-            const schemaMatches = [...condition.matchAll(/resource\.schema\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/g)];            console.log("schemaMatches ================= ", schemaMatches, typeof schemaMatches);
+            const schemaMatches = [...condition.matchAll(/resource\.schema\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/g)];
             schemaMatches.forEach(match => {
-                console.log("match ================= ", match)
                 const schemas = match[2]
                     .replace(/[\[\]]/g, '')
                     .split(',')
                     .map(s => s.trim().replace(/^"|"$/g, ''))
                     .filter(s => s !== '');
-                console.log("schemas ================= ", schemas)
                 resource.schemas.push(...schemas);
             });
     
             // Extract tables
-            const tableMatches = [...condition.matchAll(/resource\.table\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/g)];            console.log("tableMatches ================= ", tableMatches, typeof tableMatches);
+            const tableMatches = [...condition.matchAll(/resource\.table\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/g)];
             tableMatches.forEach(match => {
-                console.log("match ================= ", match)
                 const tables = match[2]
                     .replace(/[\[\]]/g, '')
                     .split(',')
                     .map(s => s.trim().replace(/^"|"$/g, ''))
                     .filter(s => s !== '');
-                console.log("tables ================= ", tables)
                 resource.tables.push(...tables);
             });
     
@@ -157,6 +168,7 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
             }
         });
     
+        console.log("Parse CEL <<<<<<<<<<<<<<<<<<<<<<<<<<", celExpression);
         console.log("Parsed result=============>>>>>>>>>>", result);
         return result;
     };
