@@ -19,6 +19,149 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
         }
     }, [user, permission]);
 
+    const hasUserWorkspacePermission = (rolesWithPermission: any[], rolesToBeMatched: any[]): boolean => {
+
+        if (rolesToBeMatched.length === 0) {            // There's no to be matched role
+                return false;
+        } else {
+
+            for (const roleToBeMatched of rolesToBeMatched) {
+
+             //   console.log("roleToBeMatched: ", roleToBeMatched)
+    
+                if (!rolesWithPermission.find(roleWithPermission => roleWithPermission.name === roleToBeMatched.role)) continue;
+                
+                const memberMatch = roleToBeMatched.members.includes(`user:${user}`);
+    
+    
+                if (memberMatch) {
+                //    console.log("workspace Matched !!!")
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }     
+    };
+
+    const getUserProjectPermissionRoles = (rolesWithPermission: any[], rolesToBeMatched: any[], hasGroups: boolean = false, theProject: string = ''): any[] => {
+        
+        let refinedRolesToBeMatched: any[] = [];
+        let rolesMatched:any[] = [];
+
+        for (const roleToBeMatched of rolesToBeMatched) {
+           // console.log("roleToBeMatched: ", roleToBeMatched)
+    
+            const matchingRole = rolesWithPermission.find(roleWithPermission => roleWithPermission.name === roleToBeMatched.role);
+            if (matchingRole) {
+               // console.log("Matching role found:", matchingRole.name);
+                refinedRolesToBeMatched.push(roleToBeMatched);
+            } else {
+              //  console.log("No matching role found. ", roleToBeMatched.role);
+                continue;
+            }
+        }
+    
+        for (const roleToBeMatched of refinedRolesToBeMatched) {
+            const memberMatch = roleToBeMatched.members.includes(`user:${user}`);
+            const groupMatch = hasGroups && userGroups.some(group => 
+                roleToBeMatched.members.includes(group.replace('groups/', 'group:'))
+            );
+    
+            if (memberMatch || groupMatch) {
+
+            //    console.log("Matched !!!roleToBeMatched matched================= ", roleToBeMatched, theProject)
+                rolesMatched.push(roleToBeMatched);
+            }
+        }
+    
+        return rolesMatched;  
+    };
+
+    //e.g  1 "request.time < timestamp("2024-09-07T08:42:34.153Z") && (resource.database in ["instances/prod-sample-instance/databases/hr_prod"])"
+    //e.g  2 "request.time < timestamp(\"2024-12-03T08:42:48.668Z\") && (resource.database in [\"instances/prod-sample-instance/databases/hr_prod\",\"instances/test-sample-instance/databases/hr_test\"])"
+    //e.g  3 "request.time < timestamp(\"2024-10-05T07:35:51.445Z\")"
+    //e.g  4 "(resource.database == \"instances/prod-sample-instance/databases/hr_prod\" && resource.schema == \"bbdataarchive\" && resource.table in [\"_20240904030038_0_t1\"])"
+    //e.g  5 "request.time < timestamp("2024-10-05T09:03:41.349Z") && ((resource.database == "instances/test-sample-instance/databases/hr_test" && resource.schema in ["bbdataarchive"]) || (resource.database == "instances/prod-sample-instance/databases/hr_prod" && resource.schema == "public" && resource.table in ["employee","dept_emp"]) || (resource.database == "instances/test-sample-instance/databases/hr_test" && resource.schema == "public" && resource.table in ["title"]))"
+    //e.g  6 "(resource.database in ["instances/test-sample-instance/databases/hr_test", "instances/prod-sample-instance/databases/hr_prod"])"
+    const parseCelExpression = (celExpression: string): {
+        isExpired: boolean,
+        expiredDate: string | null,
+        resources: Array<{
+            database: string,
+            schemas: string[],
+            tables: string[]
+        }>
+    } => {
+        console.log("Parsing CEL expression:", celExpression);
+    
+        const result = {
+            isExpired: false,
+            expiredDate: null,
+            resources: []
+        };
+    
+        // Check for expiration
+        const timeMatch = celExpression.match(/request\.time\s*<\s*timestamp\("(.+?)"\)/);
+        if (timeMatch) {
+            const expirationTime = new Date(timeMatch[1]);
+            result.expiredDate = expirationTime.toISOString();
+            result.isExpired = new Date() >= expirationTime;
+        }
+    
+        // Extract resource conditions
+        const resourceConditions = celExpression.split('&&').slice(1).join('&&').trim();
+        console.log("resourceConditions ================= ", resourceConditions)
+
+        // Remove outer parentheses and split by OR
+        const orConditions = resourceConditions.replace(/^\(|\)$/g, '').split('||').map(c => c.trim());
+    
+        if (orConditions.length) {
+            console.log("orConditions ================= ", orConditions)
+        }
+        orConditions.forEach(condition => {
+            const resource: { database: string; schemas: string[]; tables: string[] } = { database: '', schemas: [], tables: [] };
+            
+            // Extract database
+            const dbMatch = condition.match(/resource\.database\s*==\s*"([^"]+)"/);
+            if (dbMatch) resource.database = dbMatch[1];
+    
+            // Extract schemas
+            const schemaMatches = [...condition.matchAll(/resource\.schema\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/g)];            console.log("schemaMatches ================= ", schemaMatches, typeof schemaMatches);
+            schemaMatches.forEach(match => {
+                console.log("match ================= ", match)
+                const schemas = match[2]
+                    .replace(/[\[\]]/g, '')
+                    .split(',')
+                    .map(s => s.trim().replace(/^"|"$/g, ''))
+                    .filter(s => s !== '');
+                console.log("schemas ================= ", schemas)
+                resource.schemas.push(...schemas);
+            });
+    
+            // Extract tables
+            const tableMatches = [...condition.matchAll(/resource\.table\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/g)];            console.log("tableMatches ================= ", tableMatches, typeof tableMatches);
+            tableMatches.forEach(match => {
+                console.log("match ================= ", match)
+                const tables = match[2]
+                    .replace(/[\[\]]/g, '')
+                    .split(',')
+                    .map(s => s.trim().replace(/^"|"$/g, ''))
+                    .filter(s => s !== '');
+                console.log("tables ================= ", tables)
+                resource.tables.push(...tables);
+            });
+    
+            if (resource.database) {
+                result.resources.push(resource);
+            }
+        });
+    
+        console.log("Parsed result=============>>>>>>>>>>", result);
+        return result;
+    };
+    
+
     const updateDatabasesWithPermission = async () => {
         if (!user || !permission) {
             return;
@@ -27,7 +170,6 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
         const newDatabasesWithPermission: Array<{project: string, databases: any[]}> = [];
 
         const rolesWithPermission = allRoles.filter((role) => role.permissions.includes(permission));
-        const userHasPermissionWorkspace = checkUserPermission(rolesWithPermission, allWorkspaceIam.bindings);
 
         const newUserGroups: SetStateAction<never[]> = [];
         allGroups.groups.map((group: any, groupIndex: number) => {
@@ -37,8 +179,8 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
         }) 
         setUserGroups(newUserGroups);
 
-        if (userHasPermissionWorkspace.hasPermission) {
-            for (const project of allProjects) {
+        if (hasUserWorkspacePermission(rolesWithPermission, allWorkspaceIam.bindings)) {
+            for (const project of allProjects) { // list all projects and get all databases
                 const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
                     method: 'GET'
                 });
@@ -46,6 +188,7 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
                 newDatabasesWithPermission.push({project: project.name, databases: fetchedDatabasesData.databases});
             }
         } else {
+            console.log("NO workspace permission matched, let's check project permission =================================")
             for (const project of allProjects) {
                 const projectShort = project.name.split("/")[1];
                 const fetchedProjectIam = await fetch(`/api/projectiam/${encodeURIComponent(projectShort)}`, {
@@ -53,29 +196,45 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
                 });
                 const fetchedProjectIamData = await fetchedProjectIam.json();
     
-                const userHasPermissionProject = checkUserPermission(rolesWithPermission, fetchedProjectIamData.bindings, userGroups.length > 0, project.name);
-                if (userHasPermissionProject.hasPermission) {
+                const userHasMatchedRoles = getUserProjectPermissionRoles(rolesWithPermission, fetchedProjectIamData.bindings, userGroups.length > 0, project.name);
+
+                let celsConverted: any[] = [];
+
+                if (userHasMatchedRoles.length > 0) {
+
+                    let shouldFetchAllDatabases = false;
+                    for (const role of userHasMatchedRoles) {
+
+                        console.log("role ", role.condition)
+                        if (role.condition && role.condition.expression === '') {
+                            shouldFetchAllDatabases = true;
+                        } else {
+                            celsConverted.push(parseCelExpression(role.condition.expression));
+                        }
+                    }
+
+                 //   console.log("celsConverted =============================== >>>>>>>>>>>>>>>>>>>>>>>>", celsConverted)
+
+                /*    const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
+                        method: 'GET'
+                    });
+                    const fetchedDatabasesData = await fetchedDatabases.json();
+                    newDatabasesWithPermission.push({project: project.name, databases: fetchedDatabasesData.databases});*/
+                }
+
+              /*  if (userHasPermissionProject.hasFullPermission) {
                     const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
                         method: 'GET'
                     });
                     const fetchedDatabasesData = await fetchedDatabases.json();
                     newDatabasesWithPermission.push({project: project.name, databases: fetchedDatabasesData.databases});
                 } else {
-                    if (userHasPermissionProject.onlyDatabase && userHasPermissionProject.onlyDatabase.length > 0) {
-                        userHasPermissionProject.onlyDatabase.forEach((db, index) => {
-                            const extraCondition = userHasPermissionProject.extraConditions[index];
-                            if (extraCondition) {
-                                newDatabasesWithPermission.push({project: project.name, databases: [{name: db, extraConditionTime: extraCondition.expireTime, extraConditionIsExpired: extraCondition.isExpired}]});
-                            } else {
-                                newDatabasesWithPermission.push({project: project.name, databases: [{name: db}]});
-                            }
-                        });
-                    }
-                }
+                    console.log("userHasPermissionProject ++++++++++++++++++ ", userHasPermissionProject)
+                }*/
             }
         }
 
-        console.log("newDatabasesWithPermission ================= ", newDatabasesWithPermission)
+        console.log("newDatabasesWithPermission ", newDatabasesWithPermission)
         setDatabasesWithPermission(newDatabasesWithPermission);
     };
 
@@ -88,50 +247,20 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
         return acc;
     }, {});
 
-    const checkUserPermission = (rolesWithPermission: any[], rolesToBeMatched: any[], hasGroups: boolean = false, theProject: string = ''): { hasPermission: boolean, onlyDatabase: string[], extraConditions: {}[] } => {
-        let hasPermission = false;
-        let onlyDatabases: string[] = [];
-        let extraConditions: {}[] = [];
+ 
+    
 
-        console.log("rolesWithPermission ================= ", rolesWithPermission)
-        console.log("rolesToBeMatched ================= ", rolesToBeMatched)
-        console.log("hasGroups ================= ", hasGroups)
-        console.log("theProject ================= ", theProject)
+    const checkProjectSpecificCondition = (roleToBeMatched: any): { hasFullPermission: boolean, theCondition: string } => {
+        
+       // console.log("checkProjectSpecificCondition ================= ", roleToBeMatched)
 
-        for (const roleToBeMatched of rolesToBeMatched) {
-            if (!rolesWithPermission.some(roleWithPermission => roleWithPermission.name === roleToBeMatched.role)) continue;
+        if (roleToBeMatched.condition && roleToBeMatched.condition.expression) {
+          //  console.log("roleToBeMatched.condition && roleToBeMatched.condition.expression -----", roleToBeMatched.condition.expression)
+            return { hasFullPermission: false, theCondition: roleToBeMatched.condition.expression };
+        } 
 
-            const memberMatch = roleToBeMatched.members.includes(`user:${user}`);
-            const groupMatch = hasGroups && userGroups.some(group => 
-                roleToBeMatched.members.includes(group.replace('groups/', 'group:'))
-            );
-
-            if (memberMatch || groupMatch) {
-                if (theProject !== '') {
-                    const projectPermission = checkProjectSpecificPermission(roleToBeMatched);
-                    if (projectPermission.hasPermission) {
-                        hasPermission = true;
-                    }
-                    if (projectPermission.onlyDatabase) {
-                        onlyDatabases.push(projectPermission.onlyDatabase);
-                    }
-                    if (projectPermission.extraCondition) {
-                        extraConditions.push(projectPermission.extraCondition);
-                    }
-                } else {
-                    hasPermission = true;
-                }
-            }
-        }
-
-        return { hasPermission, onlyDatabase: onlyDatabases, extraConditions };
-    };
-
-    const checkProjectSpecificPermission = (roleToBeMatched: any): { hasPermission: boolean, onlyDatabase: string, extraCondition?: {} } => {
-        if (!roleToBeMatched.condition || !roleToBeMatched.condition.expression) {
-            return { hasPermission: true, onlyDatabase: '', extraCondition: {} };
-        }
-
+        return { hasFullPermission: true, theCondition: '' };
+/*
         const { expression } = roleToBeMatched.condition;
         console.log("expression ================= ", expression)
         const databaseMatch = expression.match(/resource\.database\s+in\s+\["([^"]+)"\]/);
@@ -153,7 +282,7 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
             }
         }
 
-        return { hasPermission: false, onlyDatabase: databaseMatch[1], extraCondition };
+        return { hasPermission: false, onlyDatabase: databaseMatch[1], extraCondition };*/
     };
 
     // Sort databasesWithPermission before rendering
