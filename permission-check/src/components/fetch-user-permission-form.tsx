@@ -88,7 +88,7 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
         isExpired: boolean,
         expiredDate: string | null,
         resources: Array<{
-            database: string,
+            databases: string[],
             schemas: string[],
             tables: string[]
         }>
@@ -110,8 +110,6 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
         }
     
         // Extract resource conditions
-        
-       // console.log("celExpression ---------------", celExpression)
 
         let resourceConditions = '';
         if (timeMatch){
@@ -126,20 +124,18 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
         console.log("orConditions ---------------", orConditions)
     
         orConditions.forEach(condition => {
-            const resource: { database: string; schemas: string[]; tables: string[] } = { database: '', schemas: [], tables: [] };
+            const resource: { databases: string[]; schemas: string[]; tables: string[] } = { databases: [], schemas: [], tables: [] };
             
             // Extract database
-            console.log("condition ---------------", condition)
-            const dbMatch = condition.match(/resource\.database\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/);
-            if (dbMatch) {
-                const databases = dbMatch[2]
+            const databaseMatches = [...condition.matchAll(/resource\.database\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/g)];
+            databaseMatches.forEach(match => {
+                const databases = match[2]
                     .replace(/[\[\]]/g, '')
                     .split(',')
                     .map(s => s.trim().replace(/^"|"$/g, ''))
                     .filter(s => s !== '');
-                resource.database = databases[0]; // Take the first database if there are multiple
-                console.log("resource.database ---------------", resource.database)
-            }
+                resource.databases.push(...databases);
+            });
     
             // Extract schemas
             const schemaMatches = [...condition.matchAll(/resource\.schema\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/g)];
@@ -163,7 +159,7 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
                 resource.tables.push(...tables);
             });
     
-            if (resource.database) {
+            if (resource.databases.length > 0) {
                 result.resources.push(resource);
             }
         });
