@@ -78,13 +78,28 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
         return rolesMatched;  
     };
 
+
+    const parseCelExpression = async (celExpression: string): Promise<any> => {
+
+        console.log("celExpression =============== ", celExpression)
+        const response = await fetch(`/api/cel`, {
+            method: 'POST',
+            body: JSON.stringify({
+                expressions: [celExpression]
+            })
+        });
+        const data = await response.json();
+        console.log("celExpression parse data =============== ", data)
+        return data;
+    };
+
     //e.g  1 "request.time < timestamp("2024-09-07T08:42:34.153Z") && (resource.database in ["instances/prod-sample-instance/databases/hr_prod"])"
     //e.g  2 "request.time < timestamp(\"2024-12-03T08:42:48.668Z\") && (resource.database in [\"instances/prod-sample-instance/databases/hr_prod\",\"instances/test-sample-instance/databases/hr_test\"])"
     //e.g  3 "request.time < timestamp(\"2024-10-05T07:35:51.445Z\")"
     //e.g  4 "(resource.database == \"instances/prod-sample-instance/databases/hr_prod\" && resource.schema == \"bbdataarchive\" && resource.table in [\"_20240904030038_0_t1\"])"
     //e.g  5 "request.time < timestamp("2024-10-05T09:03:41.349Z") && ((resource.database == "instances/test-sample-instance/databases/hr_test" && resource.schema in ["bbdataarchive"]) || (resource.database == "instances/prod-sample-instance/databases/hr_prod" && resource.schema == "public" && resource.table in ["employee","dept_emp"]) || (resource.database == "instances/test-sample-instance/databases/hr_test" && resource.schema == "public" && resource.table in ["title"]))"
     //e.g  6 "(resource.database in ["instances/test-sample-instance/databases/hr_test", "instances/prod-sample-instance/databases/hr_prod"])"
-    const parseCelExpression = (celExpression: string): {
+   /* const parseCelExpression = (celExpression: string): {
         isExpired: boolean,
         expiredDate: string | null,
         resources: Array<{
@@ -93,13 +108,13 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
             tables: string[]
         }>
     } => {
-        console.log("Parsing CEL expression:", celExpression);
     
         const result = {
             isExpired: false,
             expiredDate: null,
             resources: []
         };
+        let resourceConditions = '';
     
         // Check for expiration
         const timeMatch = celExpression.match(/request\.time\s*<\s*timestamp\("(.+?)"\)/);
@@ -107,21 +122,13 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
             const expirationTime = new Date(timeMatch[1]);
             result.expiredDate = expirationTime.toISOString();
             result.isExpired = new Date() >= expirationTime;
-        }
-    
-        // Extract resource conditions
-
-        let resourceConditions = '';
-        if (timeMatch){
             resourceConditions = celExpression.split('&&').slice(1).join('&&').trim();
         } else {
-            resourceConditions = celExpression.split('&&').join('&&').trim();
+            resourceConditions = celExpression.trim();
         }
-        //console.log("resourceConditions ---------------", resourceConditions)
 
         // Remove outer parentheses and split by OR
         const orConditions = resourceConditions.replace(/^\(|\)$/g, '').split('||').map(c => c.trim());
-        console.log("orConditions ---------------", orConditions)
     
         orConditions.forEach(condition => {
             const resource: { databases: string[]; schemas: string[]; tables: string[] } = { databases: [], schemas: [], tables: [] };
@@ -167,13 +174,11 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
         console.log("Parse CEL <<<<<<<<<<<<<<<<<<<<<<<<<<", celExpression);
         console.log("Parsed result=============>>>>>>>>>>", result);
         return result;
-    };
+    };*/
     
 
     const updateDatabasesWithPermission = async () => {
-        if (!user || !permission) {
-            return;
-        }
+        if (!user || !permission) { return; }
 
         const newDatabasesWithPermission: Array<{project: string, databases: any[]}> = [];
 
@@ -209,26 +214,37 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
                 let celsConverted: any[] = [];
 
                 if (userHasMatchedRoles.length > 0) {
+                    let shouldDisplayAllDatabases = false;
 
-                    let shouldFetchAllDatabases = false;
                     for (const role of userHasMatchedRoles) {
 
-                        console.log("role ", role.condition)
+                     //   console.log("role ", role.condition)
                         if (role.condition && role.condition.expression === '') {
-                            shouldFetchAllDatabases = true;
+                            shouldDisplayAllDatabases = true;
                         } else {
-                            celsConverted.push(parseCelExpression(role.condition.expression));
+                           // const parsedCel = parseCelExpression(role.condition.expression);
+                           // celsConverted.push(parsedCel);
+                           parseCelExpression(role.condition.expression);
                         }
                     }
 
-                 //   console.log("celsConverted =============================== >>>>>>>>>>>>>>>>>>>>>>>>", celsConverted)
+                   // console.log("celsConverted +++++++++++++++++++++++++++++++++++++++++++++++++", celsConverted);
 
-                /*    const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
+
+                    const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
                         method: 'GET'
                     });
                     const fetchedDatabasesData = await fetchedDatabases.json();
-                    newDatabasesWithPermission.push({project: project.name, databases: fetchedDatabasesData.databases});*/
-                }
+                    const projectAllDatabases = fetchedDatabasesData.databases;
+            
+                 //   console.log("projectAllDatabases =================", projectAllDatabases);
+
+
+                    for ( const cel of celsConverted ){
+                        console.log(cel)
+                    }
+
+                } 
 
               /*  if (userHasPermissionProject.hasFullPermission) {
                     const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
