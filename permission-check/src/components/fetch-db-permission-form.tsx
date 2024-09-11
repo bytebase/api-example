@@ -11,7 +11,7 @@ export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, al
     const [projectIam, setProjectIam] = useState([])
     const [workspaceIam, setWorkspaceIam] = useState([])
     const [permission, setPermission] = useState('')
-    
+
     const [rolesWithPermission, setRolesWithPermission] = useState([])
     const [membersWithPermission, setMembersWithPermission] = useState([])
 
@@ -78,7 +78,6 @@ export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, al
                 // Check if any database resource matches the current database
                 for (let dbrs of celValue.databaseResources) {
                     if (dbrs.databaseName == database) {
-                        console.log("matched with expired time", expiredTime);
                         // Return the members and expiredTime as an array of objects
                         return iam.members.map(member => ({ member, expiredTime }));
                     }
