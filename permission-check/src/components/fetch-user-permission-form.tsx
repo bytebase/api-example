@@ -176,44 +176,44 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
                 <h2 className="text-2xl font-bold mt-4 mb-2">Project Permission with Condition</h2>
             )}
 
-{databasesWithConditionalPermission.map((item, index) => (
-    <div key={index} className="db-list">
-        <h3 className="text-xl font-bold">{item.project}</h3>
-        <ul>
-            {item.databases.map((condDb, condIndex) => {
-                const isExpired = condDb.expiredTime && new Date(condDb.expiredTime) < new Date();
-                return (
-                    <li key={condIndex} className={isExpired ? 'line-through text-red-500' : ''}>
-                        {condDb.databaseResources.length === 0 ? (
-                            <div><strong>Database:</strong> All in this project</div>
-                        ) : (
-                            condDb.databaseResources.map((resource, resIndex) => (
-                                <div key={resIndex} className="mb-2">
-                                     {resource.databaseName}
-                                                        {resource.schema && (
-                                                            <div>
-                                                                <strong>> Schema:</strong> {resource.schema}
-                                                            </div>
-                                                        )}
-                                                        {resource.table && (
-                                                            <div>
-                                                                <strong>>>Table:</strong> {resource.table}
-                                                            </div>
-                                                        )}
-                                </div>
-                            ))
-                        )}
-                        {condDb.expiredTime ? (
-                            <div><strong>Expires:</strong> {new Date(condDb.expiredTime).toLocaleString()}</div>
-                        ) : (
-                            <div>No Expiration</div>
-                        )}
-                    </li>
-                );
-            })}
-        </ul>
-    </div>
-))}
+            {databasesWithConditionalPermission.map((item, index) => (
+                <div key={index} className="db-list">
+                    <h3 className="text-xl font-bold">{item.project}</h3>
+                    <ul>
+                        {item.databases.map((condDb, condIndex) => {
+                            const isExpired = condDb.expiredTime && new Date(condDb.expiredTime) < new Date();
+                            return (
+                                <li key={condIndex} className={isExpired ? 'line-through text-red-500' : ''}>
+                                    {condDb.databaseResources.length === 0 ? (
+                                        <div><strong>Database:</strong> All in this project</div>
+                                    ) : (
+                                        condDb.databaseResources.map((resource, resIndex) => (
+                                            <div key={resIndex} className="mb-2">
+                                                {resource.databaseName}
+                                                                    {resource.schema && (
+                                                                        <div>
+                                                                            <strong>> Schema:</strong> {resource.schema}
+                                                                        </div>
+                                                                    )}
+                                                                    {resource.table && (
+                                                                        <div>
+                                                                            <strong>>>Table:</strong> {resource.table}
+                                                                        </div>
+                                                                    )}
+                                            </div>
+                                        ))
+                                    )}
+                                    {condDb.expiredTime ? (
+                                        <div><strong>Expires:</strong> {new Date(condDb.expiredTime).toLocaleString()}</div>
+                                    ) : (
+                                        <div>No Expiration</div>
+                                    )}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
+            ))}
 
             
         </form>
