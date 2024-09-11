@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { parseCelExpression, fetchData } from "./utils";
 
-export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, allRoles, allDatabasePermissions, allGroups }) {
+export default function DbFetchUserPermissionForm({ allProjects, allWorkspaceIam, allRoles, allDatabasePermissions, allGroups }) {
 
     const [project, setProject] = useState('');
     const [filteredDatabases, setFilteredDatabases] = useState([])

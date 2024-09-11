@@ -3,7 +3,7 @@
 import { SetStateAction, useEffect, useState } from "react";
 import { parseCelExpression, fetchData } from './utils';
 
-export default function FetchUserPermissionForm({ allUsers, allDatabasePermissions, allProjects, allWorkspaceIam, allRoles, allGroups }) {
+export default function UserFetchDbPermissionForm({ allUsers, allDatabasePermissions, allProjects, allWorkspaceIam, allRoles, allGroups }) {
 
     const [userGroups, setUserGroups] = useState([])
     const [user, setUser] = useState('')

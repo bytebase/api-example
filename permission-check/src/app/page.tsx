@@ -1,6 +1,6 @@
-import FetchDbPermissionForm from "@/components/fetch-db-permission-form";
-import FetchUserPermissionForm from "@/components/fetch-user-permission-form";
 import { fetchData, generateToken } from "@/app/api/utils";
+import DbFetchUserPermissionForm from "@/components/db-fetch-user-permission-form";
+import UserFetchDbPermissionForm from "@/components/user-fetch-db-permission-form";
 
 export default async function Home() {
 
@@ -24,14 +24,14 @@ export default async function Home() {
 
   return (
     <main className="flex flex-row w-full p-10 items-start">
-            <FetchDbPermissionForm
+            <DbFetchUserPermissionForm
             allProjects={allProjectData.projects}
             allWorkspaceIam={allWorkspaceIamData}
             allRoles={allRolesData.roles}
             allDatabasePermissions={allDatabasePermissionsData}
             allGroups={allGroupsData}
             />
-            <FetchUserPermissionForm 
+            <UserFetchDbPermissionForm 
             allUsers={allUsersData.users}
             allDatabasePermissions={allDatabasePermissionsData}
             allProjects={allProjectData.projects}
