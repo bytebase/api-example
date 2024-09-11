@@ -97,6 +97,4 @@ This is a sample app demonstrating how to use [Bytebase](https://github.com/byte
 - Who has access to a specific database?
 - Which databases does a specific user have access to?
 
-![Check db and user permissions](permission-check/docs/permission-demo-911.gif)
-
-To be continued...
+![Check db and user permissions](permission-check/docs/permission-911.gif)

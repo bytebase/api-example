@@ -9,6 +9,7 @@ export default function UserFetchDbPermissionForm({ allUsers, allDatabasePermiss
     const [user, setUser] = useState('')
     const [permission, setPermission] = useState('')
     
+    const [rolesWithPermission, setRolesWithPermission] = useState([])
     const [userHasFullWorkspacePermission, setUserHasFullWorkspacePermission] = useState(false);
     const [projectsWithFullPermission, setProjectsWithFullPermission] = useState<Array<string>>([])
     const [databasesWithConditionalPermission, setDatabasesWithConditionalPermission] = useState<Array<{project: string, databases: any[]}>>([])
@@ -62,6 +63,7 @@ export default function UserFetchDbPermissionForm({ allUsers, allDatabasePermiss
         let userHasFullWorkspacePermission = false;
 
         const rolesWithPermission = allRoles.filter((role) => role.permissions.includes(permission));
+        setRolesWithPermission(rolesWithPermission);
 
         const newUserGroups: SetStateAction<never[]> = [];
         allGroups.groups.map((group: any, groupIndex: number) => {
@@ -145,6 +147,19 @@ export default function UserFetchDbPermissionForm({ allUsers, allDatabasePermiss
                 ))}
             </select>
 
+
+            {rolesWithPermission.length > 0 && (
+                <div>
+                <h2 className="text-2xl font-bold mt-4 mb-2">Roles with permission</h2>
+                <ul>
+                    {rolesWithPermission.map((item, index) => (
+                        <li key={index}>
+                            {item.title}
+                        </li>
+                    ))}
+                </ul>
+                </div>
+            )}
 
             <div>
                     <h2 className="text-2xl font-bold mt-4 mb-2">Full Workspace Permission</h2>

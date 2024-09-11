@@ -124,7 +124,7 @@ export default function DbFetchUserPermissionForm({ allProjects, allWorkspaceIam
 
         {rolesWithPermission.length > 0 && (
             <div>
-            <strong>Roles with permission</strong>
+            <h2 className="text-2xl font-bold mt-4 mb-2">Roles with permission</h2>
             <ul>
                 {rolesWithPermission.map((item, index) => (
                     <li key={index}>
@@ -137,7 +137,7 @@ export default function DbFetchUserPermissionForm({ allProjects, allWorkspaceIam
 
         {membersWithPermission.length > 0 && (
             <div>
-                <strong>Members with permission</strong>
+                <h2 className="text-2xl font-bold mt-4 mb-2">Members with permission</h2>
                 <ul>
                     {membersWithPermission.map((it, index) => {
                         const item = it.member;
