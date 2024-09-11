@@ -63,43 +63,43 @@ export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, al
 
     const updateMembersWithPermission = async () => {
         // find all roles that have the permission
-        const rolesWithPermission = allRoles.filter((role) => {
-            return role.permissions.includes(permission)
-        })
-        setRolesWithPermission(rolesWithPermission)
-
+        const rolesWithPermission = allRoles.filter((role) => role.permissions.includes(permission));
+        setRolesWithPermission(rolesWithPermission);
+    
         // find all members with roles that have the permission
-        const membersWithPermission = [
-            ...projectIam,
-            ...workspaceIam
-        ].filter(async (iam: { role: string; condition?: { expression?: string }; members: string[] }) => { // Specify the type for iam
+        const iamList = [...projectIam, ...workspaceIam];
+    
+        const membersWithPermission = (await Promise.all(iamList.map(async (iam) => {
             const hasPermission = rolesWithPermission.some((role: any) => role.name === iam.role);
             
             if (hasPermission) {
                 if (!iam.condition?.expression) {
-                    return true;
+                    // No condition means no expiredTime, but include member and null for expiredTime
+                    return iam.members.map(member => ({ member, expiredTime: null })); 
                 }
-
+    
                 const celValue = await parseCelExpression(iam.condition.expression);
-                console.log("celValue---------------",celValue.databaseResources
-                )
-                console.log("current database---------------",database)
-
+                console.log("celValue---------------", celValue.databaseResources);
+                console.log("current database---------------", database);
+    
                 let expiredTime = celValue.expiredTime;
-
+    
+                // Check if any database resource matches the current database
                 for (let dbrs of celValue.databaseResources) {
                     if (dbrs.databaseName == database) {
-                        console.log("matched with expired time",expiredTime)
+                        console.log("matched with expired time", expiredTime);
+                        // Return the members and expiredTime as an array of objects
+                        return iam.members.map(member => ({ member, expiredTime }));
                     }
                 }
-               
-                
             }
-            return false;
-
-        }).flatMap(iam => iam.members)
-        setMembersWithPermission(membersWithPermission)
-    }
+            return []; // If no match or no permission, return empty array
+        }))).flat(); // Flatten the resulting array
+    
+        // At this point, membersWithPermission will be an array of objects, where each object contains { member, expiredTime }
+        setMembersWithPermission(membersWithPermission);
+        console.log("========================", membersWithPermission);
+    };
 
     return (
         <form onSubmit={handleSubmit}  className="md:w-1/2 sm:w-full flex gap-3 flex-col p-10 border-yellow-600 border-4">        
@@ -148,29 +148,44 @@ export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, al
 
         {membersWithPermission.length > 0 && (
             <div>
-            <strong>Members with permission</strong>
-            <ul>
-                {membersWithPermission.map((item, index) => (
-                    <li key={index}>
-                    {item}
-                    {typeof item === 'string' && item.startsWith('group:') && (
-                        allGroups.groups.map((group: any, groupIndex: number) => {
-                            const replacedItem = (item as string).replace('group:', 'groups/');
-                            if (group.name === replacedItem) {
-                                return (
-                                <ul key={groupIndex} className="bg-gray-100 p-2 rounded-md">
-                                    <strong>This group includes these members:</strong>
-                                    {group.members.map((m: any, i: number) => (
-                                        <li key={i}>{m.member}</li>
-                                    ))}
-                                </ul>
-                                );
-                            }
-                        })
-                    )}
-                </li>
-                ))}
-            </ul>
+                <strong>Members with permission</strong>
+                <ul>
+                    {membersWithPermission.map((it, index) => {
+                        const item = it.member;
+                        const isExpired = it.expiredTime && new Date(it.expiredTime) < new Date();
+
+                        return (
+                            <li key={index} className={isExpired ? "line-through text-red-500" : ""}>
+                                {item}
+                                <div>
+                                    {it.expiredTime ? (
+                                        <span>
+                                           <strong>Expires:</strong>  {new Date(it.expiredTime).toLocaleString()}
+                                        </span>
+                                    ) : " No Expiration"}
+                                </div>
+                                {/* Check if item is a group */}
+                                {typeof item === 'string' && item.startsWith('group:') && 
+                                    allGroups.groups.map((group: any, groupIndex: number) => {
+                                        const replacedItem = item.replace('group:', 'groups/');
+                                        
+                                        if (group.name === replacedItem) {
+                                            return (
+                                                <ul key={groupIndex} className="bg-gray-100 p-2 mt-2 rounded-md">
+                                                    <strong>This group has these members:</strong>
+                                                    {group.members.map((m: any, i: number) => (
+                                                        <li key={i}>{m.member}</li>
+                                                    ))}
+                                                </ul>
+                                            );
+                                        }
+                                        return null; // Safely return null if no match is found
+                                    })
+                                }
+                            </li>
+                        );
+                    })}
+                </ul>
             </div>
         )}
         </form>
