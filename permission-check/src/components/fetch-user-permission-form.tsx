@@ -1,13 +1,16 @@
 "use client"
 
 import { SetStateAction, useEffect, useState } from "react";
+import { convertFromExpr } from "@/plugins/cel/cel";
 
 export default function FetchUserPermissionForm({ allUsers, allDatabasePermissions, allProjects, allWorkspaceIam, allRoles, allGroups }) {
 
     const [userGroups, setUserGroups] = useState([])
     const [user, setUser] = useState('')
     const [permission, setPermission] = useState('')
-    const [databasesWithPermission, setDatabasesWithPermission] = useState<Array<{project: string, databases: any[]}>>([])
+    const [userHasFullWorkspacePermission, setUserHasFullWorkspacePermission] = useState(false);
+    const [projectsWithFullPermission, setProjectsWithFullPermission] = useState<Array<string>>([])
+    const [databasesWithConditionalPermission, setDatabasesWithConditionalPermission] = useState<Array<{project: string, databases: any[]}>>([])
 
     const handleSubmit = (e) => { e.preventDefault();}
     const handleSelectUser = (e) => {setUser(e.target.value); setPermission('')};
@@ -20,28 +23,21 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
     }, [user, permission]);
 
     const hasUserWorkspacePermission = (rolesWithPermission: any[], rolesToBeMatched: any[]): boolean => {
+        
+        // There's no to be matched role
+        if (rolesToBeMatched.length === 0) {  return false; } 
 
-        if (rolesToBeMatched.length === 0) {            // There's no to be matched role
-                return false;
-        } else {
-
-            for (const roleToBeMatched of rolesToBeMatched) {
-
-             //   console.log("roleToBeMatched: ", roleToBeMatched)
-    
-                if (!rolesWithPermission.find(roleWithPermission => roleWithPermission.name === roleToBeMatched.role)) continue;
-                
-                const memberMatch = roleToBeMatched.members.includes(`user:${user}`);
-    
-    
-                if (memberMatch) {
-                //    console.log("workspace Matched !!!")
-                    return true;
-                } else {
-                    return false;
-                }
+        for (const roleToBeMatched of rolesToBeMatched) {
+            const matchingRole = rolesWithPermission.find(roleWithPermission => roleWithPermission.name === roleToBeMatched.role);
+            
+            if (!matchingRole) continue;
+            
+            if (roleToBeMatched.members.includes(`user:${user}`)) {
+                return true;
             }
-        }     
+        }
+        
+        return false;
     };
 
     const getUserProjectPermissionRoles = (rolesWithPermission: any[], rolesToBeMatched: any[], hasGroups: boolean = false, theProject: string = ''): any[] => {
@@ -53,11 +49,9 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
            // console.log("roleToBeMatched: ", roleToBeMatched)
     
             const matchingRole = rolesWithPermission.find(roleWithPermission => roleWithPermission.name === roleToBeMatched.role);
-            if (matchingRole) {
-               // console.log("Matching role found:", matchingRole.name);
+            if (matchingRole) {  // console.log("Matching role found:", matchingRole.name);
                 refinedRolesToBeMatched.push(roleToBeMatched);
-            } else {
-              //  console.log("No matching role found. ", roleToBeMatched.role);
+            } else { //  console.log("No matching role found. ", roleToBeMatched.role);
                 continue;
             }
         }
@@ -70,7 +64,7 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
     
             if (memberMatch || groupMatch) {
 
-            //    console.log("Matched !!!roleToBeMatched matched================= ", roleToBeMatched, theProject)
+              //  console.log("Matched !!!roleToBeMatched matched================= ", roleToBeMatched, theProject)
                 rolesMatched.push(roleToBeMatched);
             }
         }
@@ -81,7 +75,6 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
 
     const parseCelExpression = async (celExpression: string): Promise<any> => {
 
-        console.log("celExpression =============== ", celExpression)
         const response = await fetch(`/api/cel`, {
             method: 'POST',
             body: JSON.stringify({
@@ -89,98 +82,21 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
             })
         });
         const data = await response.json();
-        console.log("celExpression parse data =============== ", data)
-        return data;
+        const celPromise = convertFromExpr(data.expressions[0].expr);
+
+        return celPromise;
     };
 
-    //e.g  1 "request.time < timestamp("2024-09-07T08:42:34.153Z") && (resource.database in ["instances/prod-sample-instance/databases/hr_prod"])"
-    //e.g  2 "request.time < timestamp(\"2024-12-03T08:42:48.668Z\") && (resource.database in [\"instances/prod-sample-instance/databases/hr_prod\",\"instances/test-sample-instance/databases/hr_test\"])"
-    //e.g  3 "request.time < timestamp(\"2024-10-05T07:35:51.445Z\")"
-    //e.g  4 "(resource.database == \"instances/prod-sample-instance/databases/hr_prod\" && resource.schema == \"bbdataarchive\" && resource.table in [\"_20240904030038_0_t1\"])"
-    //e.g  5 "request.time < timestamp("2024-10-05T09:03:41.349Z") && ((resource.database == "instances/test-sample-instance/databases/hr_test" && resource.schema in ["bbdataarchive"]) || (resource.database == "instances/prod-sample-instance/databases/hr_prod" && resource.schema == "public" && resource.table in ["employee","dept_emp"]) || (resource.database == "instances/test-sample-instance/databases/hr_test" && resource.schema == "public" && resource.table in ["title"]))"
-    //e.g  6 "(resource.database in ["instances/test-sample-instance/databases/hr_test", "instances/prod-sample-instance/databases/hr_prod"])"
-   /* const parseCelExpression = (celExpression: string): {
-        isExpired: boolean,
-        expiredDate: string | null,
-        resources: Array<{
-            databases: string[],
-            schemas: string[],
-            tables: string[]
-        }>
-    } => {
-    
-        const result = {
-            isExpired: false,
-            expiredDate: null,
-            resources: []
-        };
-        let resourceConditions = '';
-    
-        // Check for expiration
-        const timeMatch = celExpression.match(/request\.time\s*<\s*timestamp\("(.+?)"\)/);
-        if (timeMatch) {
-            const expirationTime = new Date(timeMatch[1]);
-            result.expiredDate = expirationTime.toISOString();
-            result.isExpired = new Date() >= expirationTime;
-            resourceConditions = celExpression.split('&&').slice(1).join('&&').trim();
-        } else {
-            resourceConditions = celExpression.trim();
-        }
-
-        // Remove outer parentheses and split by OR
-        const orConditions = resourceConditions.replace(/^\(|\)$/g, '').split('||').map(c => c.trim());
-    
-        orConditions.forEach(condition => {
-            const resource: { databases: string[]; schemas: string[]; tables: string[] } = { databases: [], schemas: [], tables: [] };
-            
-            // Extract database
-            const databaseMatches = [...condition.matchAll(/resource\.database\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/g)];
-            databaseMatches.forEach(match => {
-                const databases = match[2]
-                    .replace(/[\[\]]/g, '')
-                    .split(',')
-                    .map(s => s.trim().replace(/^"|"$/g, ''))
-                    .filter(s => s !== '');
-                resource.databases.push(...databases);
-            });
-    
-            // Extract schemas
-            const schemaMatches = [...condition.matchAll(/resource\.schema\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/g)];
-            schemaMatches.forEach(match => {
-                const schemas = match[2]
-                    .replace(/[\[\]]/g, '')
-                    .split(',')
-                    .map(s => s.trim().replace(/^"|"$/g, ''))
-                    .filter(s => s !== '');
-                resource.schemas.push(...schemas);
-            });
-    
-            // Extract tables
-            const tableMatches = [...condition.matchAll(/resource\.table\s*(==|in)\s*(\["[^"]+?"(?:,\s*"[^"]+?")*\]|"[^"]+")/g)];
-            tableMatches.forEach(match => {
-                const tables = match[2]
-                    .replace(/[\[\]]/g, '')
-                    .split(',')
-                    .map(s => s.trim().replace(/^"|"$/g, ''))
-                    .filter(s => s !== '');
-                resource.tables.push(...tables);
-            });
-    
-            if (resource.databases.length > 0) {
-                result.resources.push(resource);
-            }
-        });
-    
-        console.log("Parse CEL <<<<<<<<<<<<<<<<<<<<<<<<<<", celExpression);
-        console.log("Parsed result=============>>>>>>>>>>", result);
-        return result;
-    };*/
-    
-
     const updateDatabasesWithPermission = async () => {
+        setDatabasesWithConditionalPermission([]);
+        setUserHasFullWorkspacePermission(false);
+        setProjectsWithFullPermission([]);
+
         if (!user || !permission) { return; }
 
-        const newDatabasesWithPermission: Array<{project: string, databases: any[]}> = [];
+        const newProjectsWithFullPermission: Array<string> = [];
+        const newDatabasesWithConditionalPermission: Array<{project: string, databases: any[]}> = [];
+        let userHasFullWorkspacePermission = false;
 
         const rolesWithPermission = allRoles.filter((role) => role.permissions.includes(permission));
 
@@ -193,128 +109,49 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
         setUserGroups(newUserGroups);
 
         if (hasUserWorkspacePermission(rolesWithPermission, allWorkspaceIam.bindings)) {
-            for (const project of allProjects) { // list all projects and get all databases
-                const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
-                    method: 'GET'
-                });
-                const fetchedDatabasesData = await fetchedDatabases.json();
-                newDatabasesWithPermission.push({project: project.name, databases: fetchedDatabasesData.databases});
-            }
-        } else {
-            console.log("NO workspace permission matched, let's check project permission =================================")
-            for (const project of allProjects) {
-                const projectShort = project.name.split("/")[1];
-                const fetchedProjectIam = await fetch(`/api/projectiam/${encodeURIComponent(projectShort)}`, {
-                    method: 'GET'
-                });
-                const fetchedProjectIamData = await fetchedProjectIam.json();
-    
-                const userHasMatchedRoles = getUserProjectPermissionRoles(rolesWithPermission, fetchedProjectIamData.bindings, userGroups.length > 0, project.name);
-
-                let celsConverted: any[] = [];
-
-                if (userHasMatchedRoles.length > 0) {
-                    let shouldDisplayAllDatabases = false;
-
-                    for (const role of userHasMatchedRoles) {
-
-                     //   console.log("role ", role.condition)
-                        if (role.condition && role.condition.expression === '') {
-                            shouldDisplayAllDatabases = true;
-                        } else {
-                           // const parsedCel = parseCelExpression(role.condition.expression);
-                           // celsConverted.push(parsedCel);
-                           parseCelExpression(role.condition.expression);
-                        }
-                    }
-
-                   // console.log("celsConverted +++++++++++++++++++++++++++++++++++++++++++++++++", celsConverted);
-
-
-                    const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
-                        method: 'GET'
-                    });
-                    const fetchedDatabasesData = await fetchedDatabases.json();
-                    const projectAllDatabases = fetchedDatabasesData.databases;
-            
-                 //   console.log("projectAllDatabases =================", projectAllDatabases);
-
-
-                    for ( const cel of celsConverted ){
-                        console.log(cel)
-                    }
-
-                } 
-
-              /*  if (userHasPermissionProject.hasFullPermission) {
-                    const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(project.name)}`, {
-                        method: 'GET'
-                    });
-                    const fetchedDatabasesData = await fetchedDatabases.json();
-                    newDatabasesWithPermission.push({project: project.name, databases: fetchedDatabasesData.databases});
-                } else {
-                    console.log("userHasPermissionProject ++++++++++++++++++ ", userHasPermissionProject)
-                }*/
-            }
-        }
-
-        console.log("newDatabasesWithPermission ", newDatabasesWithPermission)
-        setDatabasesWithPermission(newDatabasesWithPermission);
-    };
-
-    // Group databases by project
-    const groupedDatabases = databasesWithPermission.reduce((acc, item) => {
-        if (!acc[item.project]) {
-            acc[item.project] = [];
-        }
-        acc[item.project].push(...item.databases);
-        return acc;
-    }, {});
-
- 
-    
-
-    const checkProjectSpecificCondition = (roleToBeMatched: any): { hasFullPermission: boolean, theCondition: string } => {
-        
-       // console.log("checkProjectSpecificCondition ================= ", roleToBeMatched)
-
-        if (roleToBeMatched.condition && roleToBeMatched.condition.expression) {
-          //  console.log("roleToBeMatched.condition && roleToBeMatched.condition.expression -----", roleToBeMatched.condition.expression)
-            return { hasFullPermission: false, theCondition: roleToBeMatched.condition.expression };
+            //TODO the user has workspace permission
+            userHasFullWorkspacePermission = true;
         } 
+        
+        for (const project of allProjects) {
+            const projectShort = project.name.split("/")[1];
+            const fetchedProjectIam = await fetch(`/api/projectiam/${encodeURIComponent(projectShort)}`, {
+                method: 'GET'
+            });
+            const fetchedProjectIamData = await fetchedProjectIam.json();
+            const userHasMatchedRoles = getUserProjectPermissionRoles(rolesWithPermission, fetchedProjectIamData.bindings, userGroups.length > 0, project.name);
 
-        return { hasFullPermission: true, theCondition: '' };
-/*
-        const { expression } = roleToBeMatched.condition;
-        console.log("expression ================= ", expression)
-        const databaseMatch = expression.match(/resource\.database\s+in\s+\["([^"]+)"\]/);
-        const timestampMatch = expression.match(/request\.time\s*<\s*timestamp\("([^"]+)"\)/);
+            let celsConverted: any[] = [];
+            let userHasFullProjectPermission = false; // if there's no condition role which means it has full permission
 
-        if (!databaseMatch) {
-            return { hasPermission: true, onlyDatabase: '', extraCondition: {} };
+            if (userHasMatchedRoles.length > 0) {
+
+                for (const role of userHasMatchedRoles) {
+
+                    if (role.condition && role.condition.expression === '') {
+                        userHasFullProjectPermission = true;
+                    } else {
+                        const celValue = await parseCelExpression(role.condition.expression);
+                        celsConverted.push(celValue);
+                    }
+                }
+
+                if (userHasFullProjectPermission) {
+                    newProjectsWithFullPermission.push(project.name);
+                } 
+                
+                if (celsConverted.length > 0) {
+                    newDatabasesWithConditionalPermission.push({project: project.name, databases: celsConverted});
+                }
+                
+
+            } 
         }
 
-        let extraCondition: { isExpired?: boolean, expireTime?: string } = { isExpired: false, expireTime: '' };
-        let expirationTime: Date | null = null;
-
-        if (timestampMatch) {
-            expirationTime = new Date(timestampMatch[1]);
-            if (new Date() >= expirationTime) {
-                extraCondition = { isExpired: true, expireTime: expirationTime.toString() };
-            } else {
-                extraCondition = { isExpired: false, expireTime: expirationTime.toString() };
-            }
-        }
-
-        return { hasPermission: false, onlyDatabase: databaseMatch[1], extraCondition };*/
-    };
-
-    // Sort databasesWithPermission before rendering
-    const sortedDatabasesWithPermission = databasesWithPermission.sort((a, b) => {
-        if (a.project < b.project) return -1;
-        if (a.project > b.project) return 1;
-        return 0;
-    });
+        setUserHasFullWorkspacePermission(userHasFullWorkspacePermission);
+        setProjectsWithFullPermission(newProjectsWithFullPermission);
+        setDatabasesWithConditionalPermission(newDatabasesWithConditionalPermission);
+    }
 
     return (
         <form onSubmit={handleSubmit} className="md:w-1/2 sm:w-full flex gap-3 flex-col p-10 border-green-600 border-4">        
@@ -350,23 +187,78 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
                 ))}
             </select>
 
-            {Object.keys(groupedDatabases).length > 0 && (
-                Object.keys(groupedDatabases).map((project) => (
-                    <div key={project} className="mt-4">
-                        <h3 className="font-semibold text-lg">{project}</h3>
-                        <ul className="list-disc pl-5 mt-2">
-                            {groupedDatabases[project].map((db, index) => (
-                                <li 
-                                    key={`${db.name}-${index}`} 
-                                    style={{ textDecoration: db.extraConditionIsExpired ? 'line-through' : 'none' }}
-                                >
-                                    {db.name} {db.extraConditionTime}
-                                </li>
+
+            <div>
+                    <h2 className="text-2xl font-bold mt-4 mb-2">Full Workspace Permission</h2>
+            {userHasFullWorkspacePermission ? (
+                    <p className="text-blue-500">The user has full permission to the entire workspace.</p>
+            ) : (
+                    <p className="text-blue-500">The user does not have permission to the entire workspace.</p>
+            )}
+            </div>
+            
+
+<div>
+                <h2 className="text-2xl font-bold mt-4 mb-2">Full Project Permission</h2>
+                {projectsWithFullPermission.length > 0 ? (
+                    <>
+                        <p className="text-blue-500">The user has full permission to the following projects:</p>
+                        <ul>
+                            {projectsWithFullPermission.map((project, index) => (
+                                <li key={index}>{project}</li>
                             ))}
                         </ul>
-                    </div>
-                ))
+                    </>
+                ) : (
+                    <p className="text-blue-500">The user does not have full permission to any projects.</p>
+                )}
+            </div>
+
+
+            {databasesWithConditionalPermission.length > 0 && (
+                <h2 className="text-2xl font-bold mt-4 mb-2">Project Permission with Condition</h2>
             )}
+
+{databasesWithConditionalPermission.map((item, index) => (
+    <div key={index} className="db-list">
+        <h3 className="text-xl font-bold">{item.project}</h3>
+        <ul>
+            {item.databases.map((condDb, condIndex) => {
+                const isExpired = condDb.expiredTime && new Date(condDb.expiredTime) < new Date();
+                return (
+                    <li key={condIndex} className={isExpired ? 'line-through text-red-500' : ''}>
+                        {condDb.databaseResources.length === 0 ? (
+                            <div><strong>Database:</strong> All in this project</div>
+                        ) : (
+                            condDb.databaseResources.map((resource, resIndex) => (
+                                <div key={resIndex} className="mb-2">
+                                     {resource.databaseName}
+                                                        {resource.schema && (
+                                                            <div>
+                                                                <strong>> Schema:</strong> {resource.schema}
+                                                            </div>
+                                                        )}
+                                                        {resource.table && (
+                                                            <div>
+                                                                <strong>>>Table:</strong> {resource.table}
+                                                            </div>
+                                                        )}
+                                </div>
+                            ))
+                        )}
+                        {condDb.expiredTime ? (
+                            <div><strong>Expires:</strong> {new Date(condDb.expiredTime).toLocaleString()}</div>
+                        ) : (
+                            <div>No Expiration</div>
+                        )}
+                    </li>
+                );
+            })}
+        </ul>
+    </div>
+))}
+
+            
         </form>
     )
 }
