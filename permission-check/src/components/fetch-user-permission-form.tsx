@@ -1,7 +1,7 @@
 "use client"
 
 import { SetStateAction, useEffect, useState } from "react";
-import { convertFromExpr } from "@/plugins/cel/cel";
+import { parseCelExpression } from './celutils';
 
 export default function FetchUserPermissionForm({ allUsers, allDatabasePermissions, allProjects, allWorkspaceIam, allRoles, allGroups }) {
 
@@ -73,19 +73,6 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
     };
 
 
-    const parseCelExpression = async (celExpression: string): Promise<any> => {
-
-        const response = await fetch(`/api/cel`, {
-            method: 'POST',
-            body: JSON.stringify({
-                expressions: [celExpression]
-            })
-        });
-        const data = await response.json();
-        const celPromise = convertFromExpr(data.expressions[0].expr);
-
-        return celPromise;
-    };
 
     const updateDatabasesWithPermission = async () => {
         setDatabasesWithConditionalPermission([]);

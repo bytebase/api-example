@@ -1,6 +1,8 @@
 "use client"
 
+import { parse } from "path";
 import { useEffect, useState } from "react";
+import { parseCelExpression } from "./celutils";
 
 export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, allRoles, allDatabasePermissions, allGroups }) {
 
@@ -59,7 +61,7 @@ export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, al
         }
     }, [permission, database, project]);
 
-    const updateMembersWithPermission = () => {
+    const updateMembersWithPermission = async () => {
         // find all roles that have the permission
         const rolesWithPermission = allRoles.filter((role) => {
             return role.permissions.includes(permission)
@@ -70,30 +72,28 @@ export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, al
         const membersWithPermission = [
             ...projectIam,
             ...workspaceIam
-        ].filter((iam) => {
+        ].filter(async (iam: { role: string; condition?: { expression?: string }; members: string[] }) => { // Specify the type for iam
             const hasPermission = rolesWithPermission.some((role: any) => role.name === iam.role);
             
             if (hasPermission) {
                 if (!iam.condition?.expression) {
                     return true;
                 }
-                
-                const condition = iam.condition.expression;
-                const databaseCheck = condition.includes(database);
-                const timeCheck = condition.includes('request.time');
-                
-                if (databaseCheck && !timeCheck) {
-                    return true;
-                }
-                
-                if (databaseCheck && timeCheck) {
-                    const expirationMatch = condition.match(/timestamp\("(.+?)"\)/);
-                    if (expirationMatch) {
-                        const expirationTime = new Date(expirationMatch[1]);
-                        const currentTime = new Date();
-                        return currentTime < expirationTime;
+
+                const celValue = await parseCelExpression(iam.condition.expression);
+                console.log("celValue---------------",celValue.databaseResources
+                )
+                console.log("current database---------------",database)
+
+                let expiredTime = celValue.expiredTime;
+
+                for (let dbrs of celValue.databaseResources) {
+                    if (dbrs.databaseName == database) {
+                        console.log("matched with expired time",expiredTime)
                     }
                 }
+               
+                
             }
             return false;
 
