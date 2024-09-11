@@ -1,18 +1,18 @@
 "use client"
 
 import { SetStateAction, useEffect, useState } from "react";
-import { parseCelExpression } from './celutils';
+import { parseCelExpression, fetchData } from './utils';
 
 export default function FetchUserPermissionForm({ allUsers, allDatabasePermissions, allProjects, allWorkspaceIam, allRoles, allGroups }) {
 
     const [userGroups, setUserGroups] = useState([])
     const [user, setUser] = useState('')
     const [permission, setPermission] = useState('')
+    
     const [userHasFullWorkspacePermission, setUserHasFullWorkspacePermission] = useState(false);
     const [projectsWithFullPermission, setProjectsWithFullPermission] = useState<Array<string>>([])
     const [databasesWithConditionalPermission, setDatabasesWithConditionalPermission] = useState<Array<{project: string, databases: any[]}>>([])
 
-    const handleSubmit = (e) => { e.preventDefault();}
     const handleSelectUser = (e) => {setUser(e.target.value); setPermission('')};
     const handleSelectPermission = (e) => { setPermission(e.target.value); };
 
@@ -23,58 +23,34 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
     }, [user, permission]);
 
     const hasUserWorkspacePermission = (rolesWithPermission: any[], rolesToBeMatched: any[]): boolean => {
-        
         // There's no to be matched role
         if (rolesToBeMatched.length === 0) {  return false; } 
 
-        for (const roleToBeMatched of rolesToBeMatched) {
-            const matchingRole = rolesWithPermission.find(roleWithPermission => roleWithPermission.name === roleToBeMatched.role);
-            
-            if (!matchingRole) continue;
-            
-            if (roleToBeMatched.members.includes(`user:${user}`)) {
-                return true;
-            }
-        }
-        
-        return false;
+        return rolesToBeMatched.some(roleToBeMatched => 
+            rolesWithPermission.some(roleWithPermission => 
+                roleWithPermission.name === roleToBeMatched.role &&
+                roleToBeMatched.members.includes(`user:${user}`)
+            )
+        );
     };
 
     const getUserProjectPermissionRoles = (rolesWithPermission: any[], rolesToBeMatched: any[], hasGroups: boolean = false, theProject: string = ''): any[] => {
         
-        let refinedRolesToBeMatched: any[] = [];
-        let rolesMatched:any[] = [];
-
-        for (const roleToBeMatched of rolesToBeMatched) {
-           // console.log("roleToBeMatched: ", roleToBeMatched)
+        const refinedRolesToBeMatched = rolesToBeMatched.filter(roleToBeMatched => 
+            rolesWithPermission.some(roleWithPermission => roleWithPermission.name === roleToBeMatched.role)
+        );
     
-            const matchingRole = rolesWithPermission.find(roleWithPermission => roleWithPermission.name === roleToBeMatched.role);
-            if (matchingRole) {  // console.log("Matching role found:", matchingRole.name);
-                refinedRolesToBeMatched.push(roleToBeMatched);
-            } else { //  console.log("No matching role found. ", roleToBeMatched.role);
-                continue;
-            }
-        }
-    
-        for (const roleToBeMatched of refinedRolesToBeMatched) {
+        return refinedRolesToBeMatched.filter(roleToBeMatched => {
             const memberMatch = roleToBeMatched.members.includes(`user:${user}`);
             const groupMatch = hasGroups && userGroups.some(group => 
                 roleToBeMatched.members.includes(group.replace('groups/', 'group:'))
             );
-    
-            if (memberMatch || groupMatch) {
-
-              //  console.log("Matched !!!roleToBeMatched matched================= ", roleToBeMatched, theProject)
-                rolesMatched.push(roleToBeMatched);
-            }
-        }
-    
-        return rolesMatched;  
+            return memberMatch || groupMatch;
+        });
     };
 
-
-
     const updateDatabasesWithPermission = async () => {
+        
         setDatabasesWithConditionalPermission([]);
         setUserHasFullWorkspacePermission(false);
         setProjectsWithFullPermission([]);
@@ -96,16 +72,12 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
         setUserGroups(newUserGroups);
 
         if (hasUserWorkspacePermission(rolesWithPermission, allWorkspaceIam.bindings)) {
-            //TODO the user has workspace permission
             userHasFullWorkspacePermission = true;
         } 
         
         for (const project of allProjects) {
             const projectShort = project.name.split("/")[1];
-            const fetchedProjectIam = await fetch(`/api/projectiam/${encodeURIComponent(projectShort)}`, {
-                method: 'GET'
-            });
-            const fetchedProjectIamData = await fetchedProjectIam.json();
+            const fetchedProjectIamData = await fetchData(`/api/projectiam/${encodeURIComponent(projectShort)}`);
             const userHasMatchedRoles = getUserProjectPermissionRoles(rolesWithPermission, fetchedProjectIamData.bindings, userGroups.length > 0, project.name);
 
             let celsConverted: any[] = [];
@@ -129,8 +101,7 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
                 
                 if (celsConverted.length > 0) {
                     newDatabasesWithConditionalPermission.push({project: project.name, databases: celsConverted});
-                }
-                
+                }             
 
             } 
         }
@@ -141,7 +112,7 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
     }
 
     return (
-        <form onSubmit={handleSubmit} className="md:w-1/2 sm:w-full flex gap-3 flex-col p-10 border-green-600 border-4">        
+        <form className="md:w-1/2 sm:w-full flex gap-3 flex-col p-10 border-green-600 border-4">        
             <h1 className="text-2xl font-bold">Which databases does a specific user have access to?</h1>  
 
             <select 
@@ -184,8 +155,7 @@ export default function FetchUserPermissionForm({ allUsers, allDatabasePermissio
             )}
             </div>
             
-
-<div>
+            <div>
                 <h2 className="text-2xl font-bold mt-4 mb-2">Full Project Permission</h2>
                 {projectsWithFullPermission.length > 0 ? (
                     <>

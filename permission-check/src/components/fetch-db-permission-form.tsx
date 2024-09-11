@@ -1,8 +1,7 @@
 "use client"
 
-import { parse } from "path";
 import { useEffect, useState } from "react";
-import { parseCelExpression } from "./celutils";
+import { parseCelExpression, fetchData } from "./utils";
 
 export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, allRoles, allDatabasePermissions, allGroups }) {
 
@@ -12,38 +11,29 @@ export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, al
     const [projectIam, setProjectIam] = useState([])
     const [workspaceIam, setWorkspaceIam] = useState([])
     const [permission, setPermission] = useState('')
+    
     const [rolesWithPermission, setRolesWithPermission] = useState([])
     const [membersWithPermission, setMembersWithPermission] = useState([])
 
+    const fetchDatabases = (projectValue: string) => fetchData(`/api/databases/${encodeURIComponent(projectValue)}`);
+    const fetchProjectIam = (projectShort: string) => fetchData(`/api/projectiam/${encodeURIComponent(projectShort)}`);
+
     const handleSelectProject = async (e:React.ChangeEvent<HTMLSelectElement>) => {
-        console.log("handleSelectProject projectValue:", e.target.value);
 
         const projectValue = e.target.value
         setProject(projectValue);
         setPermission('');
         setDatabase('');
-        // projectValue e.g.: projects/project-sample
-        // fetch databases
-        const fetchedDatabases = await fetch(`/api/databases/${encodeURIComponent(projectValue)}`,{
-            method: 'GET'
-        })
-        const fetchedDatabasesData = await fetchedDatabases.json()
-        setFilteredDatabases(fetchedDatabasesData.databases)
+        
+        // Fetch databases and project IAM concurrently
+        const [fetchedDatabasesData, fetchedProjectIamData] = await Promise.all([
+            fetchDatabases(projectValue),
+            fetchProjectIam(projectValue.split("/")[1])
+        ]);
 
-        // fetch project iam
-        const projectShort = projectValue.split("/")[1]
-        const fetchedProjectIam = await fetch(`/api/projectiam/${encodeURIComponent(projectShort)}`,{
-            method: 'GET'
-        })
-     
-        const fetchedProjectIamData = await fetchedProjectIam.json()
-        setProjectIam(fetchedProjectIamData.bindings)
-        setWorkspaceIam(allWorkspaceIam.bindings)
-    }
-
-
-    const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+        setFilteredDatabases(fetchedDatabasesData.databases);
+        setProjectIam(fetchedProjectIamData.bindings);
+        setWorkspaceIam(allWorkspaceIam.bindings);
     }
 
     const handleSelectDatabase = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -62,6 +52,9 @@ export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, al
     }, [permission, database, project]);
 
     const updateMembersWithPermission = async () => {
+
+
+        if (!project || !permission || !database) { return; }
         // find all roles that have the permission
         const rolesWithPermission = allRoles.filter((role) => role.permissions.includes(permission));
         setRolesWithPermission(rolesWithPermission);
@@ -79,8 +72,6 @@ export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, al
                 }
     
                 const celValue = await parseCelExpression(iam.condition.expression);
-                console.log("celValue---------------", celValue.databaseResources);
-                console.log("current database---------------", database);
     
                 let expiredTime = celValue.expiredTime;
     
@@ -98,11 +89,10 @@ export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, al
     
         // At this point, membersWithPermission will be an array of objects, where each object contains { member, expiredTime }
         setMembersWithPermission(membersWithPermission);
-        console.log("========================", membersWithPermission);
     };
 
     return (
-        <form onSubmit={handleSubmit}  className="md:w-1/2 sm:w-full flex gap-3 flex-col p-10 border-yellow-600 border-4">        
+        <form className="md:w-1/2 sm:w-full flex gap-3 flex-col p-10 border-yellow-600 border-4">        
         <h1 className="text-2xl font-bold">Who has access to a specific database?</h1>            
        
         <select name="project" id="project" value={project} onChange={(e) => handleSelectProject(e)}
@@ -157,21 +147,13 @@ export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, al
                         return (
                             <li key={index} className={isExpired ? "line-through text-red-500" : ""}>
                                 {item}
-                                <div>
-                                    {it.expiredTime ? (
-                                        <span>
-                                           <strong>Expires:</strong>  {new Date(it.expiredTime).toLocaleString()}
-                                        </span>
-                                    ) : " No Expiration"}
-                                </div>
-                                {/* Check if item is a group */}
                                 {typeof item === 'string' && item.startsWith('group:') && 
                                     allGroups.groups.map((group: any, groupIndex: number) => {
                                         const replacedItem = item.replace('group:', 'groups/');
                                         
                                         if (group.name === replacedItem) {
                                             return (
-                                                <ul key={groupIndex} className="bg-gray-100 p-2 mt-2 rounded-md">
+                                                <ul key={groupIndex} className="bg-gray-100 p-2 mt-2 mb-2 rounded-md">
                                                     <strong>This group has these members:</strong>
                                                     {group.members.map((m: any, i: number) => (
                                                         <li key={i}>{m.member}</li>
@@ -182,6 +164,14 @@ export default function FetchDbPermissionForm({ allProjects, allWorkspaceIam, al
                                         return null; // Safely return null if no match is found
                                     })
                                 }
+
+                                <div>
+                                    {it.expiredTime ? (
+                                        <span>
+                                           <strong>Expires:</strong>  {new Date(it.expiredTime).toLocaleString()}
+                                        </span>
+                                    ) : " No Expiration"}
+                                </div>
                             </li>
                         );
                     })}
