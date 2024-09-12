@@ -53,7 +53,6 @@ export default function DbFetchUserPermissionForm({ allProjects, allWorkspaceIam
 
     const updateMembersWithPermission = async () => {
 
-
         if (!project || !permission || !database) { return; }
         // find all roles that have the permission
         const rolesWithPermission = allRoles.filter((role) => role.permissions.includes(permission));
