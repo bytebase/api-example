@@ -21,13 +21,18 @@ export async function parseCelExpression(celExpression: string): Promise<any> {
 
 export const fetchData = async (url: string) => {
   try {
-    const response = await fetch(url, { method: 'GET' });
+    const response = await fetch(url, { 
+      method: 'GET',
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     return await response.json();
   } catch (error) {
-    console.error(`Failed to fetch data from ${url}:`, error);
+    console.error('Error fetching data:', error);
     throw error;
   }
-}
+};
