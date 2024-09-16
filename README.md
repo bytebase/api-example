@@ -1,4 +1,4 @@
 # Bytebase API Example
 
-1. [Create an Issue](#create-an-issue)
-1. [Check the Permission](#check-the-permission)
+1. [Create an Issue](https://github.com/bytebase/api-example/tree/main/issue-creation)
+1. [Check the Permission](https://github.com/bytebase/api-example/tree/main/permission-check)
