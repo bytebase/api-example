@@ -8,7 +8,7 @@ Say your organization already has a DevOps platform and you want to integrate th
 
 The app is built with Next.js and TailwindCSS.
 
-![add issue](issue-creation/docs/add-issue-and-refresh.gif)
+![add issue](/docs/add-issue-and-refresh.gif)
 
 ## Prerequisites
 
@@ -22,11 +22,11 @@ The app is built with Next.js and TailwindCSS.
 1. Create a [service account](https://www.bytebase.com/docs/how-to/spanner/how-to-create-a-service-account-for-bytebase/).
    Choose the `DBA` role which is sufficient for this sample.
 
-![Service Account Create](issue-creation/docs/service-account-create.webp)
+![Service Account Create](/docs/service-account-create.webp)
 
 1. Record the service account key.
 
-![Service Account Create](issue-creation/docs/service-account-key.webp)
+![Service Account Create](/docs/service-account-key.webp)
 
 ### Step 2 - Configure and run this app
 
@@ -84,12 +84,3 @@ In `src/app/components/add-issue-form.tsx`:
 
 ### SQL Check
 added 2024/8/15, which is not included in the tutorial
-
-## Check the Permission
-
-This is a sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API to check:
-
-- Who has access to a specific database?
-- Which databases does a specific user have access to?
-
-![Check db and user permissions](permission-check/docs/permission-911.gif)
