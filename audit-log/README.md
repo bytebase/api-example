@@ -2,11 +2,7 @@
 
 This is a sample app demonstrating how to use [Bytebase](https://github.com/bytebase/bytebase) API to fetch and filter audit logs.
 
-## Features
-
-- Fetch audit logs from Bytebase
-- Filter audit logs by project and date range
-- Display audit log entries in a tabular format
+![audit log](./docs/audit-log.gif)
 
 ## Prerequisites
 
@@ -51,21 +47,10 @@ This is a sample app demonstrating how to use [Bytebase](https://github.com/byte
 
 This app demonstrates the use of the following Bytebase API endpoints:
 
+- `/v1/auditLogs:search` - To fetch audit logs for the whole workspace
 - `/v1/projects` - To fetch all projects
-- `/v1/audit-logs` - To fetch audit logs
+- `/v1/PROJECT_ID/auditLogs:search` - To fetch audit logs for a specific project
 
 For more details on the Bytebase API, refer to the [official documentation](https://github.com/bytebase/bytebase/blob/main/proto/gen/grpc-doc/v1/README.md).
 
-## Project Structure
 
-- `src/app/page.tsx`: Main page component
-- `src/components/filter-audit-log-form.tsx`: Component for filtering and displaying audit logs
-- `src/app/api/utils.ts`: Utility functions for API calls and token generation
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
