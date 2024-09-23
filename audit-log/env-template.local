@@ -1,0 +1,7 @@
+#rename `env-template.local` to `.env.local`
+#update the values of the variables
+
+NEXT_PUBLIC_BB_HOST=http://localhost:5678
+NEXT_PUBLIC_BB_SERVICE_ACCOUNT=api-sample@service.bytebase.com
+NEXT_PUBLIC_BB_SERVICE_KEY=bbs_2UJBSB1Ap6Ro32QWUrDf
+
