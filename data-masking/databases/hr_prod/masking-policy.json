@@ -1,0 +1,12 @@
+{
+  "maskData": [
+    {
+      "schema": "…",
+      "table": "…",
+      "column": "…",
+      "maskingLevel": "MASKING_LEVEL_UNSPECIFIED",
+      "fullMaskingAlgorithmId": "…",
+      "partialMaskingAlgorithmId": "…"
+    }
+  ]
+}

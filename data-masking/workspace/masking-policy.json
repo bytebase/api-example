@@ -1,0 +1,14 @@
+{
+  "rules": [
+    {
+      "id": "…",
+      "condition": {
+        "expression": "…",
+        "title": "…",
+        "description": "…",
+        "location": "…"
+      },
+      "maskingLevel": "MASKING_LEVEL_UNSPECIFIED"
+    }
+  ]
+}

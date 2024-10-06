@@ -1,0 +1,26 @@
+{
+  "maskingExceptions": [
+    {
+      "action": "EXPORT",
+      "maskingLevel": "PARTIAL",
+      "member": "user:nakano@bytebase.com",
+      "condition": {
+        "expression": "resource.database_name == \"test\" && resource.instance_id == \"new-instance-vnlp\" && resource.table_name == \"pokes\" && resource.column_name == \"foo\"",
+        "title": "",
+        "description": "",
+        "location": ""
+      }
+    },
+    {
+      "action": "QUERY",
+      "maskingLevel": "PARTIAL",
+      "member": "user:nakano@bytebase.com",
+      "condition": {
+        "expression": "resource.database_name == \"test\" && resource.instance_id == \"new-instance-vnlp\" && resource.table_name == \"pokes\" && resource.column_name == \"foo\"",
+        "title": "",
+        "description": "",
+        "location": ""
+      }
+    }
+  ]
+}

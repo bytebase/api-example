@@ -1,0 +1,20 @@
+{
+  "tableConfigs": [
+    {
+      "name": "pokes",
+      "columnConfigs": [
+        {
+          "name": "foo",
+          "semanticTypeId": "e8d3fd41-eba0-4afd-ae0f-32c91a4ee710",
+          "classificationId": ""
+        },
+        {
+          "name": "bar",
+          "semanticTypeId": "e8d3fd41-eba0-4afd-ae0f-32c91a4ee710",
+          "classificationId": ""
+        }
+      ],
+      "classificationId": ""
+    }
+  ]
+}
