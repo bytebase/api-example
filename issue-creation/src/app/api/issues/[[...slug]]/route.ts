@@ -1,4 +1,4 @@
-import generateToken from '@/app/api/token';
+import { generateToken } from '@/app/api/utils';
 
 export async function POST(request: Request,
   { params }: { params: { slug: string[] } }
