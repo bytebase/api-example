@@ -19,7 +19,7 @@ export default function AddIssueForm({ allProjects }: { allProjects: any[] }) {
         //we need to remove the 'projects/' part
         const projectId = selectedProject.split('/')[1];
 
-        setProject(projectId);
+        setProject(selectedProject);
         setDatabase('');
         
         if (selectedProject) {
