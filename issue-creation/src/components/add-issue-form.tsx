@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { v4 } from "uuid";
-import generateToken from '@/app/api/token';
 
 export default function AddIssueForm( props ) {
     const [project, setProject] = useState('');
@@ -18,6 +17,8 @@ export default function AddIssueForm( props ) {
 
     const handleSelectProject = (e:React.ChangeEvent<HTMLSelectElement>) => {
         setProject(e.target.value);
+        console.log("handleSelectProject", e.target.value)
+        console.log("allDatabases", allDatabases)
         setFilteredDatabases(allDatabases.filter((item) => item.project === e.target.value));
     }
 
