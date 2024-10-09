@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { v4 } from "uuid";
+import { createIssueWorkflow } from '../utils/issueCreation'; // Add this import
 
 export default function AddIssueForm({ allProjects }: { allProjects: any[] }) {
     const [project, setProject] = useState('');
@@ -11,6 +12,7 @@ export default function AddIssueForm({ allProjects }: { allProjects: any[] }) {
     const [createdIssueUID, setCreatedIssueUID] = useState('');
     const [checkResult, setCheckResult] = useState<any>(null);
     const [refreshedIssueStatus, setRefreshedIssueStatus] = useState('OPEN');
+    const [message, setMessage] = useState<string | null>(null);
 
     const handleSelectProject = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedProject = e.target.value;
@@ -79,94 +81,19 @@ export default function AddIssueForm({ allProjects }: { allProjects: any[] }) {
 
         console.log("handleSubmit");
         
-        /**
-         * Create a sheet
-         */
-        let newSheet = {
-            database: database,
-            title: ``,
-            content: Buffer.from(SQL).toString('base64'),
-            type: `TYPE_SQL`,
-            source: `SOURCE_BYTEBASE_ARTIFACT`,
-            visibility: `VISIBILITY_PUBLIC`,
-        };
-
-        const createdSheet = await fetch('/api/sheets/'+encodeURIComponent(project), {
-            method: 'POST',
-            body:JSON.stringify(newSheet)
-        });
-
-        const createdSheetData = await createdSheet.json();
-        console.log("--------- createdSheetData ----------",createdSheetData);
-
-    
-         /**
-         * Create a plan
-         */
-        let newPlan = {
-            "steps":[
-                {
-                "specs": [
-                    { 
-                        "id": v4(),
-                        "change_database_config": {
-                            "target": database,
-                            "type": `MIGRATE`,
-                            "sheet": createdSheetData.name
-                        }
-                    }
-                ]}
-            ],
-            
-            "title": `Change database ${database}`,
-            "description": "MIGRATE"
+        try {
+            const result = await createIssueWorkflow(project, database, SQL);
+            if (result.success) {
+                setMessage(result.message);
+                setCreatedIssueUID(result.issueData.uid);
+                setRefreshedIssueStatus('OPEN');
+            } else {
+                setMessage(`Error: ${result.message}`);
+            }
+        } catch (error) {
+            console.error("Error creating issue:", error);
+            setMessage("An unexpected error occurred while creating the issue.");
         }
-
-        const createdPlan = await fetch('/api/plans/'+encodeURIComponent(project), {
-            method: 'POST',
-            body:JSON.stringify(newPlan)
-        });
-
-        const createdPlanData = await createdPlan.json();
-        console.log("--------- createdPlanData ----------",createdPlanData);
-
-
-        /**
-         * Create an issue
-         */
-        let newIssue = {
-            "approvers": [],
-            "approvalTemplates": [],
-            "subscribers": [],
-            "title": `Issue: Change database ${database}`,
-            "description": "dddd",
-            "type": "DATABASE_CHANGE",
-            "assignee": "",
-            "plan": createdPlanData.name
-        }
-
-        const createdIssue = await fetch('/api/issues/'+encodeURIComponent(project), {
-            method: 'POST',
-            body:JSON.stringify(newIssue)
-        });
-     
-        const createdIssueData = await createdIssue.json();
-        console.log("--------- createdIssueData ----------",createdIssueData);
-        setCreatedIssueUID(createdIssueData.uid)
-
-        /**
-         * Create a rollout
-         */
-
-        let newRollout = {"plan" :createdPlanData.name};
-
-        const createdRollout = await fetch('/api/rollouts/'+encodeURIComponent(project), {
-            method: 'POST',
-            body:JSON.stringify(newRollout)
-        });
-     
-        const createdRolloutData = await createdRollout.json();
-        console.log("--------- createdRollout ----------", createdRolloutData);
     }
 
     return (
@@ -213,6 +140,12 @@ export default function AddIssueForm({ allProjects }: { allProjects: any[] }) {
           <button type="submit"
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >Create New Issue</button>
+
+            {message && (
+                <div className={`p-4 rounded-md ${message.startsWith('Error') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                    {message}
+                </div>
+            )}
 
         {createdIssueUID && 
         
