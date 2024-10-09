@@ -14,12 +14,17 @@ export default function AddIssueForm({ allProjects }: { allProjects: any[] }) {
 
     const handleSelectProject = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedProject = e.target.value;
-        setProject(selectedProject);
+
+        //selectedProject is like this: projects/project-sample
+        //we need to remove the 'projects/' part
+        const projectId = selectedProject.split('/')[1];
+
+        setProject(projectId);
         setDatabase('');
         
         if (selectedProject) {
             try {
-                const response = await fetch(`/api/databases/${encodeURIComponent(selectedProject)}`);
+                const response = await fetch(`/api/databases/${encodeURIComponent(projectId)}`);
                 const data = await response.json();
                 setDatabases(data.databases || []);
             } catch (error) {
@@ -42,7 +47,7 @@ export default function AddIssueForm({ allProjects }: { allProjects: any[] }) {
         setRefreshedIssueStatus(refreshedIssueData.status);
     }
 
-    const handleCheck = async (e:React.ChangeEvent<HTMLInputElement>) => {
+    const handleCheck = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
         if(!SQL || !project || !database) return;
@@ -68,7 +73,7 @@ export default function AddIssueForm({ allProjects }: { allProjects: any[] }) {
             setCheckResult(createdCheckData);     
     }
 
-    const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if(!SQL || !project || !database) return;
 
@@ -169,12 +174,12 @@ export default function AddIssueForm({ allProjects }: { allProjects: any[] }) {
 
         <div className="text-lg leading-loose font-bold">Add an issue to Bytebase Console</div>
         
-        <select name="project" id="project" value={project} onChange={(e) => handleSelectProject(e)}
+        <select name="project" id="project" value={project} onChange={handleSelectProject}
         className="w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
         <option value="">-- Please select a project --</option>
         {allProjects.map((item, index) => {
                 if (item.name === 'projects/default') {
-                    return ;
+                    return null;
                 }
                 return <option key={index} value={item.name}>{item.title}</option>
         })}
@@ -183,9 +188,9 @@ export default function AddIssueForm({ allProjects }: { allProjects: any[] }) {
         <select name="database" id="database" value={database} onChange={(e) => setDatabase(e.target.value)}
         className="w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
         <option value="">-- Please select a database --</option>
-        {filteredDatabases.map((item, index) => {
-            return  <option key={index} value={item.name}>{item.name}</option>
-        })}
+        {databases.map((item, index) => (
+            <option key={index} value={item.name}>{item.name}</option>
+        ))}
         </select>
         <textarea name="sql" 
         className="w-full rounded-md  border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
