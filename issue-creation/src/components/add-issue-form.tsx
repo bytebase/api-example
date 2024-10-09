@@ -3,23 +3,32 @@
 import { useState } from "react";
 import { v4 } from "uuid";
 
-export default function AddIssueForm( props ) {
+export default function AddIssueForm({ allProjects }: { allProjects: any[] }) {
     const [project, setProject] = useState('');
-    const [filteredDatabases, setFilteredDatabases] = useState([]);
+    const [databases, setDatabases] = useState<any[]>([]);
     const [database, setDatabase] = useState('');
     const [SQL, setSQL] = useState('');
     const [createdIssueUID, setCreatedIssueUID] = useState('');
-    const [checkResult, setCheckResult] = useState('');
+    const [checkResult, setCheckResult] = useState<any>(null);
     const [refreshedIssueStatus, setRefreshedIssueStatus] = useState('OPEN');
 
-    const allProjects = props['allProjects']
-    const allDatabases = props['allDatabases']
-
-    const handleSelectProject = (e:React.ChangeEvent<HTMLSelectElement>) => {
-        setProject(e.target.value);
-        console.log("handleSelectProject", e.target.value)
-        console.log("allDatabases", allDatabases)
-        setFilteredDatabases(allDatabases.filter((item) => item.project === e.target.value));
+    const handleSelectProject = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedProject = e.target.value;
+        setProject(selectedProject);
+        setDatabase('');
+        
+        if (selectedProject) {
+            try {
+                const response = await fetch(`/api/databases/${encodeURIComponent(selectedProject)}`);
+                const data = await response.json();
+                setDatabases(data.databases || []);
+            } catch (error) {
+                console.error("Error fetching databases:", error);
+                setDatabases([]);
+            }
+        } else {
+            setDatabases([]);
+        }
     }
 
     const refreshIssue = async () => {
