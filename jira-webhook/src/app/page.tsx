@@ -6,6 +6,7 @@ interface JiraInfo {
   issueKey: string;
   issueType: string;
   projectKey: string;
+  summary: string;
   description: string;
   sqlStatement: string;
   database: string;
@@ -51,6 +52,7 @@ export default function JiraInfoPage() {
           <p><strong>Issue Key:</strong> {jiraInfo.issueKey}</p>
           <p><strong>Issue Type:</strong> {jiraInfo.issueType}</p>
           <p><strong>Project Key:</strong> {jiraInfo.projectKey}</p>
+          <p><strong>Summary:</strong> {jiraInfo.summary}</p>
           <p><strong>Description:</strong> {jiraInfo.description}</p>
           <p><strong>SQL Statement:</strong> {jiraInfo.sqlStatement}</p>
           <p><strong>Database:</strong> {jiraInfo.database}</p>

@@ -10,6 +10,7 @@ interface JiraWebhookPayload {
       project: {
         key: string;
       };
+      summary: string;
       description: string;
       customfield_10038: string; // SQL statement
       customfield_10040: string; // Database name
@@ -24,6 +25,7 @@ interface ParsedData {
   issueKey: string;
   issueType: string;
   projectKey: string;
+  summary: string;
   description: string;
   sqlStatement: string;
   database: string;
@@ -50,6 +52,7 @@ export async function POST(request: Request) {
 
         const issueKey = body.issue.key;
         const projectKey = body.issue.fields.project.key;
+        const summary = body.issue.fields.summary;
         const description = body.issue.fields.description;
         const sqlStatement = body.issue.fields.customfield_10038;
         const database = body.issue.fields.customfield_10040;
@@ -59,6 +62,7 @@ export async function POST(request: Request) {
             issueKey,
             issueType,
             projectKey,
+            summary,
             description,
             sqlStatement,
             database,
