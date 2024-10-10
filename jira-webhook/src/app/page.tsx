@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 
 interface JiraInfo {
+  issueKey: string;
   issueType: string;
   projectKey: string;
   description: string;
@@ -47,6 +48,7 @@ export default function JiraInfoPage() {
       <h1>Jira Webhook Information</h1>
       {jiraInfo ? (
         <>
+          <p><strong>Issue Key:</strong> {jiraInfo.issueKey}</p>
           <p><strong>Issue Type:</strong> {jiraInfo.issueType}</p>
           <p><strong>Project Key:</strong> {jiraInfo.projectKey}</p>
           <p><strong>Description:</strong> {jiraInfo.description}</p>

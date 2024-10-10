@@ -2,6 +2,7 @@
 declare global {
   // eslint-disable-next-line no-var
   var lastJiraWebhook: {
+    issueKey: string;
     issueType: string;
     projectKey: string;
     description: string;
