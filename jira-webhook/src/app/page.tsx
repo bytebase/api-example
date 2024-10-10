@@ -17,6 +17,7 @@ export default function JiraInfoPage() {
   const [jiraInfo, setJiraInfo] = useState<JiraInfo | null>(null);
   const [isFetching, setIsFetching] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     const fetchJiraInfo = async () => {
@@ -44,6 +45,33 @@ export default function JiraInfoPage() {
     return () => clearInterval(interval);
   }, [jiraInfo]);
 
+  const handleUpdateDescription = async () => {
+    if (!jiraInfo) return;
+
+    setIsUpdating(true);
+    try {
+      const response = await fetch('/api/update-jira-issue', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ issueKey: jiraInfo.issueKey }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Update successful:', result);
+        // Trigger a re-fetch of the Jira info
+        setJiraInfo(null);
+      } else {
+        console.error('Failed to update Jira issue');
+      }
+    } catch (error) {
+      console.error('Error updating Jira issue:', error);
+    }
+    setIsUpdating(false);
+  };
+
   return (
     <div>
       <h1>Jira Webhook Information</h1>
@@ -58,6 +86,12 @@ export default function JiraInfoPage() {
           <p><strong>Database:</strong> {jiraInfo.database}</p>
           <p><strong>Status:</strong> {jiraInfo.status}</p>
           <p><strong>Last Updated:</strong> {lastUpdated ? lastUpdated.toLocaleString() : 'Never'}</p>
+          <button 
+            onClick={handleUpdateDescription} 
+            disabled={isUpdating || isFetching}
+          >
+            {isUpdating ? 'Updating...' : 'Update Description with Current Time'}
+          </button>
         </>
       ) : (
         <p>No Jira webhook information available yet.</p>

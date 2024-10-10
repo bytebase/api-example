@@ -132,6 +132,43 @@ curl --request PUT \
 
 ```
 
+
+## Update Jira Issue API in Node.js
+
+```js
+// This code sample uses the 'node-fetch' library:
+// https://www.npmjs.com/package/node-fetch
+const fetch = require('node-fetch');
+
+const bodyData = `{
+  "issueIdsOrKeys": [
+    "PR-1",
+    "1001",
+    "PROJECT-2"
+  ]
+}`;
+
+fetch('https://your-domain.atlassian.net/rest/api/3/issue/unarchive', {
+  method: 'PUT',
+  headers: {
+    'Authorization': `Basic ${Buffer.from(
+      'email@example.com:<api_token>'
+    ).toString('base64')}`,
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  },
+  body: bodyData
+})
+  .then(response => {
+    console.log(
+      `Response: ${response.status} ${response.statusText}`
+    );
+    return response.text();
+  })
+  .then(text => console.log(text))
+  .catch(err => console.error(err));
+```
+
 Edits an issue. Issue properties may be updated as part of the edit. Please note that issue transition will be ignored as it is not supported yet.
 
 The edits to the issue's fields are defined using update and fields. The fields that can be edited are determined using Get edit issue metadata.
