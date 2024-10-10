@@ -30,21 +30,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         fields: {
-          description: {
-            type: "doc",
-            version: 1,
-            content: [
-              {
-                type: "paragraph",
-                content: [
-                  {
-                    text: `Description updated at ${currentTime}`,
-                    type: "text"
-                  }
-                ]
-              }
-            ]
-          }
+          customfield_10039: `http://bytebase.com/issue/${currentTime}`
         }
       }),
     });
@@ -66,7 +52,7 @@ export async function POST(request: Request) {
 
     // If the response is empty or not JSON, return success without parsing
     if (!responseText.trim()) {
-      return NextResponse.json({ status: 'Issue description updated', data: null });
+      return NextResponse.json({ status: 'Bytebase issue link updated', data: null });
     }
 
     let data;
@@ -75,12 +61,12 @@ export async function POST(request: Request) {
     } catch (parseError) {
       console.error("Error parsing JSON:", parseError);
       return NextResponse.json({ 
-        status: 'Issue description likely updated, but response was not JSON',
+        status: 'Bytebase issue link likely updated, but response was not JSON',
         responseBody: responseText
       }, { status: 200 });
     }
 
-    return NextResponse.json({ status: 'Issue description updated', data });
+    return NextResponse.json({ status: 'Bytebase issue link updated', data });
   } catch (error) {
     console.error('Error updating Jira issue:', error);
     return NextResponse.json({ 

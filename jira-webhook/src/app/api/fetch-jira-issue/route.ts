@@ -10,6 +10,7 @@ declare global {
     sqlStatement: string;
     database: string;
     status: string;
+    bytebaseIssueLink: string;
   } | null;
 }
 
