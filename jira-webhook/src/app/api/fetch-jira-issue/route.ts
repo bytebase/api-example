@@ -5,6 +5,7 @@ declare global {
     issueKey: string;
     issueType: string;
     projectKey: string;
+    summary: string;
     description: string;
     sqlStatement: string;
     database: string;
