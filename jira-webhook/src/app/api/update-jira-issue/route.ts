@@ -1,5 +1,3 @@
-import { NextResponse } from 'next/server';
-
 export async function POST(request: Request) {
 
     console.log("=============update-jira-issue", request)
@@ -8,7 +6,7 @@ export async function POST(request: Request) {
   const currentTime = new Date().toISOString();
 
   if (!issueKey) {
-    return NextResponse.json({ error: 'Issue key is missing' }, { status: 400 });
+    return Response.json({ error: 'Issue key is missing' }, { status: 400 });
   }
 
   const jiraApiUrl = `https://bytebase.atlassian.net/rest/api/3/issue/${issueKey}`;
@@ -42,7 +40,7 @@ export async function POST(request: Request) {
     console.log("Response body:", responseText);
 
     if (!response.ok) {
-      return NextResponse.json({ 
+      return Response.json({ 
         error: 'Failed to update Jira issue', 
         status: response.status,
         statusText: response.statusText,
@@ -52,7 +50,7 @@ export async function POST(request: Request) {
 
     // If the response is empty or not JSON, return success without parsing
     if (!responseText.trim()) {
-      return NextResponse.json({ status: 'Bytebase issue link updated', data: null });
+      return Response.json({ status: 'Bytebase issue link updated', data: null });
     }
 
     let data;
@@ -60,16 +58,16 @@ export async function POST(request: Request) {
       data = JSON.parse(responseText);
     } catch (parseError) {
       console.error("Error parsing JSON:", parseError);
-      return NextResponse.json({ 
+      return Response.json({ 
         status: 'Bytebase issue link likely updated, but response was not JSON',
         responseBody: responseText
       }, { status: 200 });
     }
 
-    return NextResponse.json({ status: 'Bytebase issue link updated', data });
+    return Response.json({ status: 'Bytebase issue link updated', data });
   } catch (error) {
     console.error('Error updating Jira issue:', error);
-    return NextResponse.json({ 
+    return Response.json({ 
       error: 'Failed to update Jira issue', 
       details: error instanceof Error ? error.message : 'Unknown error' 
     }, { status: 500 });
