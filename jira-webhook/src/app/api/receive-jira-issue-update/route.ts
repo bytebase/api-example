@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 interface JiraWebhookPayload {
   issue: {
+    key: string;
     fields: {
       issuetype: {
         name: string;
@@ -20,6 +21,7 @@ interface JiraWebhookPayload {
 }
 
 interface ParsedData {
+  issueKey: string;
   issueType: string;
   projectKey: string;
   description: string;
@@ -35,7 +37,7 @@ declare global {
 }
 
 export async function POST(request: Request) {
-    console.log(`${request.method} request received`,request);
+    console.log(`${request.method} request received`, request);
 
     try {
         const body: JiraWebhookPayload = await request.json();
@@ -46,6 +48,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Not a Database Change issue' }, { status: 400 });
         }
 
+        const issueKey = body.issue.key;
         const projectKey = body.issue.fields.project.key;
         const description = body.issue.fields.description;
         const sqlStatement = body.issue.fields.customfield_10038;
@@ -53,6 +56,7 @@ export async function POST(request: Request) {
         const status = body.issue.fields.status.name;
 
         const parsedData: ParsedData = {
+            issueKey,
             issueType,
             projectKey,
             description,
