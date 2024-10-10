@@ -242,6 +242,7 @@ We need to parse this body and to print it out on a webpage
 
 1. This should only be triggered when the issue type is `Database Change`
 1. The project key is `API`
+1. The issue key is `API-1`
 1. The summary in Jira is `Create a table t2024 on test`
 1. The description in Jira is `Create a table t2024, first to demodb`
 1. The SQL statement is `CREATE TABLE t2024(id INT, name TEXT);`

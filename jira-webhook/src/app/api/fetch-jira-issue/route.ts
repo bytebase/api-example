@@ -1,5 +1,3 @@
-import { NextResponse } from 'next/server';
-
 // Declare the global variable
 declare global {
   // eslint-disable-next-line no-var
@@ -17,5 +15,5 @@ export async function GET() {
   // Retrieve the last Jira webhook data from the global variable
   const lastJiraWebhook = global.lastJiraWebhook || null;
 
-  return NextResponse.json(lastJiraWebhook);
+  return Response.json(lastJiraWebhook);
 }

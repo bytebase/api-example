@@ -35,7 +35,7 @@ declare global {
 }
 
 export async function POST(request: Request) {
-    console.log(`${request.method} request received`);
+    console.log(`${request.method} request received`,request);
 
     try {
         const body: JiraWebhookPayload = await request.json();
