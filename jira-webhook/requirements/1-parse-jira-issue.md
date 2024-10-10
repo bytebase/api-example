@@ -248,3 +248,4 @@ We need to parse this body and to print it out on a webpage
 1. The SQL statement is `CREATE TABLE t2024(id INT, name TEXT);`
 1. The database is `demodb`
 1. The issue status is from `To Do` to `In Progress`
+1. The customfield_10039 is bytebase issue link

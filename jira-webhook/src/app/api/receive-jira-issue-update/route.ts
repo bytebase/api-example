@@ -1,5 +1,3 @@
-import { NextResponse } from 'next/server';
-
 interface JiraWebhookPayload {
   issue: {
     key: string;
@@ -14,6 +12,7 @@ interface JiraWebhookPayload {
       description: string;
       customfield_10038: string; // SQL statement
       customfield_10040: string; // Database name
+      customfield_10039: string; // Bytebase issue link
       status: {
         name: string;
       };
@@ -30,6 +29,7 @@ interface ParsedData {
   sqlStatement: string;
   database: string;
   status: string;
+  bytebaseIssueLink: string;
 }
 
 // Declare the global variable
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
 
         const issueType = body.issue.fields.issuetype.name;
         if (issueType !== 'Database Change') {
-            return NextResponse.json({ error: 'Not a Database Change issue' }, { status: 400 });
+            return Response.json({ error: 'Not a Database Change issue' }, { status: 400 });
         }
 
         const issueKey = body.issue.key;
@@ -57,6 +57,7 @@ export async function POST(request: Request) {
         const sqlStatement = body.issue.fields.customfield_10038;
         const database = body.issue.fields.customfield_10040;
         const status = body.issue.fields.status.name;
+        const bytebaseIssueLink = body.issue.fields.customfield_10039;
 
         const parsedData: ParsedData = {
             issueKey,
@@ -67,14 +68,15 @@ export async function POST(request: Request) {
             sqlStatement,
             database,
             status,
+            bytebaseIssueLink,
         };
 
         // Store the parsed data in a global variable
         global.lastJiraWebhook = parsedData;
 
-        return NextResponse.json({ message: 'Webhook received and processed successfully', data: parsedData });
+        return Response.json({ message: 'Webhook received and processed successfully', data: parsedData });
     } catch (error) {
         console.error('Error processing webhook:', error);
-        return NextResponse.json({ error: 'Error processing webhook' }, { status: 500 });
+        return Response.json({ error: 'Error processing webhook' }, { status: 500 });
     }
 }

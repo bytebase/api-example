@@ -11,6 +11,7 @@ interface JiraInfo {
   sqlStatement: string;
   database: string;
   status: string;
+  bytebaseIssueLink: string;
 }
 
 export default function JiraInfoPage() {
@@ -45,7 +46,7 @@ export default function JiraInfoPage() {
     return () => clearInterval(interval);
   }, [jiraInfo]);
 
-  const handleUpdateDescription = async () => {
+  const handleUpdateBytebaseLink = async () => {
     if (!jiraInfo) return;
 
     setIsUpdating(true);
@@ -85,12 +86,13 @@ export default function JiraInfoPage() {
           <p><strong>SQL Statement:</strong> {jiraInfo.sqlStatement}</p>
           <p><strong>Database:</strong> {jiraInfo.database}</p>
           <p><strong>Status:</strong> {jiraInfo.status}</p>
+          <p><strong>Bytebase Issue Link:</strong> <a href={jiraInfo.bytebaseIssueLink} target="_blank" rel="noopener noreferrer">{jiraInfo.bytebaseIssueLink}</a></p>
           <p><strong>Last Updated:</strong> {lastUpdated ? lastUpdated.toLocaleString() : 'Never'}</p>
-          <button 
-            onClick={handleUpdateDescription} 
+          <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+            onClick={handleUpdateBytebaseLink} 
             disabled={isUpdating || isFetching}
           >
-            {isUpdating ? 'Updating...' : 'Update Description with Current Time'}
+            {isUpdating ? 'Updating...' : 'Update Bytebase Issue Link'}
           </button>
         </>
       ) : (
