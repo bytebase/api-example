@@ -3,7 +3,7 @@
 Correspond to https://www.bytebase.com/docs/security/data-masking/column-masking/
 
 ```bash
-curl --request PATCH ${bytebase_url}/v1/instances/prod-sample-instance/databases/hr_prod/policies/masking?update_mask=payload \
+curl --request PATCH ${bytebase_url}/v1/instances/prod-sample-instance/databases/hr_prod/policies/masking?update_mask=payload&allow_missing=true \
   --header 'Authorization: Bearer '${bytebase_token} \
   --data @column-masking.json
 ```
