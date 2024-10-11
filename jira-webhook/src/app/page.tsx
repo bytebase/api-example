@@ -18,64 +18,31 @@ export default function JiraInfoPage() {
   const [jiraInfo, setJiraInfo] = useState<JiraInfo | null>(null);
   const [isFetching, setIsFetching] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [isUpdating, setIsUpdating] = useState(false);
 
-  useEffect(() => {
-    const fetchJiraInfo = async () => {
-      setIsFetching(true);
-      try {
-        const response = await fetch('/api/fetch-jira-issue');
-        if (response.ok) {
-          const data = await response.json();
-          if (JSON.stringify(data) !== JSON.stringify(jiraInfo)) {
-            setJiraInfo(data);
-            setLastUpdated(new Date());
-          }
-        } else {
-          console.error('Failed to fetch Jira info');
-        }
-      } catch (error) {
-        console.error('Error fetching Jira info:', error);
-      }
-      setIsFetching(false);
-    };
-
-    fetchJiraInfo();
-    const interval = setInterval(fetchJiraInfo, 5000); // Refresh every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [jiraInfo]);
-
-  const handleUpdateBytebaseLink = async () => {
-    if (!jiraInfo) return;
-
-    setIsUpdating(true);
+  const fetchJiraInfo = async () => {
+    setIsFetching(true);
     try {
-      const response = await fetch('/api/update-jira-issue', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ issueKey: jiraInfo.issueKey }),
-      });
-
+      const response = await fetch('/api/fetch-jira-issue');
       if (response.ok) {
-        const result = await response.json();
-        console.log('Update successful:', result);
-        // Trigger a re-fetch of the Jira info
-        setJiraInfo(null);
+        const data = await response.json();
+        setJiraInfo(data);
+        setLastUpdated(new Date());
       } else {
-        console.error('Failed to update Jira issue');
+        console.error('Failed to fetch Jira info');
       }
     } catch (error) {
-      console.error('Error updating Jira issue:', error);
+      console.error('Error fetching Jira info:', error);
     }
-    setIsUpdating(false);
+    setIsFetching(false);
   };
 
+  useEffect(() => {
+    fetchJiraInfo();
+  }, []);
+
   return (
-    <div>
-      <h1>Jira Webhook Information</h1>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Jira Webhook Information</h1>
       {jiraInfo ? (
         <>
           <p><strong>Issue Key:</strong> {jiraInfo.issueKey}</p>
@@ -88,18 +55,17 @@ export default function JiraInfoPage() {
           <p><strong>Status:</strong> {jiraInfo.status}</p>
           <p><strong>Bytebase Issue Link:</strong> <a href={jiraInfo.bytebaseIssueLink} target="_blank" rel="noopener noreferrer">{jiraInfo.bytebaseIssueLink}</a></p>
           <p><strong>Last Updated:</strong> {lastUpdated ? lastUpdated.toLocaleString() : 'Never'}</p>
-          <button
-            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-            onClick={handleUpdateBytebaseLink} 
-            disabled={isUpdating || isFetching}
-          >
-            {isUpdating ? 'Updating...' : 'Update Bytebase Link & Set In Progress'}
-          </button>
         </>
       ) : (
         <p>No Jira webhook information available yet.</p>
       )}
-      <p>{isFetching ? "Fetching new Jira webhook information..." : "Waiting for next update..."}</p>
+      <button
+        className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={fetchJiraInfo}
+        disabled={isFetching}
+      >
+        {isFetching ? 'Fetching...' : 'Fetch Current Jira Info'}
+      </button>
     </div>
   );
 }

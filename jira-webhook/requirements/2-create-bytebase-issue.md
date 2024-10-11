@@ -36,3 +36,19 @@ we want to create a bytebase issue with the help of `utils/issueCreation.tsx`, `
     - description -> description
     - sqlStatement -> SQL
     - bytebaseIssueLink -> Bytebase issue link
+
+the found `database` structure
+```javascript
+    {
+      name: 'instances/test-sample-instance/databases/demodb',
+      syncState: 'ACTIVE',
+      successfulSyncTime: '2024-09-30T04:17:04Z',
+      project: 'projects/jira-api',
+      schemaVersion: '20240930040306',
+      environment: 'environments/test',
+      effectiveEnvironment: 'environments/test',
+      labels: {},
+      instanceResource: [Object],
+      backupAvailable: true
+    }
+```

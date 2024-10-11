@@ -1,4 +1,4 @@
-import { generateToken, fetchData, createIssueWorkflow } from '../utils';
+import { generateToken, fetchData, createIssueWorkflow, updateJiraIssue } from '../utils';
 
 interface JiraWebhookPayload {
   webhookEvent: string;
@@ -39,6 +39,11 @@ interface ParsedData {
 interface BytebaseProject {
   key: string;
   name: string;
+}
+
+interface BytebaseDatabase {
+  name: string;
+  environment: string;
 }
 
 // Declare the global variable
@@ -101,7 +106,7 @@ export async function POST(request: Request) {
             console.log("=============databasesData", databasesData);
             
             // Find matching database
-            const matchingDatabase = databasesData.databases.find((db: { name: string }) => db.name.split('/').pop() === database);
+            const matchingDatabase = databasesData.databases.find((db: BytebaseDatabase) => db.name.split('/').pop() === database);
             if (!matchingDatabase) {
                 return Response.json({ error: 'No matching Bytebase database found' }, { status: 400 });
             }
@@ -109,31 +114,19 @@ export async function POST(request: Request) {
             console.log("=============matchingDatabase", matchingDatabase);
 
             // Create Bytebase issue
-            const result = await createIssueWorkflow(matchingProject.name, matchingDatabase.name, sqlStatement);
+            const result = await createIssueWorkflow(matchingProject.name, matchingDatabase, sqlStatement, description);
             
             if (result.success && result.issueLink) {
                 bytebaseIssueLink = result.issueLink;
                 parsedData.bytebaseIssueLink = bytebaseIssueLink;
 
-                // Update Jira issue with Bytebase link
-                const jiraApiUrl = `https://bytebase.atlassian.net/rest/api/3/issue/${issueKey}`;
-                const jiraAuth = Buffer.from(
-                  `${process.env.NEXT_PUBLIC_JIRA_EMAIL}:${process.env.NEXT_PUBLIC_JIRA_API_TOKEN}`
-                ).toString('base64');
-
-                await fetch(jiraApiUrl, {
-                  method: 'PUT',
-                  headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Basic ${jiraAuth}`,
-                  },
-                  body: JSON.stringify({
-                    fields: {
-                      customfield_10039: bytebaseIssueLink
-                    }
-                  }),
-                });
+                try {
+                    // Update Jira issue with Bytebase link and set status to "In Progress"
+                    await updateJiraIssue(issueKey, bytebaseIssueLink);
+                } catch (error) {
+                    console.error('Error updating Jira issue:', error);
+                    return Response.json({ error: 'Failed to update Jira issue', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
+                }
             } else {
                 return Response.json({ error: 'Failed to create Bytebase issue', details: result.message }, { status: 500 });
             }
