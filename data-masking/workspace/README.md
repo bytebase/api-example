@@ -25,7 +25,7 @@ curl --request PATCH ${bytebase_url}/v1/settings/bb.workspace.semantic-types \
 ## Configure global masking rule
 
 ```bash
-curl --request PATCH ${bytebase_url}/v1/policies/masking_rule \
+curl --request PATCH "${bytebase_url}/v1/policies/masking_rule?allow_missing=true&update_mask=payload" \
   --header 'Authorization: Bearer '${bytebase_token} \
   --data @global-masking-rule.json
 ```
