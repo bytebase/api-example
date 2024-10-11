@@ -1,20 +1,28 @@
 {
-  "tableConfigs": [
+  "name": "instances/prod-sample-instance/databases/hr_prod/metadata",
+  "schemaConfigs": [
     {
-      "name": "pokes",
-      "columnConfigs": [
+      "name": "public",
+      "tableConfigs": [
         {
-          "name": "foo",
-          "semanticTypeId": "e8d3fd41-eba0-4afd-ae0f-32c91a4ee710",
-          "classificationId": ""
-        },
-        {
-          "name": "bar",
-          "semanticTypeId": "e8d3fd41-eba0-4afd-ae0f-32c91a4ee710",
-          "classificationId": ""
+          "name": "salary",
+          "columnConfigs": [
+            {
+              "name": "amount",
+              "semanticTypeId": "e8d3fd41-eba0-4afd-ae0f-32c91a4ee710",
+              "labels": {},
+              "classificationId": ""
+            }
+          ],
+          "classificationId": "2-2",
+          "updater": "",
+          "sourceBranch": "",
+          "updateTime": null
         }
       ],
-      "classificationId": ""
+      "functionConfigs": [],
+      "procedureConfigs": [],
+      "viewConfigs": []
     }
   ]
 }

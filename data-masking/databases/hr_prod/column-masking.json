@@ -1,0 +1,19 @@
+{
+  "name": "instances/prod-sample-instance/databases/hr_prod/policies/masking",
+  "inheritFromParent": false,
+  "type": "MASKING",
+  "maskingPolicy": {
+    "maskData": [
+      {
+        "schema": "public",
+        "table": "salary",
+        "column": "amount",
+        "maskingLevel": "PARTIAL",
+        "fullMaskingAlgorithmId": "",
+        "partialMaskingAlgorithmId": ""
+      }
+    ]
+  },
+  "enforce": true,
+  "resourceType": "DATABASE"
+}
