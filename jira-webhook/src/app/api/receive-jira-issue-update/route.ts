@@ -34,6 +34,7 @@ interface ParsedData {
   database: string;
   status: string;
   bytebaseIssueLink: string;
+  webhookType: string; // New field
 }
 
 interface BytebaseProject {
@@ -83,6 +84,7 @@ export async function POST(request: Request) {
             database,
             status,
             bytebaseIssueLink,
+            webhookType: body.webhookEvent === "jira:issue_created" ? "Create" : "Update" // Set webhook type
         };
 
         // Check if this is a new issue creation
@@ -130,9 +132,13 @@ export async function POST(request: Request) {
             } else {
                 return Response.json({ error: 'Failed to create Bytebase issue', details: result.message }, { status: 500 });
             }
+        } else if (body.webhookEvent === "jira:issue_updated") {
+            // Handle issue update
+            console.log("Jira issue updated:", issueKey);
+            // You might want to perform additional actions here for issue updates
         }
 
-        // Store the parsed data in a global variable
+        // Store the parsed data in a global variable for both create and update events
         global.lastJiraWebhook = parsedData;
 
         return Response.json({ message: 'Webhook received and processed successfully', data: parsedData });
