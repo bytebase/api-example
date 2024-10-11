@@ -178,15 +178,3 @@ The parent field may be set by key or ID. For standard issue types, the parent m
 Connect apps having an app user with Administer Jira global permission, and Forge apps acting on behalf of users with Administer Jira global permission, can override the screen security configuration using overrideScreenSecurity and overrideEditableFlag.
 
 This operation can be accessed anonymously.
-
-Permissions required:
-
-Browse projects and Edit issues project permission for the project that the issue is in.
-If issue-level security is configured, issue-level security permission to view the issue.
-Data Security Policy: Not exempt from app access rules
-Scopes
-Connect app scope required: WRITE
-
-OAuth 2.0 scopes required:
-ClassicRECOMMENDED:write:jira-work
-Granular:write:issue:jira
