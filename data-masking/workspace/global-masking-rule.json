@@ -1,0 +1,21 @@
+{
+  "name": "policies/masking_rule",
+  "inheritFromParent": false,
+  "type": "MASKING_RULE",
+  "maskingRulePolicy": {
+    "rules": [
+      {
+        "id": "78c2c31f-3034-40ab-8961-fdd8a90b632c",
+        "condition": {
+          "expression": "project_id == \"branch\"",
+          "title": "",
+          "description": "",
+          "location": ""
+        },
+        "maskingLevel": "FULL"
+      }
+    ]
+  },
+  "enforce": true,
+  "resourceType": "WORKSPACE"
+}

@@ -1,28 +1,33 @@
 {
-  "algorithms": [
-    {
-      "id": "9347822e-5a4a-4797-85ed-a59bb3115622",
-      "title": "md5-mask",
-      "description": "i am md5-mask",
-      "category": "HASH",
-      "md5Mask": {
-        "salt": "salt"
-      }
-    },
-    {
-      "id": "bbd2893d-55b2-429c-bf7c-6f073e2bcdeb",
-      "title": "RangeMask",
-      "description": "this is range mask",
-      "category": "MASK",
-      "rangeMask": {
-        "slices": [
-          {
-            "start": 0,
-            "end": 4,
-            "substitution": "*"
+  "name": "bb.workspace.masking-algorithm",
+  "value": {
+    "maskingAlgorithmSettingValue": {
+      "algorithms": [
+        {
+          "id": "9347822e-5a4a-4797-85ed-a59bb3115622",
+          "title": "md5-mask",
+          "description": "i am md5-mask",
+          "category": "HASH",
+          "md5Mask": {
+            "salt": "salt"
           }
-        ]
-      }
+        },
+        {
+          "id": "bbd2893d-55b2-429c-bf7c-6f073e2bcdeb",
+          "title": "RangeMask",
+          "description": "this is range mask",
+          "category": "MASK",
+          "rangeMask": {
+            "slices": [
+              {
+                "start": 0,
+                "end": 4,
+                "substitution": "*"
+              }
+            ]
+          }
+        }
+      ]
     }
-  ]
+  }
 }

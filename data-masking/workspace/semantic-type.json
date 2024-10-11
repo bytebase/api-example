@@ -1,11 +1,16 @@
 {
-  "types": [
-    {
-      "id": "e8d3fd41-eba0-4afd-ae0f-32c91a4ee710",
-      "title": "semantic-type-001",
-      "description": "",
-      "partialMaskAlgorithmId": "9347822e-5a4a-4797-85ed-a59bb3115622",
-      "fullMaskAlgorithmId": ""
+  "name": "bb.workspace.semantic-types",
+  "value": {
+    "semanticTypeSettingValue": {
+      "types": [
+        {
+          "id": "e8d3fd41-eba0-4afd-ae0f-32c91a4ee710",
+          "title": "semantic-type-001",
+          "description": "",
+          "partialMaskAlgorithmId": "9347822e-5a4a-4797-85ed-a59bb3115622",
+          "fullMaskAlgorithmId": ""
+        }
+      ]
     }
-  ]
+  }
 }
