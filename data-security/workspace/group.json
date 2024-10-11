@@ -1,0 +1,13 @@
+{
+    "name": "groups/contractor@example.com",
+    "title": "Contractor Group",
+    "description": "A group for contractors",
+    "creator": "users/demo@example.com",
+    "members": [
+      {
+        "member": "users/demo@example.com",
+        "role": "OWNER"
+      }
+    ],
+    "createTime": "2024-10-11T16:30:40.608Z"
+  }
