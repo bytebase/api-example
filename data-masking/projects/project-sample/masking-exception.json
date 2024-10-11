@@ -1,5 +1,5 @@
 {
-  "name": "projects/my_project/policies/masking_exception",
+  "name": "projects/project-sample/policies/masking_exception",
   "inheritFromParent": false,
   "type": "MASKING_EXCEPTION",
   "maskingExceptionPolicy": {
