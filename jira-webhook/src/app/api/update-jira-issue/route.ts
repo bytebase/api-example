@@ -43,38 +43,7 @@ export async function POST(request: Request) {
       }, { status: updateResponse.status });
     }
 
-    // Fetch available transitions
-    const transitionsResponse = await fetch(jiraTransitionUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Basic ${jiraAuth}`,
-      },
-    });
-
-    if (!transitionsResponse.ok) {
-      return Response.json({ 
-        error: 'Failed to fetch transitions', 
-        status: transitionsResponse.status,
-        statusText: transitionsResponse.statusText,
-      }, { status: transitionsResponse.status });
-    }
-
-    const transitions = await transitionsResponse.json();
-    console.log("Available transitions:", transitions);
-
-    // Find the "In Progress" transition
-    const inProgressTransition = transitions.transitions.find(
-      (t: any) => t.name === "In Progress"
-    );
-
-    console.log("=============inProgressTransition", inProgressTransition)
-
-    if (!inProgressTransition) {
-      return Response.json({ error: 'In Progress transition not found' }, { status: 400 });
-    }
-
-    // Then, transition the issue to "In Progress"
+    // Transition the issue to "In Progress" using the known transition ID
     const transitionResponse = await fetch(jiraTransitionUrl, {
       method: 'POST',
       headers: {
@@ -84,7 +53,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         transition: {
-          id: inProgressTransition.id
+          id: "21" // Hardcoded "In Progress" transition ID
         }
       }),
     });
