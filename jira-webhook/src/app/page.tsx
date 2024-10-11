@@ -12,7 +12,6 @@ interface JiraInfo {
   database: string;
   status: string;
   bytebaseIssueLink: string;
-  webhookType: string; // New field for webhook type
 }
 
 export default function JiraInfoPage() {
@@ -52,12 +51,11 @@ export default function JiraInfoPage() {
   return (
     <div className="p-4 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-1">Jira Webhook Monitor </h1>
-      <h2 className="text-sm text-gray-500 mb-4">Fetch latest created/updated Jira Issue, Refresh every 3 seconds</h2>
+      <h2 className="text-sm text-gray-500 mb-4">Fetch latest Jira Issue, Refresh every 3 seconds</h2>
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
       {jiraInfo ? (
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <p><strong>Webhook Type:</strong> <span className="font-semibold text-blue-600">{jiraInfo.webhookType}</span></p>
           <p><strong>Issue Key:</strong> {jiraInfo.issueKey}</p>
           <p><strong>Issue Type:</strong> {jiraInfo.issueType}</p>
           <p><strong>Project Key:</strong> {jiraInfo.projectKey}</p>

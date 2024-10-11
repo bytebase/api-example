@@ -34,7 +34,6 @@ interface ParsedData {
   database: string;
   status: string;
   bytebaseIssueLink: string;
-  webhookType: string; // New field
 }
 
 interface BytebaseProject {
@@ -84,7 +83,6 @@ export async function POST(request: Request) {
             database,
             status,
             bytebaseIssueLink,
-            webhookType: body.webhookEvent === "jira:issue_created" ? "Create" : "Update" // Set webhook type
         };
 
         // Check if this is a new issue creation
@@ -116,7 +114,7 @@ export async function POST(request: Request) {
             console.log("=============matchingDatabase", matchingDatabase);
 
             // Create Bytebase issue
-            const result = await createIssueWorkflow(matchingProject.name, matchingDatabase, sqlStatement, description);
+            const result = await createIssueWorkflow(matchingProject.name, matchingDatabase, sqlStatement, summary, description);
             
             if (result.success && result.issueLink) {
                 bytebaseIssueLink = result.issueLink;

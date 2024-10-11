@@ -96,13 +96,13 @@ async function createPlan(project: string, database: BytebaseDatabase, sheetName
     return response;
 }
 
-async function createIssue(project: string, database: BytebaseDatabase, planName: string, description: string) {
+async function createIssue(project: string, database: BytebaseDatabase, planName: string, summary: string, description: string) {
     const token = await generateToken();
     const newIssue = {
         "approvers": [],
         "approvalTemplates": [],
         "subscribers": [],
-        "title": `Jira issue: Change database ${database.name.split('/').pop()}[${database.environment.split('/').pop()}]`,
+        "title": `by Jira: ${summary}`,
         "description": description,
         "type": "DATABASE_CHANGE",
         "assignee": "",
@@ -129,9 +129,9 @@ async function createRollout(project: string, planName: string) {
     return response;
 }
 
-export async function createIssueWorkflow(project: string, database: BytebaseDatabase, SQL: string, description: string) {
+export async function createIssueWorkflow(project: string, database: BytebaseDatabase, SQL: string, summary: string, description: string) {
 
-    console.log("=============createIssueWorkflow", project, database, SQL, description);
+    console.log("=============createIssueWorkflow", project, database, SQL, summary, description);
     try {
         const sheetData = await createSheet(project, database, SQL);
         console.log("--------- createdSheetData ----------", sheetData);
@@ -139,7 +139,7 @@ export async function createIssueWorkflow(project: string, database: BytebaseDat
         const planData = await createPlan(project, database, sheetData.name);
         console.log("--------- createdPlanData ----------", planData);
 
-        const issueData = await createIssue(project, database, planData.name, description);
+        const issueData = await createIssue(project, database, planData.name, summary, description);
         console.log("--------- createdIssue ----------", issueData);
 
         const rolloutData = await createRollout(project, planData.name);
