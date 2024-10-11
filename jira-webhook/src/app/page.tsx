@@ -18,66 +18,44 @@ export default function JiraInfoPage() {
   const [jiraInfo, setJiraInfo] = useState<JiraInfo | null>(null);
   const [isFetching, setIsFetching] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchJiraInfo = async () => {
-      setIsFetching(true);
-      try {
-        const response = await fetch('/api/fetch-jira-issue');
-        if (response.ok) {
-          const data = await response.json();
-          if (JSON.stringify(data) !== JSON.stringify(jiraInfo)) {
-            setJiraInfo(data);
-            setLastUpdated(new Date());
-          }
-        } else {
-          console.error('Failed to fetch Jira info');
-        }
-      } catch (error) {
-        console.error('Error fetching Jira info:', error);
-      }
-      setIsFetching(false);
-    };
-
-    fetchJiraInfo();
-    const interval = setInterval(fetchJiraInfo, 5000); // Refresh every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [jiraInfo]);
-
-  const handleUpdateBytebaseLink = async () => {
-    if (!jiraInfo) return;
-
-    setIsUpdating(true);
+  const fetchJiraInfo = async () => {
+    setIsFetching(true);
+    setError(null);
     try {
-      const response = await fetch('/api/update-jira-issue', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ issueKey: jiraInfo.issueKey }),
-      });
-
+      const response = await fetch('/api/fetch-jira-issue');
       if (response.ok) {
-        const result = await response.json();
-        console.log('Update successful:', result);
-        // Trigger a re-fetch of the Jira info
-        setJiraInfo(null);
+        const data = await response.json();
+        if (data) {
+          setJiraInfo(data);
+          setLastUpdated(new Date());
+        }
       } else {
-        console.error('Failed to update Jira issue');
+        setError('Failed to fetch Jira info');
       }
     } catch (error) {
-      console.error('Error updating Jira issue:', error);
+      setError('Error fetching Jira info: ' + (error instanceof Error ? error.message : String(error)));
     }
-    setIsUpdating(false);
+    setIsFetching(false);
   };
 
+  useEffect(() => {
+    fetchJiraInfo(); // Fetch immediately on mount
+
+    const intervalId = setInterval(fetchJiraInfo, 3000); // Fetch every 3 seconds
+
+    return () => clearInterval(intervalId); // Clean up on unmount
+  }, []);
+
   return (
-    <div>
-      <h1>Jira Webhook Information</h1>
+    <div className="p-4 max-w-4xl mx-auto">
+      <h1 className="text-2xl font-bold mb-1">Jira Webhook Monitor </h1>
+      <h2 className="text-sm text-gray-500 mb-4">Fetch latest Jira Issue, Refresh every 3 seconds</h2>
+
+      {error && <p className="text-red-500 mb-4">{error}</p>}
       {jiraInfo ? (
-        <>
+        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <p><strong>Issue Key:</strong> {jiraInfo.issueKey}</p>
           <p><strong>Issue Type:</strong> {jiraInfo.issueType}</p>
           <p><strong>Project Key:</strong> {jiraInfo.projectKey}</p>
@@ -86,20 +64,25 @@ export default function JiraInfoPage() {
           <p><strong>SQL Statement:</strong> {jiraInfo.sqlStatement}</p>
           <p><strong>Database:</strong> {jiraInfo.database}</p>
           <p><strong>Status:</strong> {jiraInfo.status}</p>
-          <p><strong>Bytebase Issue Link:</strong> <a href={jiraInfo.bytebaseIssueLink} target="_blank" rel="noopener noreferrer">{jiraInfo.bytebaseIssueLink}</a></p>
-          <p><strong>Last Updated:</strong> {lastUpdated ? lastUpdated.toLocaleString() : 'Never'}</p>
-          <button
-            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-            onClick={handleUpdateBytebaseLink} 
-            disabled={isUpdating || isFetching}
-          >
-            {isUpdating ? 'Updating...' : 'Update Bytebase Link & Set In Progress'}
-          </button>
-        </>
+          <p><strong>Bytebase Issue Link:</strong> 
+            <a href={jiraInfo.bytebaseIssueLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline ml-1">
+              {jiraInfo.bytebaseIssueLink}
+            </a>
+          </p>
+        </div>
       ) : (
-        <p>No Jira webhook information available yet.</p>
+        <p className="text-gray-500">No Jira webhook information available yet.</p>
       )}
-      <p>{isFetching ? "Fetching new Jira webhook information..." : "Waiting for next update..."}</p>
+      <p className="text-sm text-gray-600">
+        {isFetching ? "Fetching..." : `Last updated: ${lastUpdated ? lastUpdated.toLocaleString() : 'Never'}`}
+      </p>
+      <button
+        className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        onClick={fetchJiraInfo}
+        disabled={isFetching}
+      >
+        Refresh Now
+      </button>
     </div>
   );
 }
