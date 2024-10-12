@@ -13,7 +13,6 @@ You can expand this example to build a GitOps solution to configure all data sec
 Doc: https://www.bytebase.com/docs/api/authentication/
 
 ```bash
-export workspace_id=6c86d081-379d-4366-be6f-481425e6f397
 export bytebase_url=http://localhost:5678
 bytebase_account="ci@service.bytebase.com"
 bytebase_password="bbs_VkANoCFP7T8rWiz1HhvH"

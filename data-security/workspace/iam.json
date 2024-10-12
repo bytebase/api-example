@@ -1,54 +1,52 @@
 {
-  "policy": {
-    "bindings": [
-      {
-        "role": "roles/workspaceDBA",
-        "members": [
-          "user:dba1@example.com",
-          "user:dba2@example.com",
-          "user:ci@service.bytebase.com"
-        ],
-        "condition": {
-          "expression": "",
-          "title": "",
-          "description": "",
-          "location": ""
-        },
-        "parsedExpr": null
+  "bindings": [
+    {
+      "role": "roles/workspaceDBA",
+      "members": [
+        "user:dba1@example.com",
+        "user:dba2@example.com",
+        "user:ci@service.bytebase.com"
+      ],
+      "condition": {
+        "expression": "",
+        "title": "",
+        "description": "",
+        "location": ""
       },
-      {
-        "role": "roles/workspaceAdmin",
-        "members": ["user:demo@example.com", "user:support@bytebase.com"],
-        "condition": {
-          "expression": "",
-          "title": "",
-          "description": "",
-          "location": ""
-        },
-        "parsedExpr": null
+      "parsedExpr": null
+    },
+    {
+      "role": "roles/workspaceAdmin",
+      "members": ["user:demo@example.com", "user:support@bytebase.com"],
+      "condition": {
+        "expression": "",
+        "title": "",
+        "description": "",
+        "location": ""
       },
-      {
-        "role": "roles/workspaceMember",
-        "members": ["allUsers"],
-        "condition": {
-          "expression": "",
-          "title": "",
-          "description": "",
-          "location": ""
-        },
-        "parsedExpr": null
+      "parsedExpr": null
+    },
+    {
+      "role": "roles/workspaceMember",
+      "members": ["allUsers"],
+      "condition": {
+        "expression": "",
+        "title": "",
+        "description": "",
+        "location": ""
       },
-      {
-        "role": "roles/auditor",
-        "members": ["user:auditor1@example.com"],
-        "condition": {
-          "expression": "",
-          "title": "",
-          "description": "",
-          "location": ""
-        },
-        "parsedExpr": null
-      }
-    ]
-  }
+      "parsedExpr": null
+    },
+    {
+      "role": "roles/auditor",
+      "members": ["user:auditor1@example.com"],
+      "condition": {
+        "expression": "",
+        "title": "",
+        "description": "",
+        "location": ""
+      },
+      "parsedExpr": null
+    }
+  ]
 }
