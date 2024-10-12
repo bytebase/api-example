@@ -18,7 +18,7 @@ we want to create a bytebase issue with the help of `utils/issueCreation.tsx`, `
 
     here is the sample to fetch all project from bytebase
         ```javascript
-        import { generateToken, fetchData } from '@/app/api/utils';
+        import { generateBBToken, fetchData } from '@/app/api/utils';
         const token = await generateToken();
         const allProjectData = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects`, token);
         ```
