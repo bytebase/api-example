@@ -23,6 +23,7 @@ interface BytebaseInfo {
   projectId: number;
   projectName: string;
   bytebaseIssueLink: string;
+  jiraIssueKey: string | null;
 }
 
 export default function WebhookInfoPage() {
@@ -104,6 +105,7 @@ export default function WebhookInfoPage() {
             <p><strong>Project ID:</strong> {bytebaseInfo.projectId}</p>
             <p><strong>Project Name:</strong> {bytebaseInfo.projectName}</p>
             <p><strong>Bytebase Issue Link:</strong> {renderBytebaseLink(bytebaseInfo.bytebaseIssueLink)}</p>
+            <p><strong>Corresponding Jira Issue Key:</strong> {bytebaseInfo.jiraIssueKey || 'Not available'}</p>
           </div>
         )}
       </div>

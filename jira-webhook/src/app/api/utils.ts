@@ -96,14 +96,14 @@ async function createPlan(project: string, database: BytebaseDatabase, sheetName
     return response;
 }
 
-async function createIssue(project: string, database: BytebaseDatabase, planName: string, summary: string, description: string) {
+async function createIssue(project: string, database: BytebaseDatabase, planName: string, summary: string, description: string, jiraIssueKey: string) {
     const token = await generateToken();
     const newIssue = {
         "approvers": [],
         "approvalTemplates": [],
         "subscribers": [],
-        "title": `by Jira: ${summary}`,
-        "description": description,
+        "title": `[JIRA>${jiraIssueKey}] ${summary}`,
+        "description": `Jira Issue Key: ${jiraIssueKey}\n\n${description}`,
         "type": "DATABASE_CHANGE",
         "assignee": "",
         "plan": planName
@@ -129,7 +129,7 @@ async function createRollout(project: string, planName: string) {
     return response;
 }
 
-export async function createIssueWorkflow(project: string, database: BytebaseDatabase, SQL: string, summary: string, description: string) {
+export async function createIssueWorkflow(project: string, database: BytebaseDatabase, SQL: string, summary: string, description: string, jiraIssueKey: string) {
 
     console.log("=============createIssueWorkflow", project, database, SQL, summary, description);
     try {
@@ -139,7 +139,7 @@ export async function createIssueWorkflow(project: string, database: BytebaseDat
         const planData = await createPlan(project, database, sheetData.name);
         console.log("--------- createdPlanData ----------", planData);
 
-        const issueData = await createIssue(project, database, planData.name, summary, description);
+        const issueData = await createIssue(project, database, planData.name, summary, description, jiraIssueKey);
         console.log("--------- createdIssue ----------", issueData);
 
         const rolloutData = await createRollout(project, planData.name);
@@ -261,6 +261,72 @@ export async function updateJiraIssue(issueKey: string, bytebaseIssueLink: strin
         return { status: 'Bytebase issue link updated and issue transitioned to In Progress', data: null };
     } catch (error) {
         console.error('Error updating Jira issue:', error);
+        throw error;
+    }
+}
+
+export async function updateJiraIssueStatus(issueKey: string, status: string) {
+    console.log(`Updating Jira issue ${issueKey} status to ${status}`);
+
+    if (!issueKey) {
+        throw new Error('Issue key is missing');
+    }
+
+    const jiraApiUrl = `https://bytebase.atlassian.net/rest/api/3/issue/${issueKey}/transitions`;
+    const jiraAuth = Buffer.from(
+        `${process.env.NEXT_PUBLIC_JIRA_EMAIL}:${process.env.NEXT_PUBLIC_JIRA_API_TOKEN}`
+    ).toString('base64');
+
+    try {
+        // Fetch available transitions
+        const transitionsResponse = await fetch(jiraApiUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Basic ${jiraAuth}`,
+            },
+        });
+
+        if (!transitionsResponse.ok) {
+            throw new Error(`Failed to fetch transitions: ${transitionsResponse.status} ${transitionsResponse.statusText}`);
+        }
+
+        const transitions = await transitionsResponse.json();
+        console.log("Available transitions:", transitions);
+
+        // Find the transition for the desired status
+        const transition = transitions.transitions.find(
+            (t: any) => t.to.name.toLowerCase() === status.toLowerCase()
+        );
+
+        if (!transition) {
+            throw new Error(`Transition to status "${status}" not found`);
+        }
+
+        // Perform the transition
+        const transitionResponse = await fetch(jiraApiUrl, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${jiraAuth}`,
+            },
+            body: JSON.stringify({
+                transition: {
+                    id: transition.id
+                }
+            }),
+        });
+
+        if (!transitionResponse.ok) {
+            const errorText = await transitionResponse.text();
+            throw new Error(`Failed to transition Jira issue: ${transitionResponse.status} ${transitionResponse.statusText} - ${errorText}`);
+        }
+
+        console.log(`Successfully updated Jira issue ${issueKey} status to ${status}`);
+        return { status: `Jira issue status updated to ${status}`, data: null };
+    } catch (error) {
+        console.error('Error updating Jira issue status:', error);
         throw error;
     }
 }

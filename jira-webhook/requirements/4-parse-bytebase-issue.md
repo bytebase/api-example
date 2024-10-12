@@ -25,3 +25,7 @@ When there is an issue updated in bytebase project, a webhook will trigger send 
 }
 
 ```
+
+currently the bytebaseIssueLink in jirawebhook is '@https://jlj1ndvx-8080.asse.devtunnels.ms/projects/jira-api/issues/237 ' while bytebaseissuelink in bbwebhook is '@https://jlj1ndvx-8080.asse.devtunnels.ms/projects/jira-api/issues/by-jira-1148-235'
+
+when we get a bytebase webhook, we should check if it's a issue status update, if yes, we need to extract the jira issue id, and then update jira issue status, if bytebase status is done, we need to set jira issue status as done; if bytebase status is open, we need to set jira issue as 'In Progress'

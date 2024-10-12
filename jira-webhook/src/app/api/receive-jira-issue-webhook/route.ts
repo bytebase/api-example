@@ -114,7 +114,7 @@ export async function POST(request: Request) {
             console.log("=============matchingDatabase", matchingDatabase);
 
             // Create Bytebase issue
-            const result = await createIssueWorkflow(matchingProject.name, matchingDatabase, sqlStatement, summary, description);
+            const result = await createIssueWorkflow(matchingProject.name, matchingDatabase, sqlStatement, summary, description, issueKey);
             
             if (result.success && result.issueLink) {
                 bytebaseIssueLink = result.issueLink;
