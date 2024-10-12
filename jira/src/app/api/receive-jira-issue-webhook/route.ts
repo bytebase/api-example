@@ -1,4 +1,4 @@
-import { generateToken, fetchData, createIssueWorkflow, updateJiraIssue } from '../utils';
+import { generateBBToken, fetchData, createBBIssueWorkflow, updateJiraIssueAfterBBIssueCreated } from '../utils';
 
 interface JiraWebhookPayload {
   webhookEvent: string;
@@ -88,7 +88,7 @@ export async function POST(request: Request) {
         // Check if this is a new issue creation
         if (body.webhookEvent === "jira:issue_created" && body.issue_event_type_name === "issue_created") {
             // Create Bytebase issue
-            const token = await generateToken();
+            const token = await generateBBToken();
             const allProjectData = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects`, token);
 
             console.log("=============allProjectData", allProjectData);
@@ -114,7 +114,7 @@ export async function POST(request: Request) {
             console.log("=============matchingDatabase", matchingDatabase);
 
             // Create Bytebase issue
-            const result = await createIssueWorkflow(matchingProject.name, matchingDatabase, sqlStatement, summary, description, issueKey);
+            const result = await createBBIssueWorkflow(matchingProject.name, matchingDatabase, sqlStatement, summary, description, issueKey);
             
             if (result.success && result.issueLink) {
                 bytebaseIssueLink = result.issueLink;
@@ -122,7 +122,7 @@ export async function POST(request: Request) {
 
                 try {
                     // Update Jira issue with Bytebase link and set status to "In Progress"
-                    await updateJiraIssue(issueKey, bytebaseIssueLink);
+                    await updateJiraIssueAfterBBIssueCreated(issueKey, bytebaseIssueLink);
                 } catch (error) {
                     console.error('Error updating Jira issue:', error);
                     return Response.json({ error: 'Failed to update Jira issue', details: error instanceof Error ? error.message : String(error) }, { status: 500 });

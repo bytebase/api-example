@@ -29,7 +29,7 @@ export async function fetchData(url: string, token: string, options: RequestInit
 }
 
 /* Generate token */ 
-export async function generateToken() {
+export async function generateBBToken() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/auth/login`, {
         method: "POST",
         body: JSON.stringify({
@@ -49,7 +49,7 @@ export async function generateToken() {
 }
 
 async function createSheet(project: string, database: BytebaseDatabase, SQL: string) {
-    const token = await generateToken();
+    const token = await generateBBToken();
     const newSheet = {
         database: database.name,
         title: ``,
@@ -68,7 +68,7 @@ async function createSheet(project: string, database: BytebaseDatabase, SQL: str
 }
 
 async function createPlan(project: string, database: BytebaseDatabase, sheetName: string) {
-    const token = await generateToken();
+    const token = await generateBBToken();
     const newPlan = {
         "steps": [
             {
@@ -97,7 +97,7 @@ async function createPlan(project: string, database: BytebaseDatabase, sheetName
 }
 
 async function createIssue(project: string, database: BytebaseDatabase, planName: string, summary: string, description: string, jiraIssueKey: string) {
-    const token = await generateToken();
+    const token = await generateBBToken();
     const newIssue = {
         "approvers": [],
         "approvalTemplates": [],
@@ -118,7 +118,7 @@ async function createIssue(project: string, database: BytebaseDatabase, planName
 }
 
 async function createRollout(project: string, planName: string) {
-    const token = await generateToken();
+    const token = await generateBBToken();
     const newRollout = { "plan": planName };
 
     const response = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/${project}/rollouts`, token, {
@@ -129,7 +129,7 @@ async function createRollout(project: string, planName: string) {
     return response;
 }
 
-export async function createIssueWorkflow(project: string, database: BytebaseDatabase, SQL: string, summary: string, description: string, jiraIssueKey: string) {
+export async function createBBIssueWorkflow(project: string, database: BytebaseDatabase, SQL: string, summary: string, description: string, jiraIssueKey: string) {
 
     console.log("=============createIssueWorkflow", project, database, SQL, summary, description);
     try {
@@ -170,7 +170,7 @@ export async function createIssueWorkflow(project: string, database: BytebaseDat
     }
 }
 
-export async function updateJiraIssue(issueKey: string, bytebaseIssueLink: string) {
+export async function updateJiraIssueAfterBBIssueCreated(issueKey: string, bytebaseIssueLink: string) {
     console.log("=============update-jira-issue", issueKey, bytebaseIssueLink);
 
     if (!issueKey) {

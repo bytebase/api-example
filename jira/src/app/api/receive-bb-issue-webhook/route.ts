@@ -41,22 +41,14 @@ declare global {
 }
 
 export async function POST(request: Request) {
-  //  console.log(`${request.method} request received`, request);
     try {
-
-        let jiraIssueKeyMatch = null
         const payload: BytebaseWebhookPayload = await request.json();
-       // console.log('bb-issue webhook Received payload:', JSON.stringify(payload));
 
-        // Check if it's an issue status update
+        // Only process "bb.issue.status.update" activity type
         if (payload.activity_type === "bb.issue.status.update") {
-
-            console.log("=========payload.issue.name",payload.issue.name);
-            console.log("=========payload.issue.description",payload.issue.description);
-            // Extract Jira issue key from title or description
-            jiraIssueKeyMatch = payload.issue.name.match(/\[JIRA>([^\]]+)\]/);
-
-            console.log("==========jiraIssueKeyMatch", jiraIssueKeyMatch);
+            console.log("Processing bb.issue.status.update");
+            
+            const jiraIssueKeyMatch = payload.issue.name.match(/\[JIRA>([^\]]+)\]/);
             const jiraIssueKey = jiraIssueKeyMatch ? jiraIssueKeyMatch[1] : null;
 
             if (jiraIssueKey) {
@@ -73,40 +65,32 @@ export async function POST(request: Request) {
                         console.log(`Updated Jira issue ${jiraIssueKey} status to ${jiraStatus}`);
                     } catch (error) {
                         console.error(`Failed to update Jira issue ${jiraIssueKey} status:`, error);
+                        return Response.json({ error: 'Failed to update Jira issue status' }, { status: 500 });
                     }
                 }
             }
+
+            // Keep the original parsed data structure
+            const parsedData: ParsedBytebaseData = {
+                issueId: payload.issue.id,
+                issueName: payload.issue.name,
+                issueStatus: payload.issue.status,
+                issueType: payload.issue.type,
+                issueDescription: payload.issue.description,
+                projectId: payload.project.id,
+                projectName: payload.project.name,
+                bytebaseIssueLink: payload.link,
+                jiraIssueKey: jiraIssueKey,
+            };
+
+            // Store the parsed data in a global variable
+            global.lastBytebaseWebhook = parsedData;
+
+            return Response.json({ message: 'Webhook processed successfully', data: parsedData });
         }
 
-        // Standardize the Bytebase Issue Link format
-        let bytebaseIssueLink = payload.link;
-        const bbHost = process.env.NEXT_PUBLIC_BB_HOST;
-        if (bytebaseIssueLink && bbHost) {
-            if (bytebaseIssueLink.startsWith(bbHost)) {
-                bytebaseIssueLink = bytebaseIssueLink.substring(bbHost.length);
-            }
-            if (!bytebaseIssueLink.startsWith('/')) {
-                bytebaseIssueLink = '/' + bytebaseIssueLink;
-            }
-            bytebaseIssueLink = bbHost + bytebaseIssueLink;
-        }
-
-        const parsedData: ParsedBytebaseData = {
-            issueId: payload.issue.id,
-            issueName: payload.issue.name,
-            issueStatus: payload.issue.status,
-            issueType: payload.issue.type,
-            issueDescription: payload.issue.description,
-            projectId: payload.project.id,
-            projectName: payload.project.name,
-            bytebaseIssueLink: bytebaseIssueLink,
-            jiraIssueKey: jiraIssueKeyMatch ? jiraIssueKeyMatch[1] : null,
-        };
-
-        // Store the parsed data in a global variable
-        global.lastBytebaseWebhook = parsedData;
-
-        return Response.json({ message: 'Webhook received and processed successfully', data: parsedData });
+        // If it's not a "bb.issue.status.update" activity, return early
+        return Response.json({ message: 'Webhook received but not processed (not a status update)' });
     } catch (error) {
         console.error('Error processing webhook:', error);
         return Response.json({ error: 'Error processing webhook' }, { status: 500 });
