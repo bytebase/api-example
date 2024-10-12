@@ -97,17 +97,24 @@ async function createPlan(project: string, database: BytebaseDatabase, sheetName
 }
 
 async function createIssue(project: string, database: BytebaseDatabase, planName: string, summary: string, description: string, jiraIssueKey: string) {
+ 
+    console.log("=============createIssue before bbtoken");
     const token = await generateBBToken();
+    console.log("=============createIssue after bbtoken");
+    const jiraBaseUrl = process.env.NEXT_PUBLIC_JIRA_BASE_URL;
+    const jiraIssueUrl = `${jiraBaseUrl}/browse/${jiraIssueKey}`;
     const newIssue = {
         "approvers": [],
         "approvalTemplates": [],
         "subscribers": [],
         "title": `[JIRA>${jiraIssueKey}] ${summary}`,
-        "description": `Jira Issue Key: ${jiraIssueKey}\n\n${description}`,
+        "description": `Jira Issue Link: [${jiraIssueUrl}](${jiraIssueUrl})\n\n${description}`,
         "type": "DATABASE_CHANGE",
         "assignee": "",
         "plan": planName
     };
+
+    console.log("=============success newIssue", newIssue);
 
     const response = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/${project}/issues`, token, {
         method: 'POST',
