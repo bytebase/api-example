@@ -10,10 +10,8 @@
       "condition": {
         "expression": "",
         "title": "",
-        "description": "",
-        "location": ""
-      },
-      "parsedExpr": null
+        "description": ""
+      }
     },
     {
       "role": "roles/workspaceAdmin",
@@ -21,10 +19,8 @@
       "condition": {
         "expression": "",
         "title": "",
-        "description": "",
-        "location": ""
-      },
-      "parsedExpr": null
+        "description": ""
+      }
     },
     {
       "role": "roles/workspaceMember",
@@ -32,10 +28,8 @@
       "condition": {
         "expression": "",
         "title": "",
-        "description": "",
-        "location": ""
-      },
-      "parsedExpr": null
+        "description": ""
+      }
     },
     {
       "role": "roles/auditor",
@@ -43,10 +37,8 @@
       "condition": {
         "expression": "",
         "title": "",
-        "description": "",
-        "location": ""
-      },
-      "parsedExpr": null
+        "description": ""
+      }
     }
   ]
 }

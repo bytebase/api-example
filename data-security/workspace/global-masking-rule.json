@@ -9,8 +9,7 @@
         "condition": {
           "expression": "project_id == \"branch\"",
           "title": "",
-          "description": "",
-          "location": ""
+          "description": ""
         },
         "maskingLevel": "FULL"
       }

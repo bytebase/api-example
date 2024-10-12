@@ -10,8 +10,7 @@
         "condition": {
           "expression": "resource.database_name == \"hr_prod\" && resource.instance_id == \"prod-sample-instance\" && resource.schema_name == \"public\" && resource.table_name == \"salary\" && resource.column_name == \"amount\"",
           "title": "",
-          "description": "",
-          "location": ""
+          "description": ""
         }
       },
       {
@@ -21,8 +20,7 @@
         "condition": {
           "expression": "resource.database_name == \"hr_prod\" && resource.instance_id == \"prod-sample-instance\" && resource.schema_name == \"public\" && resource.table_name == \"salary\" && resource.column_name == \"amount\"",
           "title": "",
-          "description": "",
-          "location": ""
+          "description": ""
         }
       }
     ]
