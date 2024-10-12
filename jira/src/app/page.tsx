@@ -102,12 +102,11 @@ export default function WebhookInfoPage() {
         {bytebaseInfo && (
           <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <h3 className="text-xl font-semibold mb-4">Last changed Bytebase Issue</h3>
+            <p><strong>Project Name:</strong> {bytebaseInfo.projectName}</p>
             <p><strong>Issue ID:</strong> {bytebaseInfo.issueId}</p>
             <p><strong>Issue Name:</strong> {bytebaseInfo.issueName}</p>
-            <p><strong>Issue Status:</strong> {bytebaseInfo.issueStatus}</p>
-            <p><strong>Issue Type:</strong> {bytebaseInfo.issueType}</p>
             <p><strong>Issue Description:</strong> {bytebaseInfo.issueDescription}</p>
-            <p><strong>Project ID:</strong> {bytebaseInfo.projectId}</p>
+            <p><strong>Issue Status:</strong> {bytebaseInfo.issueStatus}</p>
           </div>
         )}
       </div>
