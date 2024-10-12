@@ -1,4 +1,4 @@
-## Configure column masking explicitly
+## Column masking explicitly
 
 Correspond to https://www.bytebase.com/docs/security/data-masking/column-masking/
 
@@ -8,7 +8,7 @@ curl --request PATCH "${bytebase_url}/v1/instances/prod-sample-instance/database
   --data @column-masking.json
 ```
 
-## Configure column semantic type and classification
+## Column semantic type and classification
 
 - Semantic type: https://www.bytebase.com/docs/security/data-masking/semantic-types/
 - Classification: https://www.bytebase.com/docs/security/data-masking/data-classification/#manual-classification

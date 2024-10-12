@@ -1,0 +1,8 @@
+{
+  "email": "test2@example.com",
+  "title": "Test 2",
+  "userType": "USER",
+  "password": "",
+  "mfaEnabled": false,
+  "phone": "+14082120000"
+}

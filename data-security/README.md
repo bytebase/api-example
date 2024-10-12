@@ -6,7 +6,7 @@ This directory demonstrates how to use API to configure:
 1. Database query and export access control.
 1. Dynamic data masking.
 
-You can expand this example to build a GitOps solution to configure all data security policies as code.
+You can expand this example to build a GitOps solution to codify all data security policies.
 
 # Fetch the access token
 
