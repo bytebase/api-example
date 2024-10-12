@@ -87,6 +87,9 @@ export async function POST(request: Request) {
 
         // Check if this is a new issue creation
         if (body.webhookEvent === "jira:issue_created" && body.issue_event_type_name === "issue_created") {
+
+            global.lastJiraWebhook = parsedData;
+
             // Create Bytebase issue
             const token = await generateBBToken();
             const allProjectData = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects`, token);

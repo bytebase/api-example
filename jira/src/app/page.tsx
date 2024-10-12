@@ -74,14 +74,19 @@ export default function WebhookInfoPage() {
   return (
     <div className="p-4 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-1">Webhook Monitor</h1>
-      <h2 className="text-sm text-gray-500 mb-4">Fetch latest Jira and Bytebase Issue, Refresh every 3 seconds</h2>
+      <h2 className="text-sm text-gray-500 mb-4">Fetch latest Jira and Bytebase Issue related webhook, auto refresh every 3 seconds</h2>
+     <ol className="list-decimal list-inside text-sm mb-4">
+      <li> A new issue created in Jira will trigger a new issue creation in Bytebase </li>
+      <li> When the issue is created in Bytebase, the Jira issue will be updated with the Bytebase issue link and set to In progress </li>
+      <li> When the issue in Bytebase is updated as Done, the Jira issue will be set to Done </li>
+     </ol>
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {jiraInfo && (
           <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <h3 className="text-xl font-semibold mb-4">Jira Issue</h3>
+            <h3 className="text-xl font-semibold mb-4">Last changed Jira Issue</h3>
             <p><strong>Issue Key:</strong> {jiraInfo.issueKey}</p>
             <p><strong>Issue Type:</strong> {jiraInfo.issueType}</p>
             <p><strong>Project Key:</strong> {jiraInfo.projectKey}</p>
@@ -96,15 +101,13 @@ export default function WebhookInfoPage() {
 
         {bytebaseInfo && (
           <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <h3 className="text-xl font-semibold mb-4">Bytebase Issue</h3>
+            <h3 className="text-xl font-semibold mb-4">Last changed Bytebase Issue</h3>
             <p><strong>Issue ID:</strong> {bytebaseInfo.issueId}</p>
             <p><strong>Issue Name:</strong> {bytebaseInfo.issueName}</p>
             <p><strong>Issue Status:</strong> {bytebaseInfo.issueStatus}</p>
             <p><strong>Issue Type:</strong> {bytebaseInfo.issueType}</p>
             <p><strong>Issue Description:</strong> {bytebaseInfo.issueDescription}</p>
             <p><strong>Project ID:</strong> {bytebaseInfo.projectId}</p>
-            <p><strong>Project Name:</strong> {bytebaseInfo.projectName}</p>
-            <p><strong>Corresponding Jira Issue Key:</strong> {bytebaseInfo.jiraIssueKey || 'Not available'}</p>
           </div>
         )}
       </div>
