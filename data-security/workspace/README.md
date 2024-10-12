@@ -37,3 +37,13 @@ curl --request PATCH "${bytebase_url}/v1/roles/auditor" \
   --header 'Authorization: Bearer '${bytebase_token} \
   --data @custom-role.json
 ```
+
+# Configure IAM
+
+API: https://api.bytebase.com/#tag/workspaceservice
+
+```bash
+curl --request POST "${bytebase_url}/v1/workspaces/${workspace_id}:setIamPolicy" \
+  --header 'Authorization: Bearer '${bytebase_token} \
+  --data @iam.json
+```
