@@ -6,6 +6,8 @@ Another challenge for configuring users is you need to specify the password, whi
 
 # Configure groups
 
+API: https://api.bytebase.com/#tag/groupservice
+
 You can skip this if you have [SCIM](https://www.bytebase.com/docs/administration/scim/overview/) to
 provision users and groups in an organization.
 
@@ -13,4 +15,15 @@ provision users and groups in an organization.
 curl --request POST ${bytebase_url}/v1/groups \
   --header 'Authorization: Bearer '${bytebase_token} \
   --data @group.json
+```
+
+# Configure custom roles
+
+Docs: https://www.bytebase.com/docs/administration/custom-roles/
+API: https://api.bytebase.com/#tag/roleservice
+
+```bash
+curl --request POST "${bytebase_url}/v1/roles?roleId=auditor" \
+  --header 'Authorization: Bearer '${bytebase_token} \
+  --data @custom-role.json
 ```
