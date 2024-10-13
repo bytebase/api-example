@@ -14,8 +14,8 @@ Doc: https://www.bytebase.com/docs/api/authentication/
 
 ```bash
 export bytebase_url=http://localhost:5678
-bytebase_account="ci@service.bytebase.com"
-bytebase_password="bbs_VkANoCFP7T8rWiz1HhvH"
+bytebase_account="api@service.bytebase.com"
+bytebase_password="bbs_gNECWMQrKe6YbRJ1Np19"
 bytebase_token=$(curl -v ${bytebase_url}/v1/auth/login \
     --data-raw '{"email":"'${bytebase_account}'","password":"'${bytebase_password}'","web":true}' \
     --compressed 2>&1 | grep token | grep -o 'access-token=[^;]*;' | grep -o '[^;]*' | sed 's/access-token=//g; s/;//g')
