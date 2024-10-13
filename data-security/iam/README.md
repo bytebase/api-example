@@ -24,7 +24,7 @@ curl --request DELETE "${bytebase_url}/v1/roles/auditor" \
   --header 'Authorization: Bearer '${bytebase_token}
 ```
 
-# IAM
+# Workspace-level IAM
 
 API: https://api.bytebase.com/#tag/workspaceservice
 
