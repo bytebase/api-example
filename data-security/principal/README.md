@@ -46,6 +46,8 @@ provision users and groups in an organization.
 
 API: https://api.bytebase.com/#tag/groupservice
 
+_Will support upsert by the end of 2024 Oct_
+
 ```bash
 ## Create
 curl --request POST ${bytebase_url}/v1/groups \

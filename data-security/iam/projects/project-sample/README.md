@@ -1,5 +1,7 @@
 # IAM
 
+Docs: https://www.bytebase.com/docs/security/data-access-control/
+
 API: https://api.bytebase.com/#tag/projectservice/POST/v1/projects/{project}:setIamPolicy
 
 ```bash
