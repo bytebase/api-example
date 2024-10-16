@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bytebase Jira Integration Example
+
+This is a sample app demonstrating how to integrate [Bytebase](https://github.com/bytebase/bytebase) with Jira for automated database change management.
+
+Corresponding [tutorial 🔗](https://www.bytebase.com/docs/tutorials/database-change-management-with-jira-automated/)
+
+![Jira Integration](./docs/jira-bb-workflow.gif)
+
+## Prerequisites
+
+- Node.js >= 18
+- A running Bytebase instance
+- A Jira account with appropriate permissions
+- Bytebase service account with necessary permissions
 
 ## Getting Started
 
-First, run the development server:
+### Step 1 - Set up Bytebase and Jira
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Follow the [Self-host Bytebase via docker](https://www.bytebase.com/docs/get-started/self-host/#docker) guide to set up Bytebase.
+2. Create a [Bytebase service account](https://www.bytebase.com/docs/how-to/spanner/how-to-create-a-service-account-for-bytebase/) with the necessary permissions.
+3. Set up a Jira project for database change management.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Step 2 - Configure and Run the App
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone this repository.
+2. Copy `env-template.local` to `.env.local`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   cp env-template.local .env.local
+   ```
 
-## Learn More
+3. Update the `.env.local` file with your Bytebase and Jira details:
 
-To learn more about Next.js, take a look at the following resources:
+   ```
+   NEXT_PUBLIC_BB_HOST=your_bytebase_host
+   NEXT_PUBLIC_BB_SERVICE_ACCOUNT=your_service_account
+   NEXT_PUBLIC_BB_SERVICE_KEY=your_service_key
+   JIRA_HOST=your_jira_host
+   JIRA_EMAIL=your_jira_email
+   JIRA_API_TOKEN=your_jira_api_token
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Install dependencies and run the development server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   pnpm i && pnpm dev
+   ```
 
-## Deploy on Vercel
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the running app.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Usage
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This app demonstrates the integration between Bytebase and Jira, including:
+
+- Creating Jira issues for database changes
+- Creating Bytebase issues based on Jira issue status
+- Syncing status between Bytebase and Jira
+
+For more details on the Bytebase API, refer to the [official documentation](https://api.bytebase.com/).
+
+For Jira API usage, consult the [Jira Cloud REST API documentation](https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/).
