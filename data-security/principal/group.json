@@ -5,6 +5,14 @@
     {
       "member": "users/ci@service.bytebase.com",
       "role": "OWNER"
+    },
+    {
+      "member": "users/dev1@service.bytebase.com",
+      "role": "MEMBER"
+    },
+    {
+      "member": "users/dev2@service.bytebase.com",
+      "role": "MEMBER"
     }
   ]
 }
