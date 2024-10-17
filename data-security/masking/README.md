@@ -2,7 +2,9 @@
 
 Docs: https://www.bytebase.com/docs/security/data-masking/overview/
 
-## Global masking rule
+## Workspace-level policies and settings
+
+### Global masking rule
 
 Docs: https://www.bytebase.com/docs/security/data-masking/global-masking-rule/
 
@@ -14,7 +16,7 @@ curl --request PATCH "${bytebase_url}/v1/policies/masking_rule?allow_missing=tru
   --data @global-masking-rule.json
 ```
 
-## Data classification
+### Data classification
 
 Docs: https://www.bytebase.com/docs/security/data-masking/data-classification/
 
@@ -26,7 +28,7 @@ curl --request PATCH ${bytebase_url}/v1/settings/bb.workspace.data-classificatio
   --data @data-classification.json
 ```
 
-## Masking algorithm
+### Masking algorithm
 
 Docs: https://www.bytebase.com/docs/security/data-masking/masking-algorithm/
 
@@ -38,7 +40,7 @@ curl --request PATCH ${bytebase_url}/v1/settings/bb.workspace.masking-algorithm 
   --data @masking-algorithm.json
 ```
 
-## Semantic type
+### Semantic type
 
 Docs: https://www.bytebase.com/docs/security/data-masking/semantic-types/
 
@@ -49,3 +51,15 @@ curl --request PATCH ${bytebase_url}/v1/settings/bb.workspace.semantic-types \
   --header 'Authorization: Bearer '${bytebase_token} \
   --data @semantic-type.json
 ```
+
+## Project-level masking exception
+
+Project-level masking exception to overrule the workspace-level setting.
+
+https://github.com/bytebase/api-example/tree/main/data-security/masking/projects/project-sample
+
+## Schema configuration
+
+Configure metadata such as masking level, classification, semantic type at the table/column level.
+
+https://github.com/bytebase/api-example/tree/main/data-security/masking/databases
