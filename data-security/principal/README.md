@@ -1,6 +1,6 @@
 # Users
 
-`Users` API is for demonstration purpose. For managing users, we highly recommend using [SSO](https://www.bytebase.com/docs/administration/sso/overview/)
+`Users` API is for demonstration purpose. For managing users, we highly recommend using [SSO](https://www.bytebase.com/docs/administration/sso/overview/) or [SCIM](https://www.bytebase.com/docs/administration/scim/overview/)
 to provision user instead of using API.
 
 API: https://api.bytebase.com/#tag/authservice/POST/v1/users
