@@ -7,11 +7,11 @@
       "role": "OWNER"
     },
     {
-      "member": "users/dev1@service.bytebase.com",
+      "member": "users/dev1@example.com",
       "role": "MEMBER"
     },
     {
-      "member": "users/dev2@service.bytebase.com",
+      "member": "users/dev2@example.com",
       "role": "MEMBER"
     }
   ]

@@ -46,21 +46,18 @@ provision users and groups in an organization.
 
 API: https://api.bytebase.com/#tag/groupservice
 
-_Will support upsert by the end of 2024 Oct_
+You must be the **Group Owner** to create/update the group.
 
 ```bash
 ## Create
-curl --request POST ${bytebase_url}/v1/groups \
+curl --request POST "${bytebase_url}/v1/groups?group_email=contractor@example.com" \
   --header 'Authorization: Bearer '${bytebase_token} \
-  --data "$(jq -n --arg name 'groups/contractor@example.com' \
-    '. + {name: $name} + input' group.json)"
+  --data @group.json
 ```
 
-You must be the **Group Owner** to update/delete the group.
-
 ```bash
-## Update
-curl --request PATCH "${bytebase_url}/v1/groups/contractor@example.com" \
+## Upsert
+curl --request PATCH "${bytebase_url}/v1/groups/contractor@example.com?allow_missing=true" \
   --header 'Authorization: Bearer '${bytebase_token} \
   --data @group.json
 ```

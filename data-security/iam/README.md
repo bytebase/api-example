@@ -4,8 +4,6 @@ Docs: https://www.bytebase.com/docs/administration/custom-roles/
 
 API: https://api.bytebase.com/#tag/roleservice
 
-_Will support upsert by the end of 2024 Oct_
-
 ```bash
 ## Create
 curl --request POST "${bytebase_url}/v1/roles?roleId=auditor" \
@@ -14,8 +12,8 @@ curl --request POST "${bytebase_url}/v1/roles?roleId=auditor" \
 ```
 
 ```bash
-## Update
-curl --request PATCH "${bytebase_url}/v1/roles/auditor" \
+## Upsert
+curl --request PATCH "${bytebase_url}/v1/roles/auditor?allow_missing=true" \
   --header 'Authorization: Bearer '${bytebase_token} \
   --data @custom-role.json
 ```
