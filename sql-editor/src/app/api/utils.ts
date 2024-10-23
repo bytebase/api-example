@@ -1,3 +1,4 @@
+import exp from 'constants';
 import { v4 } from 'uuid';
 
 export interface BytebaseDatabase {
@@ -46,6 +47,46 @@ export async function generateBBToken() {
 
     const token = await res.json();
     return token.token;
+}
+
+export async function grantUserRole(project: string) {
+    const username = project;
+    const token = await generateBBToken();
+    const response = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects/${project}:getIamPolicy`, token, {
+        method: 'GET'
+    });
+
+    console.log("=============getIamPolicy", JSON.stringify(response));
+
+    response.bindings.push({
+        "role": "roles/projectQuerier",
+        "members": [`user:${username}@example.com`],
+        "condition": {
+          "expression": "",
+          "title": "",
+          "description": "",
+          "location": ""
+        },
+        "parsedExpr": null
+      });
+
+    const newResponse = {
+        "resource":`projects/${project}`,
+        "policy": {bindings: response.bindings},
+        "etag": response.etag
+    }
+
+
+    console.log("=============after push", JSON.stringify(newResponse));
+
+    const setResponse = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects/${project}:setIamPolicy`, token, {
+        method: 'POST',
+        body: JSON.stringify(newResponse)
+    });
+
+    console.log("=============grantUserRole", setResponse);
+
+    return setResponse;
 }
 
 /*async function createSheet(project: string) {

@@ -1,4 +1,4 @@
-import { createBBIssueWorkflow, generateBBToken } from "../utils";
+import { createBBIssueWorkflow, generateBBToken, grantUserRole } from "../utils";
 
 function generateRandomString(length: number): string {
   const characters = 'abcdefghijklmnopqrstuvwxyz';
@@ -45,7 +45,7 @@ export async function GET(request: Request) {
       console.error('Failed to create user', await createUserResponse.text());
       throw new Error('Failed to create user');
     }
-    console.log('User created successfully in Bytebase');
+    console.log('User created successfully in Bytebase', createUserResponse);
 
     // Create project using the username
     console.log(`Creating project for user: ${username}`);
@@ -70,11 +70,14 @@ export async function GET(request: Request) {
 
     console.log('User creation process completed successfully');
 
-    console.log('now create db');
+    //console.log('now create db');
+    //const result = await createBBIssueWorkflow(username)
+    //console.log("after creating db", result)
 
-    const result = await createBBIssueWorkflow(username)
-    console.log("after creating db", result)
 
+    // Grant the user project querier role
+    const result = await grantUserRole(username);
+    console.log("after grantUserRole", result)
 
     // Return the credentials and created project
     return new Response(JSON.stringify({
