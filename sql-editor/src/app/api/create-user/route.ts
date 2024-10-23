@@ -1,7 +1,7 @@
-import { generateBBToken } from "../utils";
+import { createBBIssueWorkflow, generateBBToken } from "../utils";
 
 function generateRandomString(length: number): string {
-  const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  const characters = 'abcdefghijklmnopqrstuvwxyz';
   let result = '';
   for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     console.log('Starting user creation process');
 
     // Generate random username, email, and password
-    const username = `user_${generateRandomString(8)}`;
+    const username = `${generateRandomString(8)}`;
     const email = `${username}@example.com`;
     const password = generateRandomString(12);
     console.log(`Generated credentials - Username: ${username}, Email: ${email}`);
@@ -49,15 +49,15 @@ export async function GET(request: Request) {
 
     // Create project using the username
     console.log(`Creating project for user: ${username}`);
-    const createProjectResponse = await fetch('https://api.bytebase.com/v1/projects', {
+    const createProjectResponse = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects?projectId=${username}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({
-        name: `projects/${username}`,
         title: username,
+        key: username,
       }),
     });
 
@@ -65,12 +65,23 @@ export async function GET(request: Request) {
       console.error('Failed to create project', await createProjectResponse.text());
       throw new Error('Failed to create project');
     }
-    console.log('Project created successfully');
+    const createdProject = await createProjectResponse.json();
+    console.log('Project created successfully:', createdProject);
 
     console.log('User creation process completed successfully');
 
-    // Return the credentials
-    return new Response(JSON.stringify({ message: 'User and project created successfully', credentials: { username, email, password } }), {
+    console.log('now create db');
+
+    const result = await createBBIssueWorkflow(username)
+    console.log("after creating db", result)
+
+
+    // Return the credentials and created project
+    return new Response(JSON.stringify({
+      message: 'User and project created successfully',
+      credentials: { username, email, password },
+      project: createdProject
+    }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
