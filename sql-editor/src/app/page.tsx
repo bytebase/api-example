@@ -50,8 +50,8 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold mb-8"> Embedded Bytebase SQL Editor Demo</h1>
+    <main className="flex min-h-screen flex-col items-center p-24 pt-6">
+      <h1 className="text-4xl font-bold mt-0mb-8"> Embedded Bytebase SQL Editor Demo</h1>
       {!userData && (
       <h2 className="text-2xl font-bold mb-4">Logout your Bytebase account in the same browser before click Start</h2>)}
       {!userData && (
@@ -67,15 +67,18 @@ export default function Home() {
       {userData && (
         <div className="mt-8 w-full">
           <h2 className="text-2xl font-bold mb-4">User/Project/Database Created Successfully, click Sign in to start</h2>
-          <div className="bg-gray-100 p-6 rounded-lg mb-4">
-            <p><strong>Username:</strong> {userData.credentials.username}</p>
-            <p><strong>Email:</strong> {userData.credentials.email}</p>
-            <p><strong>Password:</strong> {userData.credentials.password}</p>
-            <p><strong>Project Title:</strong> {userData.project.title}</p>
-            <p><strong>Project Key:</strong> {userData.project.key}</p>
-            <p><strong>Database:</strong> {userData.database}</p>
+          <div className="bg-gray-100 p-6 rounded-lg mb-4 flex flex-wrap">
+            <div className="w-1/2 p-2">
+              <p><strong>Username:</strong> {userData.credentials.username}</p>
+              <p><strong>Email:</strong> {userData.credentials.email}</p>
+              <p><strong>Password:</strong> {userData.credentials.password}</p>
+            </div>
+            <div className="w-1/2 p-2">
+              <p><strong>Project Title:</strong> {userData.project.title}</p>
+              <p><strong>Project Key:</strong> {userData.project.key}</p>
+              <p><strong>Database:</strong> {userData.database}</p>
+            </div>
           </div>
-          <p className="mt-4 mb-4 text-sm text-gray-600">Please save these credentials and project details for future use.</p>
           <div className="w-full h-screen border border-gray-300 rounded-lg overflow-hidden">
             <iframe
               src={`${process.env.NEXT_PUBLIC_BB_HOST}/auth?email=${userData.credentials.email}&password=${userData.credentials.password}`}
