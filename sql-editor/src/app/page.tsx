@@ -61,21 +61,23 @@ export default function Home() {
       )}
       {error && <p className="text-red-500 mt-4">{error}</p>}
       {userData && (
-        <div className="mt-8 w-full max-w-2xl">
+        <div className="mt-8 w-full">
           <h2 className="text-2xl font-bold mb-4">User and Project Created Successfully</h2>
           <div className="bg-gray-100 p-6 rounded-lg mb-4">
-            <h3 className="text-xl font-semibold mb-2">User Credentials</h3>
             <p><strong>Username:</strong> {userData.credentials.username}</p>
             <p><strong>Email:</strong> {userData.credentials.email}</p>
             <p><strong>Password:</strong> {userData.credentials.password}</p>
-          </div>
-          <div className="bg-gray-100 p-6 rounded-lg">
-            <h3 className="text-xl font-semibold mb-2">Project Details</h3>
-            <p><strong>Project ID:</strong> {userData.project.name}</p>
             <p><strong>Project Title:</strong> {userData.project.title}</p>
             <p><strong>Project Key:</strong> {userData.project.key}</p>
           </div>
-          <p className="mt-4 text-sm text-gray-600">Please save these credentials and project details for future use.</p>
+          <p className="mt-4 mb-4 text-sm text-gray-600">Please save these credentials and project details for future use.</p>
+          <div className="w-full h-screen border border-gray-300 rounded-lg overflow-hidden">
+            <iframe
+              src={`${process.env.NEXT_PUBLIC_BB_HOST}/auth?email=${userData.credentials.email}&password=${userData.credentials.password}`}
+              className="w-full h-full"
+              title="Bytebase Dashboard"
+            />
+          </div>
         </div>
       )}
     </main>
