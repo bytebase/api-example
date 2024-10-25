@@ -18,6 +18,7 @@ interface Project {
 interface UserData {
   credentials: Credentials;
   project: Project;
+  database: string;
 }
 
 export default function Home() {
@@ -34,7 +35,8 @@ export default function Home() {
         const data = await response.json();
         setUserData({
           credentials: data.credentials,
-          project: data.project
+          project: data.project,
+          database: data.database.database
         });
       } else {
         throw new Error('Failed to create user');
@@ -71,7 +73,7 @@ export default function Home() {
             <p><strong>Password:</strong> {userData.credentials.password}</p>
             <p><strong>Project Title:</strong> {userData.project.title}</p>
             <p><strong>Project Key:</strong> {userData.project.key}</p>
-            <p><strong>Database:</strong> {userData.project.key}</p>
+            <p><strong>Database:</strong> {userData.database}</p>
           </div>
           <p className="mt-4 mb-4 text-sm text-gray-600">Please save these credentials and project details for future use.</p>
           <div className="w-full h-screen border border-gray-300 rounded-lg overflow-hidden">

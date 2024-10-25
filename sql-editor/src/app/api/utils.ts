@@ -211,6 +211,7 @@ export async function createBBIssueWorkflow(project: string) {
         console.log("--------- createdRollout ----------", rolloutData);
         return {
             success: true,
+            database: project
         };
     } catch (error) {
         console.error("Error in createIssueWorkflow:", error);
