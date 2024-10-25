@@ -49,7 +49,22 @@ export async function generateBBToken() {
     return token.token;
 }
 
-export async function grantUserRole(project: string) {
+export async function switchWorkspaceMode() {
+    const token = await generateBBToken();
+    const response = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/settings/bb.workspace.profile?updateMask=value.workspace_profile_setting_value.database_change_mode`, token, {
+        method: 'PATCH',
+        body: JSON.stringify({
+            "value": { 
+                "workspaceProfileSettingValue": {
+                    "databaseChangeMode": "EDITOR"
+                }
+            }
+        })
+    });
+    return response;
+}
+
+export async function grantUserRoleProjectOwner(project: string) {
     const username = project;
     const token = await generateBBToken();
     const response = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects/${project}:getIamPolicy`, token, {
@@ -59,7 +74,7 @@ export async function grantUserRole(project: string) {
     console.log("=============getIamPolicy", JSON.stringify(response));
 
     response.bindings.push({
-        "role": "roles/projectQuerier",
+        "role": "roles/projectOwner",
         "members": [`user:${username}@example.com`],
         "condition": {
           "expression": "",

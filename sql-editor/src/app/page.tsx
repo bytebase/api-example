@@ -49,7 +49,9 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold mb-8">Welcome to Bytebase Demo</h1>
+      <h1 className="text-4xl font-bold mb-8"> Embedded Bytebase SQL Editor Demo</h1>
+      {!userData && (
+      <h2 className="text-2xl font-bold mb-4">Logout your Bytebase account in the same browser before click Start</h2>)}
       {!userData && (
         <button
           onClick={handleCreateUser}
@@ -62,13 +64,14 @@ export default function Home() {
       {error && <p className="text-red-500 mt-4">{error}</p>}
       {userData && (
         <div className="mt-8 w-full">
-          <h2 className="text-2xl font-bold mb-4">User and Project Created Successfully</h2>
+          <h2 className="text-2xl font-bold mb-4">User/Project/Database Created Successfully, click Sign in to start</h2>
           <div className="bg-gray-100 p-6 rounded-lg mb-4">
             <p><strong>Username:</strong> {userData.credentials.username}</p>
             <p><strong>Email:</strong> {userData.credentials.email}</p>
             <p><strong>Password:</strong> {userData.credentials.password}</p>
             <p><strong>Project Title:</strong> {userData.project.title}</p>
             <p><strong>Project Key:</strong> {userData.project.key}</p>
+            <p><strong>Database:</strong> {userData.project.key}</p>
           </div>
           <p className="mt-4 mb-4 text-sm text-gray-600">Please save these credentials and project details for future use.</p>
           <div className="w-full h-screen border border-gray-300 rounded-lg overflow-hidden">

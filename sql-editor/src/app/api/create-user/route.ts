@@ -1,4 +1,4 @@
-import { createBBIssueWorkflow, generateBBToken, grantUserRole } from "../utils";
+import { createBBIssueWorkflow, generateBBToken, grantUserRoleProjectOwner, switchWorkspaceMode } from "../utils";
 
 function generateRandomString(length: number): string {
   const characters = 'abcdefghijklmnopqrstuvwxyz';
@@ -70,20 +70,24 @@ export async function GET(request: Request) {
 
     console.log('User creation process completed successfully');
 
-    //console.log('now create db');
-    //const result = await createBBIssueWorkflow(username)
-    //console.log("after creating db", result)
+    console.log('now create db');
+    const createdDB = await createBBIssueWorkflow(username)
+    console.log("after creating db", createdDB)
 
 
     // Grant the user project querier role
-    const result = await grantUserRole(username);
-    console.log("after grantUserRole", result)
+    const grantresult = await grantUserRoleProjectOwner(username);
+    console.log("after grantUserRole", grantresult)
 
+    // Switch the workspace to Editor mode
+    const switchresult = await switchWorkspaceMode();
+    console.log("after switchWorkspaceMode", switchresult)
     // Return the credentials and created project
     return new Response(JSON.stringify({
       message: 'User and project created successfully',
       credentials: { username, email, password },
-      project: createdProject
+      project: createdProject,
+      database: createdDB
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
