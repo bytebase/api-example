@@ -75,10 +75,10 @@ export default function Home() {
       
       {!userData && (
         <div className="w-full max-w-md">
-          <h2 className="text-2xl font-bold mb-4">Logout your Bytebase account in the same browser before starting</h2>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address
+          <h2 className="text-xl font-bold mb-4 text-red-500">Logout your Bytebase account in the same browser before starting</h2>
+            <label htmlFor="email" className="block mb-2">
+              Email Address to sign in with Google OAuth
             </label>
             <input
               type="email"
@@ -104,7 +104,11 @@ export default function Home() {
       
       {userData && (
         <div className="mt-8 w-full">
-          <h2 className="text-2xl font-bold mb-4">User/Project/Database Created Successfully, click Sign in to start</h2>
+          <h2 className="text-2xl font-bold mb-4">
+
+            {generateUsernameFromEmail(userData.credentials.email) === userData.credentials.username ? 'User/Project/Database with same name created successfully' : 'User already exists, Project/Database with same name created successfully'}
+            
+          </h2>
           <div className="bg-gray-100 p-6 rounded-lg mb-4 flex flex-wrap">
             <div className="w-1/2 p-2">
               <p><strong>Username:</strong> {userData.credentials.username}</p>
@@ -119,7 +123,7 @@ export default function Home() {
           </div>
           <div className="w-full h-screen border border-gray-300 rounded-lg overflow-hidden">
           <iframe
-  src={`https://accounts.google.com/o/oauth2/v2/auth?state=event%3Dbb.oauth.signin.idps%252Fgoogle-9xyt%26popup%3Dfalse%26redirect%3D%252Fsql-editor%252Fprojects%252F${encodeURIComponent(userData.credentials.username)}&response_type=code&client_id=${encodeURIComponent(process.env.NEXT_PUBLIC_BB_OAUTH_CLIENT_ID)}&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&redirect_uri=${encodeURIComponent(process.env.NEXT_PUBLIC_BB_OAUTH_CLIENT_CALLBACK_URL)}`}
+  src={`https://accounts.google.com/o/oauth2/v2/auth?state=event%3Dbb.oauth.signin.idps%252Fgoogle-9xyt%26popup%3Dfalse%26redirect%3D%252Fsql-editor%252Fprojects%252F${userData.credentials.username}&response_type=code&client_id=${process.env.NEXT_PUBLIC_BB_OAUTH_CLIENT_ID}&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&redirect_uri=${encodeURIComponent(process.env.NEXT_PUBLIC_BB_OAUTH_CLIENT_CALLBACK_URL)}`}
   className="w-full h-full"
   title="Bytebase Dashboard"
 />
