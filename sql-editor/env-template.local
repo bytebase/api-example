@@ -4,3 +4,5 @@
 NEXT_PUBLIC_BB_HOST=http://localhost:8080
 NEXT_PUBLIC_BB_SERVICE_ACCOUNT=super-api@service.bytebase.com
 NEXT_PUBLIC_BB_SERVICE_KEY=bbs_xfdsfdsafxxxxxxxfhui
+NEXT_PUBLIC_BB_OAUTH_CLIENT_ID=12345-xxxxxxxxxxx.apps.googleusercontent.com
+NEXT_PUBLIC_BB_OAUTH_CLIENT_CALLBACK_URL=http://localhost:8080/oauth/callback

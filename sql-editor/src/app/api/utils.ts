@@ -64,8 +64,7 @@ export async function switchWorkspaceMode() {
     return response;
 }
 
-export async function grantUserRoleProjectOwner(project: string) {
-    const username = project;
+export async function grantUserRoleProjectOwner(project: string, email: string) {
     const token = await generateBBToken();
     const response = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects/${project}:getIamPolicy`, token, {
         method: 'GET'
@@ -75,7 +74,7 @@ export async function grantUserRoleProjectOwner(project: string) {
 
     response.bindings.push({
         "role": "roles/projectOwner",
-        "members": [`user:${username}@example.com`],
+        "members": [`user:${email}`],
         "condition": {
           "expression": "",
           "title": "",
@@ -103,28 +102,6 @@ export async function grantUserRoleProjectOwner(project: string) {
 
     return setResponse;
 }
-
-/*async function createSheet(project: string) {
-//    const SQL = `CREATE DATABASE "${project}" WITH TEMPLATE "hr_prod" OWNER "bbsample"`;
-   // console.log("========sql=======in createSheet", SQL);
-    const token = await generateBBToken();
-    const newSheet = {
-        database: ``,
-        title: ``,
-     //   content: Buffer.from('').toString('base64'),
-        type: `TYPE_SQL`,
-        source: `SOURCE_BYTEBASE_ARTIFACT`,
-        visibility: `VISIBILITY_PUBLIC`,
-        engine: `POSTGRES`
-    };
-
-    const response = await fetchData(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/projects/${project}/sheets`, token, {
-        method: 'POST',
-        body: JSON.stringify(newSheet)
-    });
-
-    return response;
-}*/
 
 async function createPlan(project: string) {
     const token = await generateBBToken();

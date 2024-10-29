@@ -1,0 +1,15 @@
+The url sample is like this:
+
+https://accounts.google.com/o/oauth2/v2/auth?state=event%3Dbb.oauth.signin.idps%252Fgoogle-9xyt%26popup%3Dfalse%26redirect%3D%252Fsql-editor%252Fprojects%252Fadelabluegmailcom&response_type=code&client_id=417640684035-of0pogoitsf5u62geqt1sdqjjunk8boa.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Foauth%2Fcallback
+
+
+now I have this two variable:
+
+
+NEXT_PUBLIC_BB_OAUTH_CLIENT_ID=417640684035-of0pogoitsf5u62geqt1sdqjjunk8boa.apps.googleusercontent.com
+NEXT_PUBLIC_BB_OAUTH_CLIENT_URL=http%3A%2F%2Flocalhost%3A8080%2Foauth%2Fcallback
+
+
+The url sample is like this:
+
+The url sample is like this:

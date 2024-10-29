@@ -1,7 +1,27 @@
-There is a button on the home page called 'Start'
+the user exists already
 
-When the user clicks on the 'Start' button,
-we need to create a Bytebase user who is workspace member
-we need to generate a random username, email and password for the user
-later we need to login as this user
-we also need to create a project using the username as the project name
+```javascript
+{
+  name: 'users/105',
+  state: 'ACTIVE',
+  email: 'a@bytebase.com',
+  title: 'adela',
+  userType: 'USER',
+  password: '',
+  serviceKey: '',
+  mfaEnabled: false,
+  mfaSecret: '',
+  recoveryCodes: [],
+  phone: '',
+  profile: {
+    lastLoginTime: '2024-10-28T10:10:29.471813137Z',
+    lastChangePasswordTime: null,
+    source: ''
+  }
+}
+```
+
+Not exists
+```javascript
+{ code: 5, message: 'user 0 not found', details: [] }
+```
