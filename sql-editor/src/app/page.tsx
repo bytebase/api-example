@@ -7,36 +7,56 @@ interface Credentials {
   email: string;
   password: string;
 }
-
-interface Project {
-  id: string;
-  title: string;
-  key: string;
-  // Add other project properties as needed
-}
-
 interface UserData {
   credentials: Credentials;
-  project: Project;
-  database: string;
 }
 
 export default function Home() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const generateUsernameFromEmail = (email: string) => {
+    // Remove all special characters including @ and . and convert to lowercase
+    return email.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+  };
 
   const handleCreateUser = async () => {
-    setLoading(true);
+    setEmailError(null);
     setError(null);
+
+    if (!email) {
+      setEmailError('Email is required');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setEmailError('Please enter a valid email address');
+      return;
+    }
+
+    setLoading(true);
     try {
-      const response = await fetch('/api/create-user');
+      const username = generateUsernameFromEmail(email);
+      const response = await fetch('/api/create-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, username }),
+      });
+
       if (response.ok) {
         const data = await response.json();
         setUserData({
-          credentials: data.credentials,
-          project: data.project,
-          database: data.database.database
+          credentials: data.credentials
         });
       } else {
         throw new Error('Failed to create user');
@@ -51,19 +71,37 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24 pt-6">
-      <h1 className="text-4xl font-bold mt-0mb-8"> Embedded Bytebase SQL Editor Demo</h1>
+      <h1 className="text-4xl font-bold mt-0 mb-8">Embedded Bytebase SQL Editor Demo</h1>
+      
       {!userData && (
-      <h2 className="text-2xl font-bold mb-4">Logout your Bytebase account in the same browser before click Start</h2>)}
-      {!userData && (
-        <button
-          onClick={handleCreateUser}
-          disabled={loading}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          {loading ? 'Creating...' : 'Start'}
-        </button>
+        <div className="w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-4">Logout your Bytebase account in the same browser before starting</h2>
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your email"
+            />
+            {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
+          </div>
+          <button
+            onClick={handleCreateUser}
+            disabled={loading}
+            className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+          >
+            {loading ? 'Creating...' : 'Start'}
+          </button>
+        </div>
       )}
+
       {error && <p className="text-red-500 mt-4">{error}</p>}
+      
       {userData && (
         <div className="mt-8 w-full">
           <h2 className="text-2xl font-bold mb-4">User/Project/Database Created Successfully, click Sign in to start</h2>
@@ -74,17 +112,18 @@ export default function Home() {
               <p><strong>Password:</strong> {userData.credentials.password}</p>
             </div>
             <div className="w-1/2 p-2">
-              <p><strong>Project Title:</strong> {userData.project.title}</p>
-              <p><strong>Project Key:</strong> {userData.project.key}</p>
-              <p><strong>Database:</strong> {userData.database}</p>
+              <p><strong>Project Title:</strong> {userData.credentials.username}</p>
+              <p><strong>Project Key:</strong> {userData.credentials.username}</p>
+              <p><strong>Database:</strong> {userData.credentials.username}</p>
             </div>
           </div>
           <div className="w-full h-screen border border-gray-300 rounded-lg overflow-hidden">
-            <iframe
-              src={`${process.env.NEXT_PUBLIC_BB_HOST}/auth?email=${userData.credentials.email}&password=${userData.credentials.password}`}
-              className="w-full h-full"
-              title="Bytebase Dashboard"
-            />
+          <iframe
+  src={`https://accounts.google.com/o/oauth2/v2/auth?state=event%3Dbb.oauth.signin.idps%252Fgoogle-9xyt%26popup%3Dfalse%26redirect%3D%252Fsql-editor%252Fprojects%252F${encodeURIComponent(userData.credentials.username)}&response_type=code&client_id=${encodeURIComponent(process.env.NEXT_PUBLIC_BB_OAUTH_CLIENT_ID)}&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&redirect_uri=${encodeURIComponent(process.env.NEXT_PUBLIC_BB_OAUTH_CLIENT_CALLBACK_URL)}`}
+  className="w-full h-full"
+  title="Bytebase Dashboard"
+/>
+
           </div>
         </div>
       )}
