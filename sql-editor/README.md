@@ -1,5 +1,7 @@
 # Embed SQL Editor
 
+Corresponding [tutorial 🔗](https://www.bytebase.com/docs/tutorials/embed-sql-editor/).
+
 This example demonstrates how to embed [Bytebase SQL Editor](https://www.bytebase.com/docs/sql-editor/overview/)
 with iframe into your own application and call Bytebase API to prepare the environment.
 
