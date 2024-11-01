@@ -1,0 +1,2345 @@
+{
+  "name": "reviewConfigs/advanced",
+  "title": "Advanced SQL Review",
+  "enabled": true,
+  "rules": [
+    {
+      "type": "database.drop-empty-database",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.no-null",
+      "level": "WARNING",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.drop-naming-convention",
+      "level": "ERROR",
+      "payload": "{\"format\":\"_del$\"}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "engine.mysql.use-innodb",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.require-pk",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.no-foreign-key",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.disallow-partition",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.disallow-trigger",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.comment",
+      "level": "DISABLED",
+      "payload": "{\"required\":true,\"maxLength\":64,\"requiredClassification\":false}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.no-duplicate-index",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.text-fields-total-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":1000}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.disallow-set-charset",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.select.no-select-all",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.where.no-leading-wildcard-like",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-commit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-limit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-order-by",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.merge-alter-table",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.must-specify-column",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.disallow-order-by-rand",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.row-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":1000}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.affected-row-limit",
+      "level": "WARNING",
+      "payload": "{\"number\":100}",
+      "engine": "MYSQL",
+      "comment": "Reveal the number of rows to be updated or deleted can help determine whether the statement meets business expectations. Suggestion error level: Warning"
+    },
+    {
+      "type": "statement.dml-dry-run",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.select-full-table-scan",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-using-filesort",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-using-temporary",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.where.no-equal-null",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.query.minimum-plan-level",
+      "level": "DISABLED",
+      "payload": "{\"string\":\"INDEX\"}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.where.maximum-logical-operator-count",
+      "level": "DISABLED",
+      "payload": "{\"number\":10}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.maximum-limit-value",
+      "level": "DISABLED",
+      "payload": "{\"number\":1000}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.maximum-join-table-count",
+      "level": "DISABLED",
+      "payload": "{\"number\":10}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.maximum-statements-in-transaction",
+      "level": "DISABLED",
+      "payload": "{\"number\":10}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.join-strict-column-attrs",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "naming.table",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "naming.column",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.uk",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^uk_{{table}}_{{column_list}}$\",\"maxLength\":63}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.idx",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^idx_{{table}}_{{column_list}}$\",\"maxLength\":63}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.fk",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^fk_{{referencing_table}}_{{referencing_column}}_{{referenced_table}}_{{referenced_column}}$\",\"maxLength\":63}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "naming.column.auto-increment",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^id$\",\"maxLength\":63}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "naming.identifier.no-keyword",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.required",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"id\",\"created_ts\",\"updated_ts\",\"creator_id\",\"updater_id\"]}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.type-disallow-list",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"JSON\"]}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-change-type",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-drop-in-index",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.set-default-for-not-null",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-change",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-changing-order",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.auto-increment-must-integer",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-set-charset",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.auto-increment-must-unsigned",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.comment",
+      "level": "DISABLED",
+      "payload": "{\"required\":true,\"maxLength\":64,\"requiredClassification\":false}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-character-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":20}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-varchar-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":2560}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.auto-increment-initial-value",
+      "level": "DISABLED",
+      "payload": "{\"number\":1}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.current-time-count-limit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.require-default",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "schema.backward-compatibility",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "index.no-duplicate-column",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "index.type-no-blob",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "index.pk-type-limit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "index.key-number-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":5}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "index.total-number-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":5}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "index.primary-key-type-allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"SERIAL\",\"BIGSERIAL\",\"INT\",\"BIGINT\"]}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "index.type-allow-list",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"BTREE\",\"HASH\"]}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "system.charset.allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"utf8mb4\"]}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "system.collation.allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"utf8mb4_0900_ai_ci\"]}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "system.procedure.disallow-create",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "system.event.disallow-create",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "system.view.disallow-create",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "system.function.disallow-create",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "system.function.disallowed-list",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"RAND\",\"UUID\",\"SLEEP\"]}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.limit-size",
+      "level": "DISABLED",
+      "payload": "{\"number\":10000000}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "advice.online-migration",
+      "level": "DISABLED",
+      "payload": "{\"number\":100000000}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-mix-in-ddl",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-mix-in-dml",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "database.drop-empty-database",
+      "level": "ERROR",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.no-null",
+      "level": "WARNING",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "table.drop-naming-convention",
+      "level": "ERROR",
+      "payload": "{\"format\":\"_del$\"}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "table.require-pk",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "table.no-foreign-key",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "table.disallow-partition",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "table.comment",
+      "level": "DISABLED",
+      "payload": "{\"required\":true,\"maxLength\":64,\"requiredClassification\":false}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "statement.select.no-select-all",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "statement.where.no-leading-wildcard-like",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-commit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-limit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-order-by",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "statement.merge-alter-table",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.must-specify-column",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.disallow-order-by-rand",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "statement.dml-dry-run",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "statement.maximum-limit-value",
+      "level": "DISABLED",
+      "payload": "{\"number\":1000}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "naming.table",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "naming.column",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.uk",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^uk_{{table}}_{{column_list}}$\",\"maxLength\":63}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.idx",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^idx_{{table}}_{{column_list}}$\",\"maxLength\":63}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.fk",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^fk_{{referencing_table}}_{{referencing_column}}_{{referenced_table}}_{{referenced_column}}$\",\"maxLength\":63}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "naming.column.auto-increment",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^id$\",\"maxLength\":63}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.required",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"id\",\"created_ts\",\"updated_ts\",\"creator_id\",\"updater_id\"]}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.type-disallow-list",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"JSON\"]}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-change-type",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-drop-in-index",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.set-default-for-not-null",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-change",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-changing-order",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.auto-increment-must-integer",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-set-charset",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.auto-increment-must-unsigned",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.comment",
+      "level": "DISABLED",
+      "payload": "{\"required\":true,\"maxLength\":64,\"requiredClassification\":false}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-character-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":20}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.auto-increment-initial-value",
+      "level": "DISABLED",
+      "payload": "{\"number\":1}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.current-time-count-limit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "column.require-default",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "schema.backward-compatibility",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "index.no-duplicate-column",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "index.type-no-blob",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "index.pk-type-limit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "index.key-number-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":5}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "index.total-number-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":5}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "index.primary-key-type-allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"SERIAL\",\"BIGSERIAL\",\"INT\",\"BIGINT\"]}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "system.charset.allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"utf8mb4\"]}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "system.collation.allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"utf8mb4_0900_ai_ci\"]}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-mix-in-ddl",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-mix-in-dml",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "TIDB",
+      "comment": ""
+    },
+    {
+      "type": "database.drop-empty-database",
+      "level": "ERROR",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.no-null",
+      "level": "WARNING",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "table.drop-naming-convention",
+      "level": "ERROR",
+      "payload": "{\"format\":\"_del$\"}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "table.require-pk",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "table.no-foreign-key",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "table.disallow-partition",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "table.comment",
+      "level": "DISABLED",
+      "payload": "{\"required\":true,\"maxLength\":64,\"requiredClassification\":false}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.select.no-select-all",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.where.no-leading-wildcard-like",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-commit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-limit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-order-by",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.merge-alter-table",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.must-specify-column",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.disallow-order-by-rand",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.row-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":1000}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.affected-row-limit",
+      "level": "WARNING",
+      "payload": "{\"number\":100}",
+      "engine": "OCEANBASE",
+      "comment": "Reveal the number of rows to be updated or deleted can help determine whether the statement meets business expectations. Suggestion error level: Warning"
+    },
+    {
+      "type": "statement.dml-dry-run",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.select-full-table-scan",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.maximum-limit-value",
+      "level": "DISABLED",
+      "payload": "{\"number\":1000}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "naming.table",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "naming.column",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.uk",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^uk_{{table}}_{{column_list}}$\",\"maxLength\":63}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.idx",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^idx_{{table}}_{{column_list}}$\",\"maxLength\":63}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.fk",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^fk_{{referencing_table}}_{{referencing_column}}_{{referenced_table}}_{{referenced_column}}$\",\"maxLength\":63}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "naming.column.auto-increment",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^id$\",\"maxLength\":63}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.required",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"id\",\"created_ts\",\"updated_ts\",\"creator_id\",\"updater_id\"]}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.type-disallow-list",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"JSON\"]}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-change-type",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-drop-in-index",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.set-default-for-not-null",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-change",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-changing-order",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.auto-increment-must-integer",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-set-charset",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.auto-increment-must-unsigned",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.comment",
+      "level": "DISABLED",
+      "payload": "{\"required\":true,\"maxLength\":64,\"requiredClassification\":false}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-character-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":20}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-varchar-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":2560}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.auto-increment-initial-value",
+      "level": "DISABLED",
+      "payload": "{\"number\":1}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.current-time-count-limit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.require-default",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "schema.backward-compatibility",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "index.no-duplicate-column",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "index.type-no-blob",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "index.pk-type-limit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "index.key-number-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":5}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "index.total-number-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":5}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "index.primary-key-type-allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"SERIAL\",\"BIGSERIAL\",\"INT\",\"BIGINT\"]}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "system.charset.allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"utf8mb4\"]}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "system.collation.allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"utf8mb4_0900_ai_ci\"]}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.add-column-without-position",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-offline-ddl",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-drop",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE",
+      "comment": ""
+    },
+    {
+      "type": "database.drop-empty-database",
+      "level": "ERROR",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.no-null",
+      "level": "WARNING",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "table.drop-naming-convention",
+      "level": "ERROR",
+      "payload": "{\"format\":\"_del$\"}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "engine.mysql.use-innodb",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "table.require-pk",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "table.no-foreign-key",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "table.disallow-partition",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "statement.select.no-select-all",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "statement.where.no-leading-wildcard-like",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-commit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-limit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-order-by",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "statement.merge-alter-table",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.must-specify-column",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.disallow-order-by-rand",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.row-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":1000}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "statement.affected-row-limit",
+      "level": "WARNING",
+      "payload": "{\"number\":100}",
+      "engine": "MARIADB",
+      "comment": "Reveal the number of rows to be updated or deleted can help determine whether the statement meets business expectations. Suggestion error level: Warning"
+    },
+    {
+      "type": "statement.dml-dry-run",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "statement.select-full-table-scan",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "statement.maximum-limit-value",
+      "level": "DISABLED",
+      "payload": "{\"number\":1000}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "naming.table",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "naming.column",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.uk",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^uk_{{table}}_{{column_list}}$\",\"maxLength\":63}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.idx",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^idx_{{table}}_{{column_list}}$\",\"maxLength\":63}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.fk",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^fk_{{referencing_table}}_{{referencing_column}}_{{referenced_table}}_{{referenced_column}}$\",\"maxLength\":63}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "naming.column.auto-increment",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^id$\",\"maxLength\":63}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.required",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"id\",\"created_ts\",\"updated_ts\",\"creator_id\",\"updater_id\"]}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.type-disallow-list",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"JSON\"]}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-change-type",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-drop-in-index",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.set-default-for-not-null",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-change",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-changing-order",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.auto-increment-must-integer",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-set-charset",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.auto-increment-must-unsigned",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-character-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":20}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-varchar-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":2560}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.auto-increment-initial-value",
+      "level": "DISABLED",
+      "payload": "{\"number\":1}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.current-time-count-limit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.require-default",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "schema.backward-compatibility",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "index.no-duplicate-column",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "index.type-no-blob",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "index.pk-type-limit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "index.key-number-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":5}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "index.total-number-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":5}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "system.charset.allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"utf8mb4\"]}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "system.collation.allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"utf8mb4_0900_ai_ci\"]}",
+      "engine": "MARIADB",
+      "comment": ""
+    },
+    {
+      "type": "column.no-null",
+      "level": "WARNING",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "table.drop-naming-convention",
+      "level": "ERROR",
+      "payload": "{\"format\":\"_del$\"}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "table.require-pk",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "table.no-foreign-key",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "table.disallow-partition",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.select.no-select-all",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.where.no-leading-wildcard-like",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-commit",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-on-del-cascade",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-rm-tbl-cascade",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.merge-alter-table",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.must-specify-column",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.disallow-order-by-rand",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.row-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":1000}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.affected-row-limit",
+      "level": "WARNING",
+      "payload": "{\"number\":100}",
+      "engine": "POSTGRES",
+      "comment": "Reveal the number of rows to be updated or deleted can help determine whether the statement meets business expectations. Suggestion error level: Warning"
+    },
+    {
+      "type": "statement.dml-dry-run",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-add-column-with-default",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.add-check-not-valid",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-add-not-null",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.create-specify-schema",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.check-set-role-variable",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.maximum-limit-value",
+      "level": "DISABLED",
+      "payload": "{\"number\":1000}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "naming.fully-qualified",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "naming.table",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "naming.column",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.uk",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^uk_{{table}}_{{column_list}}$\",\"maxLength\":63}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.pk",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^pk_{{table}}_{{column_list}}$\"}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.idx",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^idx_{{table}}_{{column_list}}$\",\"maxLength\":63}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "naming.index.fk",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^$|^fk_{{referencing_table}}_{{referencing_column}}_{{referenced_table}}_{{referenced_column}}$\",\"maxLength\":63}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "column.required",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"id\",\"created_ts\",\"updated_ts\",\"creator_id\",\"updater_id\"]}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "column.type-disallow-list",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"JSON\"]}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "column.disallow-change-type",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-character-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":20}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "column.require-default",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "schema.backward-compatibility",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "index.no-duplicate-column",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "index.key-number-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":5}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "index.total-number-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":5}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "index.primary-key-type-allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"SERIAL\",\"BIGSERIAL\",\"INT\",\"BIGINT\"]}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "index.create-concurrently",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "system.charset.allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"utf8mb4\"]}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "system.collation.allowlist",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"utf8mb4_0900_ai_ci\"]}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "system.comment.length",
+      "level": "DISABLED",
+      "payload": "{\"number\":64}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.add-foreign-key-not-valid",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.non-transactional",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-mix-in-ddl",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "statement.disallow-mix-in-dml",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    },
+    {
+      "type": "column.no-null",
+      "level": "WARNING",
+      "payload": "{}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "table.require-pk",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "table.no-foreign-key",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "statement.select.no-select-all",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "statement.where.no-leading-wildcard-like",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.must-specify-column",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "naming.table",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "naming.table.no-keyword",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "naming.identifier.no-keyword",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "naming.identifier.case",
+      "level": "DISABLED",
+      "payload": "{\"upper\":true}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.required",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"ID\"]}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.type-disallow-list",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"JSON\"]}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.set-default-for-not-null",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-character-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":20}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-varchar-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":2560}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.require-default",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "index.key-number-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":5}",
+      "engine": "ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.no-null",
+      "level": "WARNING",
+      "payload": "{}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "table.require-pk",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "table.no-foreign-key",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "statement.select.no-select-all",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "statement.where.no-leading-wildcard-like",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "statement.insert.must-specify-column",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "naming.table",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "naming.table.no-keyword",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "naming.identifier.no-keyword",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "naming.identifier.case",
+      "level": "DISABLED",
+      "payload": "{\"upper\":true}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.required",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"id\",\"created_ts\",\"updated_ts\",\"creator_id\",\"updater_id\"]}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.type-disallow-list",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"JSON\"]}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.set-default-for-not-null",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-character-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":20}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-varchar-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":2560}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.require-default",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "index.key-number-limit",
+      "level": "DISABLED",
+      "payload": "{\"number\":5}",
+      "engine": "OCEANBASE_ORACLE",
+      "comment": ""
+    },
+    {
+      "type": "column.no-null",
+      "level": "WARNING",
+      "payload": "{}",
+      "engine": "SNOWFLAKE",
+      "comment": ""
+    },
+    {
+      "type": "table.drop-naming-convention",
+      "level": "ERROR",
+      "payload": "{\"format\":\"_del$\"}",
+      "engine": "SNOWFLAKE",
+      "comment": ""
+    },
+    {
+      "type": "table.require-pk",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "SNOWFLAKE",
+      "comment": ""
+    },
+    {
+      "type": "table.no-foreign-key",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "SNOWFLAKE",
+      "comment": ""
+    },
+    {
+      "type": "statement.select.no-select-all",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "SNOWFLAKE",
+      "comment": ""
+    },
+    {
+      "type": "naming.table",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "SNOWFLAKE",
+      "comment": ""
+    },
+    {
+      "type": "naming.table.no-keyword",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "SNOWFLAKE",
+      "comment": ""
+    },
+    {
+      "type": "naming.identifier.no-keyword",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "SNOWFLAKE",
+      "comment": ""
+    },
+    {
+      "type": "naming.identifier.case",
+      "level": "DISABLED",
+      "payload": "{\"upper\":true}",
+      "engine": "SNOWFLAKE",
+      "comment": ""
+    },
+    {
+      "type": "column.required",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"ID\"]}",
+      "engine": "SNOWFLAKE",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-varchar-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":2560}",
+      "engine": "SNOWFLAKE",
+      "comment": ""
+    },
+    {
+      "type": "schema.backward-compatibility",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "SNOWFLAKE",
+      "comment": ""
+    },
+    {
+      "type": "column.no-null",
+      "level": "WARNING",
+      "payload": "{}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.drop-naming-convention",
+      "level": "ERROR",
+      "payload": "{\"format\":\"_del$\"}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.require-pk",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.no-foreign-key",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "statement.select.no-select-all",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "naming.table",
+      "level": "DISABLED",
+      "payload": "{\"format\":\"^[a-z]+(_[a-z]+)*$\",\"maxLength\":63}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "naming.table.no-keyword",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "naming.identifier.no-keyword",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.required",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"id\",\"created_ts\",\"updated_ts\",\"creator_id\",\"updater_id\"]}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.type-disallow-list",
+      "level": "DISABLED",
+      "payload": "{\"list\":[\"JSON\"]}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "column.maximum-varchar-length",
+      "level": "DISABLED",
+      "payload": "{\"number\":2560}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "schema.backward-compatibility",
+      "level": "DISABLED",
+      "payload": "{}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.disallow-ddl",
+      "level": "DISABLED",
+      "payload": "{\"list\":[]}",
+      "engine": "MSSQL",
+      "comment": ""
+    },
+    {
+      "type": "table.disallow-dml",
+      "level": "DISABLED",
+      "payload": "{\"list\":[]}",
+      "engine": "MSSQL",
+      "comment": ""
+    }
+  ]
+}

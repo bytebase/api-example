@@ -1,0 +1,12 @@
+{
+  "name": "environments/test/policies/tag",
+  "inheritFromParent": false,
+  "type": "TAG",
+  "tagPolicy": {
+    "tags": {
+      "bb.tag.review_config": "reviewConfigs/sql-review-policy-frfr"
+    }
+  },
+  "enforce": true,
+  "resourceType": "ENVIRONMENT"
+}

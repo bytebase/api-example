@@ -1,0 +1,21 @@
+{
+  "name": "reviewConfigs/basic",
+  "title": "Basic SQL Review",
+  "enabled": true,
+  "rules": [
+    {
+      "type": "engine.mysql.use-innodb",
+      "level": "WARNING",
+      "payload": "{}",
+      "engine": "MYSQL",
+      "comment": ""
+    },
+    {
+      "type": "index.create-concurrently",
+      "level": "WARNING",
+      "payload": "{}",
+      "engine": "POSTGRES",
+      "comment": ""
+    }
+  ]
+}

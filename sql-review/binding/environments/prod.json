@@ -1,0 +1,12 @@
+{
+  "name": "environments/prod/policies/tag",
+  "inheritFromParent": true,
+  "type": "TAG",
+  "tagPolicy": {
+    "tags": {
+      "bb.tag.review_config": "reviewConfigs/prod"
+    }
+  },
+  "enforce": true,
+  "resourceType": "ENVIRONMENT"
+}
