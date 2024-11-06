@@ -53,9 +53,14 @@ export default function Home() {
 
         setTables(tablesWithConfigs);
         
+        const storedTableName = localStorage.getItem('selectedTableName');
+        
         if (preserveSelection && selectedTable) {
           const updatedSelectedTable = tablesWithConfigs.find(t => t.name === selectedTable.name);
           setSelectedTable(updatedSelectedTable || null);
+        } else if (storedTableName) {
+          const storedTable = tablesWithConfigs.find(t => t.name === storedTableName);
+          setSelectedTable(storedTable || tablesWithConfigs[0]);
         } else if (tablesWithConfigs.length > 0) {
           setSelectedTable(tablesWithConfigs[0]);
         }
@@ -71,6 +76,7 @@ export default function Home() {
   const handleTableChange = (tableName: string) => {
     const selected = tables.find(table => table.name === tableName);
     setSelectedTable(selected || null);
+    localStorage.setItem('selectedTableName', tableName);
   };
 
   const showNotification = (message: string, type: 'success' | 'error') => {
@@ -90,31 +96,51 @@ export default function Home() {
       const currentTable = tables.find(t => t.name === tableName);
       if (!currentTable) throw new Error('Table not found');
 
+      // Get the current metadata to preserve other configurations
+      const metadataResponse = await fetch('/api/databasemeta');
+      const currentMetadata: DatabaseMetadata = await metadataResponse.json();
+      
+      // Find current schema configs
+      const publicSchemaConfig = currentMetadata.schemaConfigs.find(
+        config => config.name === 'public'
+      );
+
+      // Preserve existing table configurations
+      const existingTableConfigs = publicSchemaConfig?.tableConfigs || [];
+      
+      // Create updated table config
+      const updatedTableConfig = {
+        name: tableName,
+        columnConfigs: currentTable.columns
+          .filter(col => 
+            col.classificationId ||
+            col.name === columnName
+          )
+          .map(col => ({
+            name: col.name,
+            classificationId: columnName === col.name ? classificationId : col.classificationId,
+            semanticTypeId: '',
+            labels: {}
+          })),
+        classificationId: columnName 
+          ? currentTable.classificationId 
+          : classificationId
+      };
+
+      // Merge configurations: keep all other tables and update the target table
+      const mergedTableConfigs = existingTableConfigs.map(config => 
+        config.name === tableName ? updatedTableConfig : config
+      );
+
+      // If the table wasn't in the existing configs, add it
+      if (!existingTableConfigs.some(config => config.name === tableName)) {
+        mergedTableConfigs.push(updatedTableConfig);
+      }
+
       const updatePayload = {
         schemaConfigs: [{
           name: 'public',
-          tableConfigs: [{
-            name: tableName,
-            // Always include existing column configurations
-            columnConfigs: currentTable.columns
-              .filter(col => 
-                // Keep columns that already have classifications
-                col.classificationId ||
-                // Or the column being updated
-                col.name === columnName
-              )
-              .map(col => ({
-                name: col.name,
-                classificationId: columnName === col.name ? classificationId : col.classificationId,
-                semanticTypeId: '',
-                labels: {}
-              })),
-            // Preserve existing table classification if not updating table,
-            // or set new classification if updating table
-            classificationId: columnName 
-              ? currentTable.classificationId 
-              : classificationId
-          }]
+          tableConfigs: mergedTableConfigs
         }]
       };
 
