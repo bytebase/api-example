@@ -1,13 +1,14 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { DatabaseMetadata, Table } from './types/database';
-import { Classification } from './types/classification';
+import { Classification, ClassificationLevel } from './types/classification';
 
 export default function Home() {
   const [selectedTable, setSelectedTable] = useState<Table | null>(null);
   const [tables, setTables] = useState<Table[]>([]);
   const [loading, setLoading] = useState(true);
   const [classifications, setClassifications] = useState<Record<string, Classification>>({});
+  const [classificationLevels, setClassificationLevels] = useState<ClassificationLevel[]>([]);
   const [updating, setUpdating] = useState(false);
   const [notification, setNotification] = useState<{message: string, type: 'success' | 'error'} | null>(null);
 
@@ -28,6 +29,7 @@ export default function Home() {
       
       const classificationConfig = classificationData.value.dataClassificationSettingValue.configs[0];
       setClassifications(classificationConfig.classification);
+      setClassificationLevels(classificationConfig.levels);
       
       const publicSchema = data.schemas.find(schema => schema.name === 'public');
       const publicSchemaConfig = data.schemaConfigs.find(config => config.name === 'public');
@@ -182,6 +184,14 @@ export default function Home() {
     handleLoad();
   }, []);
 
+  // Add function to get level title for a classification
+  const getClassificationDisplay = (classification: Classification) => {
+    if (!classification.levelId) return classification.title;
+    
+    const level = classificationLevels.find(l => l.id === classification.levelId);
+    return `${classification.id} ${classification.title} ==== [${level?.title || classification.levelId}]`;
+  };
+
   if (loading) {
     return <div className="min-h-screen p-8 text-gray-500">Loading...</div>;
   }
@@ -228,7 +238,7 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <span>Table Classification:</span>
                 <select
-                  className="px-2 py-1 border border-gray-300 rounded"
+                  className="px-2 py-1 border border-gray-300 rounded min-w-[300px]"
                   value={selectedTable.classificationId || ''}
                   onChange={(e) => handleClassificationUpdate(selectedTable.name, null, e.target.value)}
                   disabled={updating}
@@ -236,7 +246,7 @@ export default function Home() {
                   <option value="">Not set</option>
                   {getSelectableClassifications().map((classification) => (
                     <option key={classification.id} value={classification.id}>
-                      {classification.title} ({classification.id})
+                      {getClassificationDisplay(classification)}
                     </option>
                   ))}
                 </select>
@@ -276,7 +286,7 @@ export default function Home() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <select
-                        className="px-2 py-1 border border-gray-300 rounded"
+                        className="px-2 py-1 border border-gray-300 rounded min-w-[300px]"
                         value={column.classificationId || ''}
                         onChange={(e) => handleClassificationUpdate(selectedTable.name, column.name, e.target.value)}
                         disabled={updating}
@@ -284,7 +294,7 @@ export default function Home() {
                         <option value="">Not set</option>
                         {getSelectableClassifications().map((classification) => (
                           <option key={classification.id} value={classification.id}>
-                            {classification.title} ({classification.id})
+                            {getClassificationDisplay(classification)}
                           </option>
                         ))}
                       </select>
