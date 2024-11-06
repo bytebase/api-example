@@ -199,6 +199,7 @@ export default function Home() {
       )}
 
       <div className="mb-8">
+        <h1 className='text-3xl font-bold mb-4'>Data Classification Demo</h1>
         <label htmlFor="table-select" className="block text-sm font-medium text-gray-700 mb-2">
           Select Table
         </label>
