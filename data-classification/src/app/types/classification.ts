@@ -1,3 +1,9 @@
+export interface ClassificationLevel {
+  id: string;
+  title: string;
+  description: string;
+}
+
 export interface Classification {
   id: string;
   title: string;
@@ -5,14 +11,21 @@ export interface Classification {
   levelId?: string;
 }
 
-export interface ClassificationLevel {
+export interface ClassificationConfig {
   id: string;
   title: string;
-  description: string;
+  levels: ClassificationLevel[];
+  classification: Record<string, Classification>;
+  classificationFromConfig: boolean;
 }
 
-export interface ClassificationData {
-  title: string;
-  levels: ClassificationLevel[];
-  classification: Classification[];
+export interface DataClassificationSettingValue {
+  configs: ClassificationConfig[];
+}
+
+export interface ClassificationResponse {
+  name: string;
+  value: {
+    dataClassificationSettingValue: DataClassificationSettingValue;
+  };
 } 

@@ -7,9 +7,13 @@ export default function Home() {
   const [selectedTable, setSelectedTable] = useState<Table | null>(null);
   const [tables, setTables] = useState<Table[]>([]);
   const [loading, setLoading] = useState(true);
-  const [classifications, setClassifications] = useState<Classification[]>([]);
+  const [classifications, setClassifications] = useState<Record<string, Classification>>({});
   const [updating, setUpdating] = useState(false);
   const [notification, setNotification] = useState<{message: string, type: 'success' | 'error'} | null>(null);
+
+  const getSelectableClassifications = () => {
+    return Object.values(classifications).filter(c => c.levelId);
+  };
 
   const handleLoad = async (preserveSelection = false) => {
     try {
@@ -20,9 +24,10 @@ export default function Home() {
       ]);
 
       const data: DatabaseMetadata = await metadataResponse.json();
-      const classificationData = await classificationsResponse.json();
+      const classificationData: ClassificationResponse = await classificationsResponse.json();
       
-      setClassifications(classificationData.classification);
+      const classificationConfig = classificationData.value.dataClassificationSettingValue.configs[0];
+      setClassifications(classificationConfig.classification);
       
       const publicSchema = data.schemas.find(schema => schema.name === 'public');
       const publicSchemaConfig = data.schemaConfigs.find(config => config.name === 'public');
@@ -228,7 +233,7 @@ export default function Home() {
                   disabled={updating}
                 >
                   <option value="">Not set</option>
-                  {classifications.map((classification) => (
+                  {getSelectableClassifications().map((classification) => (
                     <option key={classification.id} value={classification.id}>
                       {classification.title} ({classification.id})
                     </option>
@@ -276,7 +281,7 @@ export default function Home() {
                         disabled={updating}
                       >
                         <option value="">Not set</option>
-                        {classifications.map((classification) => (
+                        {getSelectableClassifications().map((classification) => (
                           <option key={classification.id} value={classification.id}>
                             {classification.title} ({classification.id})
                           </option>
