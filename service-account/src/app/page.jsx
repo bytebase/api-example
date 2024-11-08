@@ -72,26 +72,28 @@ export default async function Home() {
   }
 
   return (
-    <main className="p-4 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Bytebase 项目列表</h1>
-      
-      {error ? (
-        <div className="p-4 bg-red-50 text-red-600 rounded-lg">
-          {error}
-        </div>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {projects.length > 0 ? (
-            projects.map((project) => (
-              <ProjectCard key={project.key} project={project} />
-            ))
-          ) : (
-            <div className="col-span-full text-center py-8 bg-gray-50 rounded-lg">
-              暂无项目数据
-            </div>
-          )}
-        </div>
-      )}
-    </main>
+    <div className="grid items-center justify-items-center p-5">
+      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full">
+        <h1 className="text-2xl font-bold">Bytebase 项目列表</h1>
+        
+        {error ? (
+          <div className="p-4 bg-red-50 text-red-600 rounded-lg w-full">
+            {error}
+          </div>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 w-full">
+            {projects.length > 0 ? (
+              projects.map((project) => (
+                <ProjectCard key={project.key} project={project} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8 bg-gray-50 rounded-lg">
+                暂无项目数据
+              </div>
+            )}
+          </div>
+        )}
+      </main>
+    </div>
   );
 }
