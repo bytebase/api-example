@@ -15,18 +15,26 @@ async function getProjects() {
     });
     
     if (!response.ok) {
-      throw new Error(`API 请求失败: ${response.status}`);
+      throw new Error(`API request failed: ${response.status}`);
     }
 
     const data = await response.json();
     return data.projects || [];
   } catch (error) {
-    console.error('获取项目列表失败:', error);
-    throw new Error('获取项目列表时发生错误');
+    console.error('Failed to fetch project list:', error);
+    throw new Error('Error occurred while fetching project list');
   }
 }
 
 export async function generateToken() {
+  if (!process.env.NEXT_PUBLIC_BB_HOST) {
+    throw new Error('Environment variable NEXT_PUBLIC_BB_HOST is not defined');
+  }
+  
+  if (!process.env.NEXT_PUBLIC_BB_SERVICE_ACCOUNT || !process.env.NEXT_PUBLIC_BB_SERVICE_KEY) {
+    throw new Error('Service account or key environment variables are not defined');
+  }
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_BB_HOST}/v1/auth/login`, {
       method: "POST",
       body: JSON.stringify({
@@ -52,8 +60,8 @@ const ProjectCard = ({ project }) => (
   >
     <h2 className="font-semibold text-lg">{project.name}</h2>
     <div className="mt-2 text-gray-600 space-y-1">
-      <p>标题: {project.title || '暂无标题'}</p>
-      <p>状态: <span className={`inline-block px-2 py-1 rounded ${
+      <p>Title: {project.title || 'No title'}</p>
+      <p>Status: <span className={`inline-block px-2 py-1 rounded ${
         project.state === 'active' ? 'bg-green-100 text-green-800' : 
         'bg-gray-100 text-gray-800'
       }`}>{project.state}</span></p>
@@ -74,7 +82,7 @@ export default async function Home() {
   return (
     <div className="grid items-center justify-items-center p-5">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full">
-        <h1 className="text-2xl font-bold">Bytebase 项目列表</h1>
+        <h1 className="text-2xl font-bold">Bytebase Project List</h1>
         
         {error ? (
           <div className="p-4 bg-red-50 text-red-600 rounded-lg w-full">
@@ -88,7 +96,7 @@ export default async function Home() {
               ))
             ) : (
               <div className="col-span-full text-center py-8 bg-gray-50 rounded-lg">
-                暂无项目数据
+                No projects available
               </div>
             )}
           </div>
