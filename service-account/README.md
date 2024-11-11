@@ -13,7 +13,7 @@ This example demonstrates how to use Bytebase service account to call Bytebase A
 ### Step 1 - Start Bytebase
 
 1. Follow the [Self-host Bytebase via docker](https://www.bytebase.com/docs/get-started/self-host/#docker) guide to set up Bytebase.
-2. Create a [service account](https://www.bytebase.com/docs/how-to/spanner/how-to-create-a-service-account-for-bytebase/) with the necessary permissions.
+2. Create a [service account](https://www.bytebase.com/docs/api/authentication/) with the necessary permissions.
 3. Record the service account key.
 
 ### Step 2 - Configure and Run the App
@@ -47,4 +47,4 @@ This app demonstrates the use of Bytebase API endpoint:
 
 - `/v1/auth/login` - To generate a token for service account.
 
-For more details about Bytebase API, refer to [official documentation](https://github.com/bytebase/bytebase/blob/main/proto/gen/grpc-doc/v1/README.md).
+For more details about Bytebase API, refer to [official documentation](https://www.bytebase.com/docs/api/overview/).
