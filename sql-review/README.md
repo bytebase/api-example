@@ -27,11 +27,11 @@ echo $bytebase_token
 ### Upsert
 
 ```bash
-curl --request PATCH ${bytebase_url}/v1/reviewConfigs/basic \
+curl --request PATCH "${bytebase_url}/v1/reviewConfigs/basic?allow_missing=true&update_mask=rules" \
   --header 'Authorization: Bearer '${bytebase_token} \
   --data @policy/basic.json
 
-curl --request PATCH ${bytebase_url}/v1/reviewConfigs/advanced \
+curl --request PATCH "${bytebase_url}/v1/reviewConfigs/advanced?allow_missing=true&update_mask=rules" \
   --header 'Authorization: Bearer '${bytebase_token} \
   --data @policy/advanced.json
 ```
@@ -51,11 +51,11 @@ curl --request DELETE ${bytebase_url}/v1/reviewConfigs/advanced \
 ### Attach
 
 ```bash
-curl --request PATCH ${bytebase_url}/v1/environments/test/policies/tag \
+curl --request PATCH "${bytebase_url}/v1/environments/test/policies/tag?allow_missing=true&update_mask=payload" \
   --header 'Authorization: Bearer '${bytebase_token} \
   --data @binding/environments/test.json
 
-curl --request PATCH ${bytebase_url}/v1/environments/prod/policies/tag \
+curl --request PATCH "${bytebase_url}/v1/environments/prod/policies/tag?allow_missing=true&update_mask=payload" \
   --header 'Authorization: Bearer '${bytebase_token} \
   --data @binding/environments/prod.json
 ```
@@ -75,7 +75,7 @@ curl --request DELETE ${bytebase_url}/v1/environments/prod/policies/tag \
 ### Attach
 
 ```bash
-curl --request PATCH ${bytebase_url}/v1/projects/project-sample/policies/tag \
+curl --request PATCH "${bytebase_url}/v1/projects/project-sample/policies/tag?allow_missing=true&update_mask=payload" \
   --header 'Authorization: Bearer '${bytebase_token} \
   --data @binding/projects/project-sample.json
 ```
