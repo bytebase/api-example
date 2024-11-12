@@ -1,9 +1,0 @@
-{
-  "title": "Auditor",
-  "description": "Role for auditor",
-  "permissions": [
-    "bb.auditLogs.export",
-    "bb.auditLogs.search",
-    "bb.projects.list"
-  ]
-}
