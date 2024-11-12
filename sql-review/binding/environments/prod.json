@@ -4,7 +4,7 @@
   "type": "TAG",
   "tagPolicy": {
     "tags": {
-      "bb.tag.review_config": "reviewConfigs/prod"
+      "bb.tag.review_config": "reviewConfigs/advanced"
     }
   },
   "enforce": true,
