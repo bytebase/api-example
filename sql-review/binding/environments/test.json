@@ -4,7 +4,7 @@
   "type": "TAG",
   "tagPolicy": {
     "tags": {
-      "bb.tag.review_config": "reviewConfigs/sql-review-policy-frfr"
+      "bb.tag.review_config": "reviewConfigs/basic"
     }
   },
   "enforce": true,
