@@ -1,5 +1,7 @@
 # SQL Review
 
+Corresponding [tutorial 🔗](https://www.bytebase.com/docs/tutorials/api-sql-review/).
+
 This example demonstrates how to use API to configure [SQL Review](https://www.bytebase.com/docs/sql-review/review-policy/) policies.
 This example defines the following review policies:
 
