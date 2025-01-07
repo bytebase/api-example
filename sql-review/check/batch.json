@@ -1,0 +1,26 @@
+{
+  "release": {
+    "title": "Sample PR",
+    "files": [
+      {
+        "path": "migrations/1_create_table.sql",
+        "type": "VERSIONED",
+        "version": "1",
+        "changeType": "DDL",
+        "statement": "CREATE TABLE t1 (id INTEGER PRIMARY KEY, name TEXT);"
+      },
+      {
+        "path": "migrations/2_create_index.sql",
+        "type": "VERSIONED",
+        "version": "2",
+        "changeType": "DDL",
+        "statement": "CREATE INDEX t1_name on t1 (name);"
+      }
+    ],
+    "vcsSource": {
+      "vcsType": "GITHUB",
+      "pullRequestUrl": "https://github.com/bytebase/api-example/pull/123"
+    }
+  },
+  "targets": ["instances/prod-sample-instance/databases/hr_prod"]
+}

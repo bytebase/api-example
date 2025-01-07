@@ -1,0 +1,4 @@
+{
+  "statement": "CREATE TABLE t1 (id INTEGER PRIMARY KEY, name TEXT);",
+  "name": "instances/prod-sample-instance/databases/hr_prod"
+}

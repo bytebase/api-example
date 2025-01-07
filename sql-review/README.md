@@ -88,3 +88,21 @@ curl --request PATCH "${bytebase_url}/v1/projects/project-sample/policies/tag?al
 curl --request DELETE ${bytebase_url}/v1/projects/project-sample/policies/tag \
   --header 'Authorization: Bearer '${bytebase_token}
 ```
+
+## Check Statements
+
+### Batch API (recommended)
+
+```bash
+curl --request POST "${bytebase_url}/v1/projects/project-sample/releases:check" \
+  --header 'Authorization: Bearer '${bytebase_token} \
+  --data @check/batch.json
+```
+
+### Simple API
+
+```bash
+curl --request POST "${bytebase_url}/v1/sql/check" \
+  --header 'Authorization: Bearer '${bytebase_token} \
+  --data @check/simple.json
+```
