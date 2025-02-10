@@ -10,17 +10,15 @@ This example defines the following review policies:
 
 ## Fetch the access token with service account
 
-To call the Bytebase API, you need to use the service account
-
-Doc: https://www.bytebase.com/docs/api/authentication/
+To call the Bytebase API, you need to use [service account](https://www.bytebase.com/docs/api/authentication/).
 
 ```bash
-export bytebase_url=http://localhost:5678
-bytebase_account="ci@service.bytebase.com"
-bytebase_password="bbs_Jrlj59enAEwSG7fM8a69"
+export bytebase_url=http://localhost:8080
+export bytebase_account=api-sample@service.bytebase.com
+export bytebase_password=bbs_***********8Tdcm
 bytebase_token=$(curl -v ${bytebase_url}/v1/auth/login \
-    --data-raw '{"email":"'${bytebase_account}'","password":"'${bytebase_password}'","web":true}' \
-    --compressed 2>&1 | grep token | grep -o 'access-token=[^;]*;' | grep -o '[^;]*' | sed 's/access-token=//g; s/;//g')
+   --data-raw '{"email":"'${bytebase_account}'","password":"'${bytebase_password}'","web":true}' \
+   --compressed 2>&1 | grep token | grep -o 'access-token=[^;]*;' | grep -o '[^;]*' | sed 's/access-token=//g; s/;//g')
 echo $bytebase_token
 ```
 
@@ -48,7 +46,7 @@ curl --request DELETE ${bytebase_url}/v1/reviewConfigs/advanced \
   --header 'Authorization: Bearer '${bytebase_token}
 ```
 
-## Configure policy on environment
+## Attach policy to environment
 
 ### Attach
 
@@ -72,7 +70,7 @@ curl --request DELETE ${bytebase_url}/v1/environments/prod/policies/tag \
   --header 'Authorization: Bearer '${bytebase_token}
 ```
 
-## Configure policy on project
+## Attach policy to project
 
 ### Attach
 

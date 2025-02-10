@@ -1,3 +1,72 @@
 # Environment
 
 This example demonstrates how to use Bytebase API to configure [Environment](https://www.bytebase.com/docs/concepts/data-model/#environment).
+
+## Fetch access token with service account
+
+You have to call Bytebase API with [service account](https://www.bytebase.com/docs/api/authentication/).
+
+```bash
+export bytebase_url=http://localhost:8080
+export bytebase_account=api-sample@service.bytebase.com
+export bytebase_password=bbs_**********ifIkC
+bytebase_token=$(curl -v ${bytebase_url}/v1/auth/login \
+   --data-raw '{"email":"'${bytebase_account}'","password":"'${bytebase_password}'","web":true}' \
+   --compressed 2>&1 | grep token | grep -o 'access-token=[^;]*;' | grep -o '[^;]*' | sed 's/access-token=//g; s/;//g')
+echo $bytebase_token
+```
+
+## Configure Environment
+
+**Note:** The `order` parameter specifies the execution sequence of DDL/DML commands, while `title` corresponds to the `Environment Name` in the Bytebase UI.
+
+### Create
+
+```bash
+curl --request POST "${bytebase_url}/v1/environments?environment_id=test1" \
+  --header 'Authorization: Bearer '${bytebase_token} \
+  --data '{
+  "name": "",
+  "state": "STATE_UNSPECIFIED",
+  "title": "test1",
+  "order": 1,
+  "tier": "ENVIRONMENT_TIER_UNSPECIFIED",
+  "color": "#008000"
+}'
+```
+
+### Update
+
+```bash
+curl --request PATCH "${bytebase_url}/v1/environments/test1?allow_missing=true" \
+  --header 'Authorization: Bearer '${bytebase_token} \
+  --data '{
+  "name": "",
+  "state": "STATE_UNSPECIFIED",
+  "title": "test1-sample",
+  "order": 1,
+  "tier": "ENVIRONMENT_TIER_UNSPECIFIED",
+  "color": ""
+}'
+```
+
+### Delete
+
+```bash
+curl --request DELETE ${bytebase_url}/v1/environments/test1 \
+  --header 'Authorization: Bearer '${bytebase_token}
+```
+
+### Undelete
+
+Turns the `tier` parameter into `UNPROTECTED`.
+
+Operates on deleted resources only. Needs calling the `DELETE` API first.
+
+```bash
+curl --request POST "${bytebase_url}/v1/environments/test1:undelete" \
+  --header 'Authorization: Bearer '${bytebase_token} \
+  --data '{
+  "name": ""
+}'
+```
