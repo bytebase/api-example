@@ -1,0 +1,73 @@
+{
+    "name": "extra-datasource-1",
+    "updateMask": "",
+    "validateOnly": true,
+    "dataSource": {
+        "id": "A1B2C3D4-E5F6-7890-1234-56789ABCDEF0",
+        "type": "READ_ONLY",
+        "username": "bytebase",
+        "password": "testpwd1",
+        "host": "host.docker.internal",
+        "port": "3306",
+
+
+        
+        "useSsl": false,
+        "sslCa": "",
+        "sslCert": "",
+        "sslKey": "",
+        "database": "",
+        "srv": false,
+        "authenticationDatabase": "",
+        "sid": "",
+        "serviceName": "",
+        "sshHost": "",
+        "sshPort": "",
+        "sshUser": "",
+        "sshPassword": "",
+        "sshPrivateKey": "",
+        "authenticationPrivateKey": "",
+        "externalSecret": {
+            "secretType": "SAECRET_TYPE_UNSPECIFIED",
+            "url": "",
+            "authType": "AUTH_TYPE_UNSPECIFIED",
+            "appRole": {
+                "roleId": "",
+                "secretId": "",
+                "type": "SECRET_TYPE_UNSPECIFIED",
+                "mountPath": ""
+            },
+            "token": "",
+            "engineName": "",
+            "secretName": "",
+            "passwordKeyName": ""
+        },
+        "authenticationType":"AUTHENTICATION_UNSPECIFIED",
+        "saslConfig": {
+            "krbConfig": {
+                "primary": "",
+                "instance": "",
+                "realm": "",
+                "keytab": "",
+                "kdcHost": "",
+                "kdcPort": "",
+                "kdcTransportProtocol": ""
+            }
+        },
+        "additionalAddresses": [
+            {
+                "host": "",
+                "port": ""
+            }
+        ],
+        "replicaSet": "",
+        "directConnection": true,
+        "region": "",
+        "warehouseId": "",
+        "masterName": "",
+        "masterUsername": "",
+        "masterPassword": "",
+        "redisType": "REDIS_TYPE_UNSPECIFIED",
+        "cluster": ""
+    }
+}

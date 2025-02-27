@@ -1,0 +1,89 @@
+{
+    "name": "instances/test1",
+    "state": "ACTIVE",
+    "environment": "environments/test",
+    "title": "MySQL instance via API",
+    "engine": "MYSQL",
+    
+
+
+    "externalLink": "",
+    "dataSources": [
+    {
+        "username": "bytebase",
+        "id": "BF176A9A-76E3-40EA-A3B7-6D1092BD7E0C",
+        "password": "testpwd1",
+        "host": "host.docker.internal",
+        "type": "ADMIN",
+        "port": "3306",
+        
+        
+        
+        "useSsl": false,
+        "sslCa": "",
+        "sslCert": "",
+        "sslKey": "",
+        "database": "",
+        "srv": false,
+        "authenticationDatabase": "",
+        "sid": "",
+        "serviceName": "",
+        "sshHost": "",
+        "sshPort": "",
+        "sshUser": "",
+        "sshPassword": "",
+        "sshPrivateKey": "",
+        "authenticationPrivateKey": "",
+        "externalSecret": {
+        "secretType": "SAECRET_TYPE_UNSPECIFIED",
+        "url": "",
+        "authType": "AUTH_TYPE_UNSPECIFIED",
+        "appRole": {
+            "roleId": "",
+            "secretId": "",
+            "type": "SECRET_TYPE_UNSPECIFIED",
+            "mountPath": ""
+        },
+        "token": "",
+        "engineName": "",
+        "secretName": "",
+        "passwordKeyName": ""
+        },
+        "authenticationType": "AUTHENTICATION_UNSPECIFIED",
+        "saslConfig": {
+        "krbConfig": {
+            "primary": "",
+            "instance": "",
+            "realm": "",
+            "keytab": "",
+            "kdcHost": "",
+            "kdcPort": "",
+            "kdcTransportProtocol": ""
+        }
+        },
+        "additionalAddresses": [
+        {
+            "host": "",
+            "port": ""
+        }
+        ],
+        "replicaSet": "",
+        "directConnection": false,
+        "region": "",
+        "warehouseId": "",
+        "masterName": "",
+        "masterUsername": "",
+        "masterPassword": "",
+        "redisType": "REDIS_TYPE_UNSPECIFIED",
+        "cluster": ""
+    }
+    ],
+    "activation": true,
+    "options": {
+    "syncInterval": "",
+    "maximumConnections": 1,
+    "syncDatabases": [
+        ""
+    ]
+    }
+}

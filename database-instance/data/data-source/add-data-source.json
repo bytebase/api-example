@@ -1,0 +1,11 @@
+{
+  "name": "extra-datasource-1",
+  "dataSource": {
+    "id": "A1B2C3D4-E5F6-7890-1234-56789ABCDEF4",
+    "type": "READ_ONLY",
+    "username": "bytebase",
+    "password": "testpwd1",
+    "host": "host.docker.internal",
+    "port": "3306"
+  }
+}
