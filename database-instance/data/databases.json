@@ -1,0 +1,18 @@
+{
+    "instance": {
+        "name": "instances/test2",
+        "engine": "MYSQL",
+        "activation": true,
+        "environment": "environments/test",
+        "dataSources": [
+            {
+                "username": "bytebase",
+                "id": "BF176A9A-76E3-40EA-A3B7-6D1092BD7E0C",
+                "password": "testpwd1",
+                "host": "host.docker.internal",
+                "type": "ADMIN",
+                "port": "3306"
+            }
+        ]
+    }
+}

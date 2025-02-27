@@ -1,0 +1,12 @@
+{
+    "requests": [
+        {
+            "name": "instances/test1",
+            "enableFullSync": true
+        },
+        {
+            "name": "instances/test-sample-instance",
+            "enableFullSync": true
+        }
+    ]
+}
